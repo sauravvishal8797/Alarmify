@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Alarmify</string>
+    <string name="new_alarm">Alarm</string>
 </resources>
