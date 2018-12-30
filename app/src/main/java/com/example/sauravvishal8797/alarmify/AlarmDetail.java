@@ -1,21 +1,36 @@
 package com.example.sauravvishal8797.alarmify;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Paint;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.lang.reflect.Field;
+import java.util.Calendar;
 
 public class AlarmDetail extends AppCompatActivity {
+
+    private ImageView setButton;
+    private ImageView abortButton;
+    private TextView alarmMessage;
+    private SwitchCompat snooze;
+    private SwitchCompat deleteAfterButton;
+    private AlarmManager alarmManager;
+    private PendingIntent pendingIntent;
 
     private TimePicker time_picker;
     private Resources system;
@@ -25,8 +40,37 @@ public class AlarmDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarm_detail);
         time_picker = (TimePicker) findViewById(R.id.timepicker22);
+        //setButton = (SwitchCompat) findViewById(R.id.set)
+        setUI();
         statusBarTransparent();
         setTimePickerTextColor();
+    }
+
+    private void setUI(){
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        setButton = (ImageView) findViewById(R.id.set_button);
+        setButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setAlarm();
+            }
+        });
+        abortButton = (ImageView) findViewById(R.id.abort_button);
+        snooze = (SwitchCompat) findViewById(R.id.snooze_button);
+        deleteAfterButton = (SwitchCompat) findViewById(R.id.delete_after_button);
+
+    }
+
+    private void setAlarm(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, time_picker.getCurrentHour());
+        calendar.set(Calendar.MINUTE, time_picker.getCurrentMinute());
+        Intent intent = new Intent(AlarmDetail.this, AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(AlarmDetail.this, 0, intent, 0);
+        alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
+        //Log.i("lalalala", time_picker.getC)
+        finish();
+
     }
 
     //method to set the status bar transparent
