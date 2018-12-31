@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -12,6 +12,17 @@
     <style name="NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- AlertDialog theme -->
+    <style name="AlertDialogTheme">
+        <item name="android:background">@color/customPrimary</item>
+    </style>
+
+    <style name="AlertDialog_Dark" parent="Theme.AppCompat.Dialog.Alert"><!--BOTTONI-->
+        <item name="android:backgroundTint" tools:targetApi="lollipop">
+           @color/customPrimary
+        </item>
     </style>
 
 </resources>

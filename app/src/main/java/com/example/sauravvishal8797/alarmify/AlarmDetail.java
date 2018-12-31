@@ -1,15 +1,20 @@
 package com.example.sauravvishal8797.alarmify;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Paint;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -19,7 +24,11 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.example.sauravvishal8797.alarmify.adapters.AlarmAdapter;
+import com.example.sauravvishal8797.alarmify.adapters.repeatAlarmAdapter;
+
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class AlarmDetail extends AppCompatActivity {
@@ -27,6 +36,7 @@ public class AlarmDetail extends AppCompatActivity {
     private ImageView setButton;
     private ImageView abortButton;
     private TextView alarmMessage;
+    private TextView daytext;
     private SwitchCompat snooze;
     private SwitchCompat deleteAfterButton;
     private AlarmManager alarmManager;
@@ -58,7 +68,55 @@ public class AlarmDetail extends AppCompatActivity {
         abortButton = (ImageView) findViewById(R.id.abort_button);
         snooze = (SwitchCompat) findViewById(R.id.snooze_button);
         deleteAfterButton = (SwitchCompat) findViewById(R.id.delete_after_button);
+        daytext = (TextView) findViewById(R.id.daytext);
+        daytext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog();
+            }
+        });
 
+    }
+
+    private void showDialog(){
+        View dialogview = this.getLayoutInflater().from(AlarmDetail.this).inflate(R.layout.repeat_alarm_dialog, null);
+        dialogview.setBackgroundColor(getResources().getColor(R.color.customPrimary));
+        RecyclerView dayList = (RecyclerView) dialogview.findViewById(R.id.repeat_option_dialog);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        dayList.setLayoutManager(linearLayoutManager);
+        repeatAlarmAdapter alarmAdapter = new repeatAlarmAdapter(addDays(), getApplicationContext());
+        dayList.setAdapter(alarmAdapter);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialog_Dark);
+        builder.setView(dialogview);
+        final AlertDialog dialog = builder.create();
+        //dialog.show();
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK".toUpperCase(), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialog.dismiss();
+            }
+        });
+        //dialog.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundColor(R.color.customPrimary);
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL".toUpperCase(), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        dialog.show();
+       // dialog.getWindow().
+    }
+
+    private ArrayList<String> addDays(){
+        ArrayList<String> days = new ArrayList<>();
+        days.add("Monday");
+        days.add("Tuesday");
+        days.add("Wednesday");
+        days.add("Thrusday");
+        days.add("Friday");
+        days.add("Saturday");
+        days.add("Sunday");
+        return days;
     }
 
     private void setAlarm(){
