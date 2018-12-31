@@ -3,21 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_share"
+        android:id="@+id/create_alarm"
         android:orderInCategory="0"
         android:title="New Alarm"
         android:icon="@drawable/ic_add_black_24dp"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_edit"
+        android:id="@+id/all_alarms"
         android:orderInCategory="1"
         app:showAsAction="always"
         android:icon="@drawable/ic_alarm_black_24dp"
         android:title="Alarm" />
 
     <item
-        android:id="@+id/action_compress"
+        android:id="@+id/settings"
         android:orderInCategory="2"
         app:showAsAction="always"
         android:icon="@drawable/ic_brightness_7_black_24dp"

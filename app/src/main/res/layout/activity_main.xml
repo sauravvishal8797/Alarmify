@@ -12,23 +12,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/text"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="50dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="@string/new_alarm"
+        android:text="@string/app_name"
         android:textColor="@color/whitishtint"
         android:textSize="26dp" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="60dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="27dp"
-        android:layout_marginRight="27dp"
-        android:src="@drawable/ic_add_black_24dp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/viewalarm"
@@ -38,9 +27,42 @@
         android:layout_height="match_parent">
     </android.support.v7.widget.RecyclerView>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/no_alarm_view"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_snooze_black_24dp"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="20dp"
+            android:textColor="@color/whitishtint"
+            android:layout_gravity="center_horizontal"
+            android:text="No alarms activated yet!"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="@color/whitishtint"
+            android:layout_gravity="center_horizontal"
+            android:text="Go ahead and activate an alarm."/>
+    </LinearLayout>
+
     <android.support.design.widget.BottomNavigationView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/bottombar"
         android:layout_alignParentBottom="true"
         android:background="#212121"
         app:menu="@menu/bottom_menu"></android.support.design.widget.BottomNavigationView>
