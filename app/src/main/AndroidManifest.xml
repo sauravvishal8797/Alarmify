@@ -3,9 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.sauravvishal8797.alarmify">
 
-    <uses-permission android:name="android.permission.WAKE_LOCK"></uses-permission>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -19,8 +21,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AlarmDetail"></activity>
-        <receiver android:name=".AlarmReceiver"></receiver>
+        <activity
+            android:name=".AlarmDetail"
+            android:parentActivityName=".MainActivity" />
+
+        <receiver android:name=".AlarmReceiver" />
+
+        <activity android:name=".Mathspuzzle" />
+
+        <receiver
+            android:name=".OnPauseReceiver"
+            android:exported="false" />
+
+        <activity android:name=".Restart"></activity>
+        <service android:name=".Alarmservice"
+            android:exported="false"/>
     </application>
 
 </manifest>

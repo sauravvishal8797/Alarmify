@@ -19,6 +19,7 @@ public class repeatAlarmAdapter extends RecyclerView.Adapter<repeatAlarmAdapter.
 
     private ArrayList<String> daysList;
     private Context context;
+    public static ArrayList<String> repeatDays = new ArrayList<>();
 
     public repeatAlarmAdapter(ArrayList<String> daysList, Context context) {
         this.daysList=daysList;
@@ -34,12 +35,17 @@ public class repeatAlarmAdapter extends RecyclerView.Adapter<repeatAlarmAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        String day = daysList.get(i);
+        final String day = daysList.get(i).substring(0, 3);
         viewHolder.day.setText(day);
-        viewHolder.checkBox.setButtonTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.colorAccent)));
+        viewHolder.checkBox.setButtonTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.grey_shade)));
         viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    repeatDays.add(day);
+                }else {
+                    repeatDays.remove(day);
+                }
 
             }
         });

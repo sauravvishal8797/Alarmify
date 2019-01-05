@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/NoActionBar"
+    android:id="@+id/layout_id"
     android:background="@color/customPrimary"
     tools:context=".MainActivity">
 
@@ -64,7 +65,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/bottombar"
         android:layout_alignParentBottom="true"
-        android:background="#212121"
+        android:background="#003153"
         app:menu="@menu/bottom_menu"></android.support.design.widget.BottomNavigationView>
 
 

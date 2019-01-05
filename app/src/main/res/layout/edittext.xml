@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/customPrimary"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="23dp"
+        android:textStyle="bold"
+        android:textColor="@color/grey_shade"
+        android:text="Alarm Label"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/labeledit_tex"
+        android:layout_margin="20dp"
+        android:textColor="@color/grey_shade"
+        android:textColorHint="@color/grey_shade"
+        android:hint="Enter your Label here...."/>
+
+</LinearLayout>

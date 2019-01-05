@@ -3,6 +3,7 @@ package com.example.sauravvishal8797.alarmify;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -14,33 +15,51 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.sauravvishal8797.alarmify.adapters.AlarmAdapter;
 import com.example.sauravvishal8797.alarmify.adapters.repeatAlarmAdapter;
+import com.example.sauravvishal8797.alarmify.models.Alarm;
+import com.example.sauravvishal8797.alarmify.realm.RealmController;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import io.realm.Realm;
 
 public class AlarmDetail extends AppCompatActivity {
 
     private ImageView setButton;
     private ImageView abortButton;
     private TextView alarmMessage;
+    private RelativeLayout repeatView;
+    private RelativeLayout labelView;
     private TextView daytext;
     private SwitchCompat snooze;
     private SwitchCompat deleteAfterButton;
     private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
+    private int snoozetime=0;
+    private boolean deleteAfterGoesOff = false;
+    private ArrayList<String> repeatAlarmDays;
+    private String labelText;
+    private String alarmTime;
+    private Realm realm;
+    private RealmController realmController;
 
     private TimePicker time_picker;
     private Resources system;
@@ -50,15 +69,50 @@ public class AlarmDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarm_detail);
         time_picker = (TimePicker) findViewById(R.id.timepicker22);
+        time_picker.setIs24HourView(true);
         //setButton = (SwitchCompat) findViewById(R.id.set)
         setUI();
         statusBarTransparent();
         setTimePickerTextColor();
     }
 
+    private void timePickerChange(){
+        //final int time_picker.getCurrentHour() = time_picker.getCurrentHour();
+        final int min = time_picker.getCurrentMinute();
+        Log.i("hours", String.valueOf(time_picker.getCurrentHour()) + "   " + String.valueOf(min));
+
+        time_picker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+            @Override
+            public void onTimeChanged(TimePicker timePicker, int i, int i1) {
+                alarmTime = time_picker.getCurrentHour().toString() +":" + time_picker.getCurrentMinute().toString();
+
+                //Calendar.getInstance().getTime().getHours();
+                int newhour = timePicker.getCurrentHour()-time_picker.getCurrentHour();
+                int newmin = timePicker.getCurrentMinute()-time_picker.getCurrentMinute();
+                if(newhour==0&&newmin>0){
+                    alarmMessage.setText("Alarm set for" + newmin + "minutes from now");
+                } else if(newhour==0&&newmin<0){
+                    alarmMessage.setText("Alrm set for " + (24-1)+ " hours " + (60-time_picker.getCurrentMinute())+timePicker.getCurrentMinute() + " minutes from now");
+
+                } else if(newhour>0 && newmin>0){
+                    alarmMessage.setText("Alrm set for " + newhour+ " hours " + newmin + " minutes from now");
+
+                } else if (newhour>0&&newmin<0){
+                    alarmMessage.setText("Alrm set for " + (newhour-1)+ " hours " + (60-time_picker.getCurrentMinute())+timePicker.getCurrentMinute() + " minutes from now");
+
+                } else if (newhour<0){
+
+                }
+                Log.i("hours", String.valueOf(timePicker.getCurrentHour()) + "   " + String.valueOf(timePicker.getCurrentMinute()));
+            }
+        });
+
+    }
+
     private void setUI(){
-        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmMessage = (TextView) findViewById(R.id.set_alarm_mssg);
         setButton = (ImageView) findViewById(R.id.set_button);
+        timePickerChange();
         setButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,16 +120,67 @@ public class AlarmDetail extends AppCompatActivity {
             }
         });
         abortButton = (ImageView) findViewById(R.id.abort_button);
-        snooze = (SwitchCompat) findViewById(R.id.snooze_button);
-        deleteAfterButton = (SwitchCompat) findViewById(R.id.delete_after_button);
-        daytext = (TextView) findViewById(R.id.daytext);
-        daytext.setOnClickListener(new View.OnClickListener() {
+        abortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        repeatView = (RelativeLayout) findViewById(R.id.repeat_alarm_option);
+        repeatView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showDialog();
             }
         });
+        snooze = (SwitchCompat) findViewById(R.id.snooze_button);
+        snooze.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    showSnoozeDialog();
+                }
+            }
+        });
+        deleteAfterButton = (SwitchCompat) findViewById(R.id.delete_after_button);
+        deleteAfterButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b){
+                    deleteAfterGoesOff=true;
+                }else {
+                    deleteAfterGoesOff=false;
+                }
+            }
+        });
+        daytext = (TextView) findViewById(R.id.daytext);
+        labelView = (RelativeLayout) findViewById(R.id.labelview);
+        labelView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                View view1 = getLayoutInflater().inflate(R.layout.edittext, null);
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext(), R.style.AlertDialog_Dark);
+                builder.setView(view1);
+                final EditText editText = (EditText) view1.findViewById(R.id.labeledit_tex);
+                //editText.setHintTextColor();
+                final AlertDialog dialog = builder.create();
+                dialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK".toUpperCase(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        labelText = editText.getText().toString().trim();
 
+                    }
+                });
+                dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL".toUpperCase(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                dialog.show();
+            }
+        });
     }
 
     private void showDialog(){
@@ -94,6 +199,7 @@ public class AlarmDetail extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialog.dismiss();
+                repeatAlarmDays = repeatAlarmAdapter.repeatDays;
             }
         });
         //dialog.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundColor(R.color.customPrimary);
@@ -105,6 +211,38 @@ public class AlarmDetail extends AppCompatActivity {
         });
         dialog.show();
        // dialog.getWindow().
+    }
+
+    private void showSnoozeDialog(){
+        final String[] colors = {"Off", "5 minutes", "10 minutes", "15 minutes", "20 minutes", "25 minutes", "30 minutes"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialog_Dark);
+        builder.setTitle("Choose Snooze duration");
+       // builder.s
+        builder.setSingleChoiceItems(colors, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if(i==0){
+                    snoozetime=0;
+                }else {
+                    snoozetime = Integer.parseInt(colors[i]);
+                }
+            }
+        });
+        final AlertDialog dialog = builder.create();
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK".toUpperCase(), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL".toUpperCase(), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     private ArrayList<String> addDays(){
@@ -120,15 +258,42 @@ public class AlarmDetail extends AppCompatActivity {
     }
 
     private void setAlarm(){
+        creatingNewAlarmObject();
+        alarmManager = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        Calendar now = Calendar.getInstance();
+        Log.i("lalalala", String.valueOf(now.get(Calendar.HOUR_OF_DAY)) +" "+String.valueOf(now.get(Calendar.MINUTE)));
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, time_picker.getCurrentHour());
         calendar.set(Calendar.MINUTE, time_picker.getCurrentMinute());
+        if(calendar.before(now)){
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
         Intent intent = new Intent(AlarmDetail.this, AlarmReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(AlarmDetail.this, 0, intent, 0);
-        alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         //Log.i("lalalala", time_picker.getC)
         finish();
+    }
 
+    private void creatingNewAlarmObject(){
+        StringBuilder builder = new StringBuilder();
+        realmController = RealmController.with(this);
+        realm = realmController.getRealm();
+        Alarm newAlarm = new Alarm();
+        newAlarm.setTime(alarmTime);
+        if(repeatAlarmDays==null)
+            newAlarm.setDays("No Repeat");
+        else {
+            for(int i=0; i<repeatAlarmDays.size(); i++){
+                builder.append(repeatAlarmDays.get(i)+" ");
+            }
+            newAlarm.setDays(builder.toString());
+        }
+        newAlarm.setSnoozeTime(snoozetime);
+        newAlarm.setDeleteAfterGoesOff(deleteAfterGoesOff);
+        newAlarm.setLabel(labelText);
+        newAlarm.setPeriod("AM");
+        realmController.addAlarm(newAlarm);
     }
 
     //method to set the status bar transparent
@@ -157,7 +322,7 @@ public class AlarmDetail extends AppCompatActivity {
 
     private void set_numberpicker_text_colour(NumberPicker number_picker){
         final int count = number_picker.getChildCount();
-        final int color = getResources().getColor(R.color.grey_shade);
+        final int color = getResources().getColor(R.color.white);
 
         for(int i = 0; i < count; i++){
             View child = number_picker.getChildAt(i);

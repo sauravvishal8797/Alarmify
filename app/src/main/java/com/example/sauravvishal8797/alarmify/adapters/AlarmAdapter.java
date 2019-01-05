@@ -1,5 +1,6 @@
 package com.example.sauravvishal8797.alarmify.adapters;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
@@ -18,9 +19,12 @@ import java.util.ArrayList;
 public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> {
 
     private ArrayList<Alarm> list;
+    StringBuilder builder = new StringBuilder();
+    private Context context;
 
-    public AlarmAdapter(ArrayList<Alarm> list) {
+    public AlarmAdapter(ArrayList<Alarm> list, Context context) {
         this.list=list;
+        this.context=context;
     }
 
     @NonNull
@@ -32,11 +36,14 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        StringBuilder builder = new StringBuilder();
 
         Alarm alarm = list.get(i);
         viewHolder.timeText.setText(alarm.getTime());
         viewHolder.periodText.setText(alarm.getPeriod());
-        viewHolder.daysText.setText("Mo Tu Thr");
+        viewHolder.daysText.setText(alarm.getDays());
+        viewHolder.button.setChecked(true);
+        viewHolder.periodText.setText(alarm.getPeriod());
     }
 
     @Override

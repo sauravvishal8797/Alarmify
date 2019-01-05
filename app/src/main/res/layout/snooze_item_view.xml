@@ -16,13 +16,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_margin="20dp"
-            android:id="@+id/day"
-            android:text="Monday"
+            android:id="@+id/snooze_duration"
+            android:text="10 minutes"
             android:textSize="16dp"
             android:textColor="@color/grey_shade"/>
 
-        <CheckBox
-            android:id="@+id/hceck"
+        <RadioButton
+            android:id="@+id/snooze_option_radiobutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -30,6 +30,7 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="43dp"
+            android:buttonTint="@color/grey_shade"
             android:layout_marginRight="43dp"/>
 
     </RelativeLayout>

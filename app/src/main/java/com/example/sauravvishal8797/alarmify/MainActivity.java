@@ -1,6 +1,7 @@
 package com.example.sauravvishal8797.alarmify;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -10,32 +11,68 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.example.sauravvishal8797.alarmify.adapters.AlarmAdapter;
 import com.example.sauravvishal8797.alarmify.models.Alarm;
+import com.example.sauravvishal8797.alarmify.realm.RealmController;
 
 import java.util.ArrayList;
+
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView alarmRecyclerView;
+    private RelativeLayout parentlayout;
+    private LinearLayout emptyView;
     private BottomNavigationView bottomNavigationView;
+    private RealmController realmController;
+    private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        parentlayout = (RelativeLayout) findViewById(R.id.layout_id);
+        emptyView = (LinearLayout) findViewById(R.id.no_alarm_view);
         alarmRecyclerView = (RecyclerView) findViewById(R.id.viewalarm);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         alarmRecyclerView.setLayoutManager(linearLayoutManager);
-        AlarmAdapter alarmAdapter = new AlarmAdapter(getData());
-        alarmRecyclerView.setAdapter(alarmAdapter);
+        if (getData().size()==0)
+            emptyView.setVisibility(View.VISIBLE);
+        else {
+            AlarmAdapter alarmAdapter = new AlarmAdapter(getData(), this);
+            alarmRecyclerView.setAdapter(alarmAdapter);
+        }
         //bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottombar);
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottombar);
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+        bottomNavigationView.setSelectedItemId(R.id.all_alarms);
         statusBarTransparent();
+    }
+
+    private int navigationMenu(){
+        Resources resources = getApplicationContext().getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return resources.getDimensionPixelSize(resourceId);
+        }
+        return 0;
+
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        bottomNavigationView.setSelectedItemId(R.id.all_alarms);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -66,18 +103,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private ArrayList<Alarm> getData(){
-        ArrayList<Alarm> alarms = new ArrayList<>();
-        for(int i=0; i<10; i++){
-            ArrayList<String> days = new ArrayList<>();
-            days.add("Tu ");
-            days.add("Wed ");
-            days.add("Thru ");
-            Alarm a = new Alarm();
-            a.setTime("7:30");
-            a.setPeriod("AM");
-            a.setDays(days);
-            alarms.add(a);
+        ArrayList<Alarm> allAlarms = new ArrayList<>();
+        realmController = RealmController.with(this);
+        realm = realmController.getRealm();
+        RealmResults<Alarm> realmResults = realmController.getAlarms();
+        if (realmResults.size()==0)
+            return allAlarms;
+        for(int i = 0; i < realmResults.size(); i++){
+            allAlarms.add(realmResults.get(i));
         }
-        return alarms;
+       return allAlarms;
     }
 }
