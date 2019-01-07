@@ -49,14 +49,18 @@ public class MainActivity extends AppCompatActivity {
         if (getData().size()==0)
             emptyView.setVisibility(View.VISIBLE);
         else {
-            AlarmAdapter alarmAdapter = new AlarmAdapter(getData(), this);
-            alarmRecyclerView.setAdapter(alarmAdapter);
+           setAdapter();
         }
         //bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottombar);
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottombar);
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         bottomNavigationView.setSelectedItemId(R.id.all_alarms);
         statusBarTransparent();
+    }
+
+    private void setAdapter(){
+        AlarmAdapter alarmAdapter = new AlarmAdapter(getData(), this);
+        alarmRecyclerView.setAdapter(alarmAdapter);
     }
 
     private int navigationMenu(){
@@ -93,6 +97,12 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setAdapter();
+    }
 
     //method to set the status bar transparent
     private void statusBarTransparent(){

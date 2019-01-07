@@ -3,12 +3,14 @@ package com.example.sauravvishal8797.alarmify;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Paint;
 import android.os.Build;
+import android.print.PrinterId;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -49,6 +51,7 @@ public class AlarmDetail extends AppCompatActivity {
     private RelativeLayout repeatView;
     private RelativeLayout labelView;
     private TextView daytext;
+    private TextView alarmLabel;
     private SwitchCompat snooze;
     private SwitchCompat deleteAfterButton;
     private AlarmManager alarmManager;
@@ -59,6 +62,7 @@ public class AlarmDetail extends AppCompatActivity {
     private String labelText;
     private String alarmTime;
     private Realm realm;
+    private String period;
     private RealmController realmController;
 
     private TimePicker time_picker;
@@ -69,7 +73,7 @@ public class AlarmDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarm_detail);
         time_picker = (TimePicker) findViewById(R.id.timepicker22);
-        time_picker.setIs24HourView(true);
+        time_picker.setIs24HourView(false);
         //setButton = (SwitchCompat) findViewById(R.id.set)
         setUI();
         statusBarTransparent();
@@ -77,30 +81,59 @@ public class AlarmDetail extends AppCompatActivity {
     }
 
     private void timePickerChange(){
+        final String am_pm;
+        final String[] hours = new String[1];
+        final String[] minutes = new String[1];
         //final int time_picker.getCurrentHour() = time_picker.getCurrentHour();
         final int min = time_picker.getCurrentMinute();
         Log.i("hours", String.valueOf(time_picker.getCurrentHour()) + "   " + String.valueOf(min));
 
+
         time_picker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker timePicker, int i, int i1) {
-                alarmTime = time_picker.getCurrentHour().toString() +":" + time_picker.getCurrentMinute().toString();
+                if(time_picker.getCurrentHour()>=12){
+                    if(time_picker.getCurrentHour()-12>0)
+                        hours[0] = "0"+String.valueOf(time_picker.getCurrentHour()-12);
+                    else
+                        hours[0] = time_picker.getCurrentHour().toString();
+                    if(time_picker.getCurrentMinute()>=0 && time_picker.getCurrentMinute()<=9)
+                        minutes[0] = "0"+time_picker.getCurrentMinute();
+                    else
+                        minutes[0] = time_picker.getCurrentMinute().toString();
 
+                    alarmTime = hours[0]+":"+minutes[0];
+                   /* alarmTime = (time_picker.getCurrentHour()-12>0)?(String.valueOf(time_picker.getCurrentHour()-12)):
+                            time_picker.getCurrentHour()+":" +
+                            ((time_picker.getCurrentMinute()>=0 && time_picker.getCurrentMinute()<=9)?String.valueOf(0) +
+                                    time_picker.getCurrentMinute().toString():time_picker.getCurrentMinute().toString());*/
+                    period = "PM";
+                } else {
+                    alarmTime = time_picker.getCurrentHour().toString() +":" +
+                            ((time_picker.getCurrentMinute()>=0 && time_picker.getCurrentMinute()<=9)?String.valueOf(0) +
+                                    time_picker.getCurrentMinute().toString():time_picker.getCurrentMinute().toString());
+                    period = "AM";
+                }
                 //Calendar.getInstance().getTime().getHours();
                 int newhour = timePicker.getCurrentHour()-time_picker.getCurrentHour();
                 int newmin = timePicker.getCurrentMinute()-time_picker.getCurrentMinute();
-                if(newhour==0&&newmin>0){
-                    alarmMessage.setText("Alarm set for" + newmin + "minutes from now");
-                } else if(newhour==0&&newmin<0){
-                    alarmMessage.setText("Alrm set for " + (24-1)+ " hours " + (60-time_picker.getCurrentMinute())+timePicker.getCurrentMinute() + " minutes from now");
+                if(newhour>0&&newmin<0){
+                    alarmMessage.setText("Alarm set for "+ (24-Math.abs(newhour)) +"hours "+Math.abs(newmin)+"minutes from now");
+                }else if(newhour>0&&newmin>0){
+                    alarmMessage.setText("Alarm set for "+ (24-Math.abs(newhour)-1) +"hours "+time_picker.getCurrentMinute()+
+                            (60-timePicker.getCurrentMinute())+"minutes from now");
 
-                } else if(newhour>0 && newmin>0){
-                    alarmMessage.setText("Alrm set for " + newhour+ " hours " + newmin + " minutes from now");
+                }else if(newhour>0&&newmin==0){
+                    alarmMessage.setText("Alarm set for "+ (24-Math.abs(newhour)) +"hours from now");
 
-                } else if (newhour>0&&newmin<0){
-                    alarmMessage.setText("Alrm set for " + (newhour-1)+ " hours " + (60-time_picker.getCurrentMinute())+timePicker.getCurrentMinute() + " minutes from now");
+                }else if(newhour<0&&newmin<0){
+                    alarmMessage.setText("Alarm set for "+ Math.abs(newhour) +"hours "+Math.abs(newmin)+"minutes from now");
 
-                } else if (newhour<0){
+                }else if(newhour<0&&newmin==0){
+                    alarmMessage.setText("Alarm set for "+ Math.abs(newhour) +"hours from now");
+                }else if(newhour<0 && newmin>0){
+                    alarmMessage.setText("Alarm set for "+ (Math.abs(newhour)-1) +"hours "+time_picker.getCurrentMinute()+
+                            (60-timePicker.getCurrentMinute())+"minutes from now");
 
                 }
                 Log.i("hours", String.valueOf(timePicker.getCurrentHour()) + "   " + String.valueOf(timePicker.getCurrentMinute()));
@@ -112,6 +145,8 @@ public class AlarmDetail extends AppCompatActivity {
     private void setUI(){
         alarmMessage = (TextView) findViewById(R.id.set_alarm_mssg);
         setButton = (ImageView) findViewById(R.id.set_button);
+        daytext = (TextView) findViewById(R.id.daytext);
+        alarmLabel = (TextView) findViewById(R.id.labeltext);
         timePickerChange();
         setButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,7 +203,10 @@ public class AlarmDetail extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         labelText = editText.getText().toString().trim();
-
+                        if(labelText.isEmpty())
+                            alarmLabel.setText("No Label");
+                        else
+                            alarmLabel.setText(labelText);
                     }
                 });
                 dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL".toUpperCase(), new DialogInterface.OnClickListener() {
@@ -184,6 +222,7 @@ public class AlarmDetail extends AppCompatActivity {
     }
 
     private void showDialog(){
+        final StringBuilder builder2 = new StringBuilder();
         View dialogview = this.getLayoutInflater().from(AlarmDetail.this).inflate(R.layout.repeat_alarm_dialog, null);
         dialogview.setBackgroundColor(getResources().getColor(R.color.customPrimary));
         RecyclerView dayList = (RecyclerView) dialogview.findViewById(R.id.repeat_option_dialog);
@@ -200,6 +239,10 @@ public class AlarmDetail extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialog.dismiss();
                 repeatAlarmDays = repeatAlarmAdapter.repeatDays;
+                for(int k=0; k<repeatAlarmDays.size(); k++){
+                    builder2.append(repeatAlarmDays.get(k)+",");
+                }
+                daytext.setText(builder2.toString().substring(0, builder2.toString().lastIndexOf(',')));
             }
         });
         //dialog.getButton(DialogInterface.BUTTON_POSITIVE).setBackgroundColor(R.color.customPrimary);
@@ -215,7 +258,7 @@ public class AlarmDetail extends AppCompatActivity {
 
     private void showSnoozeDialog(){
         final String[] colors = {"Off", "5 minutes", "10 minutes", "15 minutes", "20 minutes", "25 minutes", "30 minutes"};
-
+        final int[] values = {0, 5, 10, 15, 20, 25, 30};
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialog_Dark);
         builder.setTitle("Choose Snooze duration");
        // builder.s
@@ -225,7 +268,9 @@ public class AlarmDetail extends AppCompatActivity {
                 if(i==0){
                     snoozetime=0;
                 }else {
-                    snoozetime = Integer.parseInt(colors[i]);
+                   // String time = colors[i];
+                    //time
+                    snoozetime = values[i];
                 }
             }
         });
@@ -292,7 +337,7 @@ public class AlarmDetail extends AppCompatActivity {
         newAlarm.setSnoozeTime(snoozetime);
         newAlarm.setDeleteAfterGoesOff(deleteAfterGoesOff);
         newAlarm.setLabel(labelText);
-        newAlarm.setPeriod("AM");
+        newAlarm.setPeriod(period);
         realmController.addAlarm(newAlarm);
     }
 
