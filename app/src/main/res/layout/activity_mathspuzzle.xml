@@ -1,16 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/customPrimary"
     tools:context=".Mathspuzzle">
 
-    <Button
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/burron"
-        android:text="leave"
-        android:gravity="center"/>
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
 
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grey_shade"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:text="Solve the Expression"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:id="@+id/math_exp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/grey_shade"
+            android:text="32+45+88=?" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ans_edittext"
+            android:layout_centerInParent="true"
+            android:inputType="number"
+            android:layout_marginTop="10dp"
+            android:hint="Enter the answer here"
+            android:textColorHint="@color/grey_shade"
+            android:textColor="@color/grey_shade"
+            android:layout_gravity="center" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/submit_button"
+            android:backgroundTint="@color/customPrimary"
+            android:text="Submit"
+            android:textSize="15dp"
+            android:textColor="@color/grey_shade"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

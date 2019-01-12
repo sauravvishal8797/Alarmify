@@ -1,8 +1,13 @@
 package com.example.sauravvishal8797.alarmify;
 
+import android.app.ActivityManager;
 import android.app.IntentService;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
+
+import java.util.List;
 
 public class Alarmservice extends IntentService {
 
@@ -23,4 +28,6 @@ public class Alarmservice extends IntentService {
         startActivity(intent1);
 
     }
+
+
 }

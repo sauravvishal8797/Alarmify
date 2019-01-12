@@ -1,6 +1,7 @@
 package com.example.sauravvishal8797.alarmify;
 
 import android.app.Application;
+import android.arch.lifecycle.LifecycleObserver;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -17,6 +18,7 @@ public class MyApplication extends Application{
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(realmConfiguration);
+
 
     }
 }

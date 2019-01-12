@@ -1,9 +1,9 @@
 package com.example.sauravvishal8797.alarmify;
 
-import android.app.Application;
-import android.content.ComponentCallbacks;
+import android.app.ActivityManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
@@ -12,51 +12,93 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.jaeger.library.StatusBarUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 public class Mathspuzzle extends AppCompatActivity {
 
     private boolean isFocus;
     private boolean isPaused=false;
     private Handler collapseNotificationHandler;
-    private Button button;
     private boolean isShutting=false;
+    private ActivityManager mActivityManager;
+    private Handler mHandler;
+    //private interface lifecycledelegate;
+
+    private TextView expText;
+    private Button submitButton;
+    private EditText ansEdttxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mathspuzzle);
-      //  requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.registerComponentCallbacks(new ComponentCallbacks() {
-            @Override
-            public void onConfigurationChanged(Configuration configuration) {
+        statusBarTransparent();
+        mActivityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
+        setUpUi();
+        Toast.makeText(getApplicationContext(), "Hey there", Toast.LENGTH_SHORT).show();
+    }
 
-            }
+    private void statusBarTransparent(){
+        StatusBarUtil.setTransparent(this);
+    }
 
-            @Override
-            public void onLowMemory() {
-
-            }
-        });
-
-            //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-          //      WindowManager.LayoutParams.FLAG_FULLSCREEN);
-       // this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
-        button = (Button) findViewById(R.id.burron);
-        button.setOnClickListener(new View.OnClickListener() {
+    private void setUpUi(){
+        final int[] count = {0};
+        final int[] ans = {0};
+        expText = (TextView) findViewById(R.id.math_exp);
+        final String[] result = generateExpression();
+        expText.setText(result[0]);
+        ans[0] =Integer.valueOf(result[1]);
+        ansEdttxt = (EditText) findViewById(R.id.ans_edittext);
+        submitButton = (Button) findViewById(R.id.submit_button);
+        submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
-
+                int a = checkAnswer(ans[0]);
+                if(!ansEdttxt.getText().toString().isEmpty() && count[0]<=3){
+                    String[] res = generateExpression();
+                    if(ansEdttxt.getText().toString().equals(ans[0])){
+                        ansEdttxt.getText().clear();
+                        //ansEdttxt.setText(res[0]);
+                        expText.setText(res[0]);
+                        ans[0] = ans[0] + (Integer.valueOf(res[1]) - ans[0]);
+                        count[0]++;
+                    }
+                }else {
+                    finish();
+                }
             }
         });
-        Toast.makeText(getApplicationContext(), "Hey there", Toast.LENGTH_SHORT).show();
+    }
+
+    public int checkAnswer(int a){
+
+        return a;
+    }
+
+    public String[] generateExpression(){
+        String[] exp = new String[2];
+        Random random = new Random();
+        int x = random.nextInt(9) + 1;
+        int y = random.nextInt(9)+ 1;
+        int z = random.nextInt(9) + 1;
+        int sum = x+y+z;
+        exp[0]=String.valueOf(x) + "+" + String.valueOf(y) + "+" + String.valueOf(z) + "=" + "?";
+        exp[1]=String.valueOf(sum);
+        return exp;
     }
 
     @Override
@@ -174,9 +216,9 @@ public class Mathspuzzle extends AppCompatActivity {
         //startActivity(intent);
 
         new ResumeActivity().execute();
+
         Log.i("stopper", "pause");
     }
-
 
 
     @Override
@@ -188,6 +230,14 @@ public class Mathspuzzle extends AppCompatActivity {
        // onPostResume();
         //onRestart();
         //isPaused=false;
+        Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                new ResumeActivity().execute();
+            }
+        };
+        handler.postDelayed(runnable, 500);
         Log.i("stop", "onStop");
     }
 
@@ -216,5 +266,50 @@ public class Mathspuzzle extends AppCompatActivity {
             }
             return null;
         }
+    }
+
+   /* private static boolean isApplicationBroughtToBackground(final Activity activity) {
+        ActivityManager activityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
+        List tasks = null;
+        try {
+            tasks = activityManager.getRunningTasks(1);
+        } catch (SecurityException e) {
+            Log.e("lop", "Missing required permission: \"android.permission.GET_TASKS\".", e);
+            return false;
+        }
+        if (tasks != null && !tasks.isEmpty()) {
+            ComponentName topActivity = tasks.get(0).topActivity;
+            try {
+                PackageInfo pi = activity.getPackageManager().getPackageInfo(activity.getPackageName(), PackageManager.GET_ACTIVITIES);
+                for (ActivityInfo activityInfo : pi.activities) {
+                    if(topActivity.getClassName().equals(activityInfo.name)) {
+                        return false;
+                    }
+                }
+            } catch( PackageManager.NameNotFoundException e) {
+                Log.e("lop", "Package name not found: " + activity.getPackageName());
+                return false; // Never happens.
+            }
+        }
+        return true;
+    }*/
+
+    String[] getActivePackagesCompat() {
+        final List<ActivityManager.RunningTaskInfo> taskInfo = mActivityManager.getRunningTasks(1);
+        final ComponentName componentName = taskInfo.get(0).topActivity;
+        final String[] activePackages = new String[1];
+        activePackages[0] = componentName.getPackageName();
+        return activePackages;
+    }
+
+    String[] getActivePackages() {
+        final Set<String> activePackages = new HashSet<String>();
+        final List<ActivityManager.RunningAppProcessInfo> processInfos = mActivityManager.getRunningAppProcesses();
+        for (ActivityManager.RunningAppProcessInfo processInfo : processInfos) {
+            if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                activePackages.addAll(Arrays.asList(processInfo.pkgList));
+            }
+        }
+        return activePackages.toArray(new String[activePackages.size()]);
     }
 }
