@@ -62,7 +62,7 @@
             android:textSize="20dp"
             android:textColor="@color/whitishtint"
             android:layout_gravity="center_horizontal"
-            android:text="No alarms activated yet!"/>
+            android:text="@string/dummy_alarm_message"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
             android:textSize="20dp"
             android:textColor="@color/whitishtint"
             android:layout_gravity="center_horizontal"
-            android:text="Go ahead and activate an alarm."/>
+            android:text="@string/alarm_activate_mssg"/>
     </LinearLayout>
 
     <android.support.design.widget.BottomNavigationView
@@ -78,8 +78,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/bottombar"
         android:layout_alignParentBottom="true"
+        app:itemTextColor="@color/bottom_nav_color"
+        app:itemIconTint="@color/bottom_nav_color"
         android:background="#003153"
         app:menu="@menu/bottom_menu"></android.support.design.widget.BottomNavigationView>
-
 
 </RelativeLayout>

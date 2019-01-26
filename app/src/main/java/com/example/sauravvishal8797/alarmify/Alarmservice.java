@@ -23,7 +23,10 @@ public class Alarmservice extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
 
         String value = intent.getStringExtra("Data");
+        //Mathspuzzle.repeat=false;
+
         Intent intent1 = new Intent(getApplicationContext(), Mathspuzzle.class);
+        //intent1.putExtra("putPauseFalse", "false");
         intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent1);
 

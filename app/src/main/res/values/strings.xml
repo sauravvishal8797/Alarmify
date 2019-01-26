@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Alarmify</string>
     <string name="new_alarm">Alarm</string>
+    <string name="dummy_alarm_message">No Alarms activated yet!</string>
+    <string name="alarm_activate_mssg">Go Ahead and activate an alarm!</string>
+    <string name="deactivate_alarm_dialog_title">Deactivate Alarm</string>
+    <string name="deactivate_alarm_dialog_mssg">Are you sure you want to deactivate this alarm?</string>
+    <string name="dialog_postive_button">OK</string>
+    <string name="dialog_negative_mssg">CANCEL</string>
 </resources>

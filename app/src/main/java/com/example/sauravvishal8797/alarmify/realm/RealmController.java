@@ -2,6 +2,7 @@ package com.example.sauravvishal8797.alarmify.realm;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 
 import com.example.sauravvishal8797.alarmify.models.Alarm;
 
@@ -48,6 +49,13 @@ public class RealmController {
         realm.commitTransaction();
     }
 
+    public void deactivateAlarm(String time){
+        Alarm alarm = realm.where(Alarm.class).equalTo("time", time).findFirst();
+        realm.beginTransaction();
+        alarm.setActivated(false);
+        realm.commitTransaction();
+    }
+
     //Retrieve all the active alarm details
     public RealmResults<Alarm> getAlarms(){
 
@@ -61,6 +69,7 @@ public class RealmController {
        // alarm1.setTime(alarm.getTime());
         alarm1.setDays(alarm.getDays());
         alarm1.setPeriod(alarm.getPeriod());
+        alarm1.setActivated(alarm.isActivated());
         alarm1.setLabel(alarm.getLabel());
         alarm1.setSnoozeTime(alarm.getSnoozeTime());
         alarm1.setDeleteAfterGoesOff(alarm.isDeleteAfterGoesOff());
