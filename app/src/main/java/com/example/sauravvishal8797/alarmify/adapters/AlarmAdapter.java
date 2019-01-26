@@ -84,7 +84,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialog.dismiss();
-                            deactivateAlarm(alarm.getTime());
+                            deactivateAlarm(alarm.getTime(), alarm.getHour(), alarm.getMinute());
                             deactivateAlert[0]=false;
                             viewHolder.button.setChecked(false);
                         }
@@ -100,17 +100,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
                                 }
                             });
                     dialog.show();
-                    AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-                    Calendar now = Calendar.getInstance();
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.set(Calendar.HOUR_OF_DAY, alarm.getHour());
-                    calendar.set(Calendar.MINUTE, alarm.getMinute());
-                    if(calendar.before(now)){
-                        calendar.add(Calendar.DAY_OF_MONTH, 1);
-                    }
-                    Intent intent = new Intent(context, AlarmReceiver.class);
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-                    alarmManager.cancel(pendingIntent);
                 } else if(b && !deactivateAlert[0]){
                     final AlertDialog dialog = AlertDialogHelper.getTextDialog(context, context.getResources().getString
                             (R.string.reactivate_alarm_dialog_title), context.getResources().getString(R.string.reactive_alarm_dialog_mssg));
@@ -119,19 +108,8 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialog.dismiss();
-                            reActivateAlarm(alarm.getTime());
+                            reActivateAlarm(alarm.getTime(), alarm.getHour(), alarm.getMinute());
                             viewHolder.button.setChecked(true);
-                            AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-                            Calendar now = Calendar.getInstance();
-                            Calendar calendar = Calendar.getInstance();
-                            calendar.set(Calendar.HOUR_OF_DAY, alarm.getHour());
-                            calendar.set(Calendar.MINUTE, alarm.getMinute());
-                            if(calendar.before(now)){
-                                calendar.add(Calendar.DAY_OF_MONTH, 1);
-                            }
-                            Intent intent = new Intent(context, AlarmReceiver.class);
-                            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-                            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                             deactivateAlert[0]=true;
                         }
                     });
@@ -151,14 +129,36 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
         viewHolder.periodText.setText(alarm.getPeriod());
     }
 
-    private void deactivateAlarm(String alarmTime){
+    private void deactivateAlarm(String alarmTime, int hour, int min){
         realmController = RealmController.with(activity);
         realmController.deactivateAlarm(alarmTime);
+        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Calendar now = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, min);
+        if(calendar.before(now)){
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        alarmManager.cancel(pendingIntent);
     }
 
-    private void reActivateAlarm(String alarmTime){
+    private void reActivateAlarm(String alarmTime, int hour, int min){
         realmController = RealmController.with(activity);
         realmController.reActivateAlarm(alarmTime);
+        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Calendar now = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, min);
+        if(calendar.before(now)){
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
     }
 
     @Override
