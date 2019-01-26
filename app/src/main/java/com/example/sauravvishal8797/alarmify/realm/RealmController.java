@@ -18,10 +18,21 @@ public class RealmController {
         realm = Realm.getDefaultInstance();
     }
 
+    public RealmController(Context context){
+        realm = Realm.getDefaultInstance();
+    }
+
     public static RealmController with(Activity activity){
 
         if(instance == null){
             instance = new RealmController(activity.getApplication());
+        }
+        return instance;
+    }
+
+    public static RealmController with(Context context){
+        if (instance == null) {
+            instance = new RealmController(context);
         }
         return instance;
     }

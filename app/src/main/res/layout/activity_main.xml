@@ -22,7 +22,7 @@
 
     <TextView
         android:id="@+id/Options_menu"
-        android:layout_width="wrap_content"
+        android:layout_width="15dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:textColor="@color/whitishtint"

@@ -1,7 +1,6 @@
 package com.example.sauravvishal8797.alarmify;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -27,7 +26,9 @@ import java.util.ArrayList;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class MainActivity extends AppCompatActivity {
+import static android.support.v7.widget.RecyclerView.*;
+
+public class MainActivity extends AppCompatActivity{
 
     /**
      * Declaring UI widgets
@@ -54,6 +55,12 @@ public class MainActivity extends AppCompatActivity {
     /** Manages UI elements */
     private void setUpUI(){
         alarmRecyclerView = findViewById(R.id.viewalarm);
+        alarmRecyclerView.addOnScrollListener(new OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
         parentlayout = findViewById(R.id.layout_id);
         emptyView = findViewById(R.id.no_alarm_view);
         bottomNavigationView = findViewById(R.id.bottombar);

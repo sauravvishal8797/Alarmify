@@ -11,12 +11,14 @@ import android.net.Uri;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
+import com.example.sauravvishal8797.alarmify.realm.RealmController;
+
 public class AlarmReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
 
-
-
+        RealmController controller = RealmController.with(context);
+        controller.deactivateAlarm(intent.getStringExtra("alarmtime"));
         Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         if (alarmUri == null) {
             alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -45,6 +47,4 @@ public class AlarmReceiver extends BroadcastReceiver{
         intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent1);
     }
-
-
 }

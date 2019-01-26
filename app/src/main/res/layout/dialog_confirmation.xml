@@ -21,10 +21,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/dialog_display_mssg"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="5dp"
         android:layout_marginBottom="20dp"
         android:textColor="@color/grey_shade"
         android:textSize="18dp"
-        android:text="Are you sure you want to deactivate this alarm? "/>
+        android:text="Are you sure you want to turn-off this alarm? "/>
 
 </LinearLayout>

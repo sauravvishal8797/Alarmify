@@ -314,6 +314,7 @@ public class AlarmDetail extends AppCompatActivity {
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
         Intent intent = new Intent(AlarmDetail.this, AlarmReceiver.class);
+        intent.putExtra("alarmtime", alarmTime);
         pendingIntent = PendingIntent.getBroadcast(AlarmDetail.this, 0, intent, 0);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         //Log.i("lalalala", time_picker.getC)
