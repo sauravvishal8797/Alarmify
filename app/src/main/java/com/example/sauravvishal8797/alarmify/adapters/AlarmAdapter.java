@@ -58,14 +58,16 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         StringBuilder builder = new StringBuilder();
         final Alarm alarm = list.get(i);
-        viewHolder.timeText.setText(alarm.getTime());
+        if(alarm.getTime().startsWith("0")&&alarm.getTime().substring(0, alarm.getTime().indexOf(":")).length()==3){
+            viewHolder.timeText.setText(alarm.getTime().substring(1));
+        } else {
+            viewHolder.timeText.setText(alarm.getTime());
+        }
         viewHolder.periodText.setText(alarm.getPeriod());
         viewHolder.daysText.setText(alarm.getDays());
         if(alarm.isActivated()){
-            Log.i("lalalalala", "lop");
             viewHolder.button.setChecked(true);
         } else {
-            Log.i("lllll", "loo");
             viewHolder.button.setChecked(false);
         }
         viewHolder.button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
