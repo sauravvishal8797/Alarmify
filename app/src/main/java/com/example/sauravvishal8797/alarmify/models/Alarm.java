@@ -9,11 +9,14 @@ public class Alarm extends RealmObject{
 
     @PrimaryKey
     private String time;
+    private int hour;
+    private int minute;
     private String period;
     private String repeatDays;
     private int snoozeTime;
     private String label;
     private boolean deleteAfterGoesOff;
+    private boolean isActivated;
 
     public void setTime(String time) {
         this.time = time;
@@ -21,6 +24,22 @@ public class Alarm extends RealmObject{
 
     public String getTime() {
         return time;
+    }
+
+    public void setHour(int hour) {
+        this.hour = hour;
+    }
+
+    public int getHour() {
+        return hour;
+    }
+
+    public void setMinute(int minute) {
+        this.minute = minute;
+    }
+
+    public int getMinute() {
+        return minute;
     }
 
     public void setPeriod(String period) {
@@ -61,5 +80,13 @@ public class Alarm extends RealmObject{
 
     public boolean isDeleteAfterGoesOff() {
         return deleteAfterGoesOff;
+    }
+
+    public void setActivated(boolean activated) {
+        isActivated = activated;
+    }
+
+    public boolean isActivated() {
+        return isActivated;
     }
 }

@@ -1,6 +1,7 @@
 package com.example.sauravvishal8797.alarmify;
 
 import android.app.ActivityManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -21,16 +22,21 @@ import com.jaeger.library.StatusBarUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Mathspuzzle extends AppCompatActivity {
 
     private boolean isFocus;
-    private boolean isPaused=false;
+    private static boolean isPaused=false;
+   // private boolean
     private Handler collapseNotificationHandler;
     private boolean isShutting=false;
     private ActivityManager mActivityManager;
@@ -39,20 +45,25 @@ public class Mathspuzzle extends AppCompatActivity {
 
     private TextView expText;
     private Button submitButton;
+    public static boolean repeat=false;
     private EditText ansEdttxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mathspuzzle);
+        setContentView(R.layout.maths_exp_view);
+        Intent intent = getIntent();
         statusBarTransparent();
         mActivityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
-        setUpUi();
-        Toast.makeText(getApplicationContext(), "Hey there", Toast.LENGTH_SHORT).show();
+       // setUpUi();
+        isPaused=false;
+        Toast.makeText(getApplicationContext(), "Hey there buddy", Toast.LENGTH_SHORT).show();
+        Log.i("papapa", "lalalopappaa");
     }
 
     private void statusBarTransparent(){
         StatusBarUtil.setTransparent(this);
+        StatusBarUtil.hideFakeStatusBarView(this);
     }
 
     private void setUpUi(){
@@ -199,7 +210,6 @@ public class Mathspuzzle extends AppCompatActivity {
                     if (!isFocus && !isPaused) {
                         collapseNotificationHandler.postDelayed(this, 100L);
                     }
-
                 }
             }, 300L);
         }
@@ -211,11 +221,12 @@ public class Mathspuzzle extends AppCompatActivity {
         onResume();
         isPaused=true;
         isShutting=true;
+        repeat=true;
 
         //Intent intent = new Intent(Mathspuzzle.this, Restart.class);
         //startActivity(intent);
 
-        new ResumeActivity().execute();
+       // new ResumeActivity().execute();
 
         Log.i("stopper", "pause");
     }
@@ -230,15 +241,8 @@ public class Mathspuzzle extends AppCompatActivity {
        // onPostResume();
         //onRestart();
         //isPaused=false;
-        Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                new ResumeActivity().execute();
-            }
-        };
-        handler.postDelayed(runnable, 500);
-        Log.i("stop", "onStop");
+       // new ResumeActivity().execute();
+       // repeat=true;
     }
 
 
@@ -249,50 +253,39 @@ public class Mathspuzzle extends AppCompatActivity {
        // new ResumeActivity().execute();
     }
 
+
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
+    protected void onResume() {
+        super.onResume();
         isPaused=false;
+        repeat=false;
+        Log.i("lalalalal", "lolo");
+        Log.i("papapapap", "lalalalallll");
     }
 
     class ResumeActivity extends AsyncTask<Void, Void, Void>{
 
         @Override
         protected Void doInBackground(Void... voids) {
-            if(isPaused){
-                Intent intent = new Intent(getApplicationContext(), Alarmservice.class);
-                intent.putExtra("Data", "martg");
-                startService(intent);
-            }
+
+            ScheduledExecutorService scheduler =
+                    Executors.newSingleThreadScheduledExecutor();
+
+            scheduler.scheduleAtFixedRate
+                    (new Runnable() {
+                        public void run() {
+                            if(isPaused&&repeat){
+                                Log.i("papapapapapa", "lalalalala");
+                                Intent intent = new Intent(getApplicationContext(), Alarmservice.class);
+                                intent.putExtra("Data", "kio");
+                                startService(intent);
+                            }
+                            // call service
+                        }
+                    }, 0, 2, TimeUnit.SECONDS);
             return null;
         }
     }
-
-   /* private static boolean isApplicationBroughtToBackground(final Activity activity) {
-        ActivityManager activityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
-        List tasks = null;
-        try {
-            tasks = activityManager.getRunningTasks(1);
-        } catch (SecurityException e) {
-            Log.e("lop", "Missing required permission: \"android.permission.GET_TASKS\".", e);
-            return false;
-        }
-        if (tasks != null && !tasks.isEmpty()) {
-            ComponentName topActivity = tasks.get(0).topActivity;
-            try {
-                PackageInfo pi = activity.getPackageManager().getPackageInfo(activity.getPackageName(), PackageManager.GET_ACTIVITIES);
-                for (ActivityInfo activityInfo : pi.activities) {
-                    if(topActivity.getClassName().equals(activityInfo.name)) {
-                        return false;
-                    }
-                }
-            } catch( PackageManager.NameNotFoundException e) {
-                Log.e("lop", "Package name not found: " + activity.getPackageName());
-                return false; // Never happens.
-            }
-        }
-        return true;
-    }*/
 
     String[] getActivePackagesCompat() {
         final List<ActivityManager.RunningTaskInfo> taskInfo = mActivityManager.getRunningTasks(1);

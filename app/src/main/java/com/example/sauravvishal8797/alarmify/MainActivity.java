@@ -2,7 +2,6 @@ package com.example.sauravvishal8797.alarmify;
 
 import android.content.Intent;
 import android.content.res.Resources;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -10,14 +9,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
@@ -31,27 +25,39 @@ import com.jaeger.library.StatusBarUtil;
 import java.util.ArrayList;
 
 import io.realm.Realm;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
+
+    /**
+     * Declaring UI widgets
+     */
 
     private RecyclerView alarmRecyclerView;
     private RelativeLayout parentlayout;
     private LinearLayout emptyView;
     private BottomNavigationView bottomNavigationView;
+    private TextView optionsMenuTextView;
+
     private RealmController realmController;
     private Realm realm;
-    private TextView optionsMenuTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        parentlayout = (RelativeLayout) findViewById(R.id.layout_id);
-        emptyView = (LinearLayout) findViewById(R.id.no_alarm_view);
-        alarmRecyclerView = (RecyclerView) findViewById(R.id.viewalarm);
-        optionsMenuTextView = (TextView) findViewById(R.id.Options_menu);
+       // ButterKnife.bind(this);
+        setUpUI();
+        statusBarTransparent();
+    }
+
+    /** Manages UI elements */
+    private void setUpUI(){
+        alarmRecyclerView = findViewById(R.id.viewalarm);
+        parentlayout = findViewById(R.id.layout_id);
+        emptyView = findViewById(R.id.no_alarm_view);
+        bottomNavigationView = findViewById(R.id.bottombar);
+        optionsMenuTextView = findViewById(R.id.Options_menu);
         optionsMenuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,15 +69,13 @@ public class MainActivity extends AppCompatActivity {
         if (getData().size()==0)
             emptyView.setVisibility(View.VISIBLE);
         else {
-           setAdapter();
+            setAdapter();
         }
-        //bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottombar);
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottombar);
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         bottomNavigationView.setSelectedItemId(R.id.all_alarms);
-        statusBarTransparent();
     }
 
+    /** Displays the popup menu, present at the top right corner of the Activity */
     private void showPopup(View v){
         PopupMenu popup = new PopupMenu(this, v);
         MenuInflater inflater = popup.getMenuInflater();
@@ -96,6 +100,10 @@ public class MainActivity extends AppCompatActivity {
         popup.show();
     }
 
+    /**
+     * To delete all the active/inactive alarm data from the database at once
+     * @return boolean variable to indicate the success or failure of the operation
+     */
     private boolean[] deleteAllAlarms(){
         final boolean[] deleted = {false};
         /*realmController = RealmController.with(this);
@@ -113,36 +121,36 @@ public class MainActivity extends AppCompatActivity {
         //setAdapter();
     }
 
+    /**
+     * Populates the adapter to display all the alarm data from the realm database
+     * Displays an emptyView with a message if no data is stored in the database
+     */
     private void setAdapter(){
         if(getData().size()==0){
             alarmRecyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
             optionsMenuTextView.setVisibility(View.GONE);
         }else {
+            emptyView.setVisibility(View.GONE);
+            alarmRecyclerView.setVisibility(View.VISIBLE);
             if(optionsMenuTextView.getVisibility() == View.GONE){
                 optionsMenuTextView.setVisibility(View.VISIBLE);
             }
-            AlarmAdapter alarmAdapter = new AlarmAdapter(getData(), this);
+            AlarmAdapter alarmAdapter = new AlarmAdapter(getData(), this, this);
             alarmRecyclerView.setAdapter(alarmAdapter);
         }
-    }
-
-    private int navigationMenu(){
-        Resources resources = getApplicationContext().getResources();
-        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            return resources.getDimensionPixelSize(resourceId);
-        }
-        return 0;
-
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
         bottomNavigationView.setSelectedItemId(R.id.all_alarms);
+        setAdapter();
     }
 
+    /**
+     * BottomNavigation view itemSelectListener
+     */
     private BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -168,18 +176,22 @@ public class MainActivity extends AppCompatActivity {
         setAdapter();
     }
 
-    //method to set the status bar transparent
+    /** Sets the theme of the status bar to transparent */
     private void statusBarTransparent(){
         StatusBarUtil.setTransparent(this);
     }
 
+    /**
+     *Retrieves all the alarm data from the database making use of
+     * getAlarms() from the RealmController class
+     * @return ArrayList of Alarm objects
+     */
     private ArrayList<Alarm> getData(){
         ArrayList<Alarm> allAlarms = new ArrayList<>();
         realmController = RealmController.with(this);
         realm = realmController.getRealm();
         RealmResults<Alarm> realmResults = realmController.getAlarms();
-        if (realmResults.size()==0)
-            return allAlarms;
+        if (realmResults.size()==0) return allAlarms;
         for(int i = 0; i < realmResults.size(); i++){
             allAlarms.add(realmResults.get(i));
         }

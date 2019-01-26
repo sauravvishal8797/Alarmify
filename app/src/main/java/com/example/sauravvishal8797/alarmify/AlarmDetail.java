@@ -326,6 +326,8 @@ public class AlarmDetail extends AppCompatActivity {
         realm = realmController.getRealm();
         Alarm newAlarm = new Alarm();
         newAlarm.setTime(alarmTime);
+        newAlarm.setHour(time_picker.getCurrentHour());
+        newAlarm.setMinute(time_picker.getCurrentMinute());
         if(repeatAlarmDays==null)
             newAlarm.setDays("No Repeat");
         else {
@@ -334,6 +336,7 @@ public class AlarmDetail extends AppCompatActivity {
             }
             newAlarm.setDays(builder.toString());
         }
+        newAlarm.setActivated(true);
         newAlarm.setSnoozeTime(snoozetime);
         newAlarm.setDeleteAfterGoesOff(deleteAfterGoesOff);
         newAlarm.setLabel(labelText);
