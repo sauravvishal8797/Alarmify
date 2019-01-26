@@ -67,6 +67,13 @@ public class RealmController {
         realm.commitTransaction();
     }
 
+    public void reActivateAlarm(String time){
+        Alarm alarm = realm.where(Alarm.class).equalTo("time", time).findFirst();
+        realm.beginTransaction();
+        alarm.setActivated(true);
+        realm.commitTransaction();
+    }
+
     //Retrieve all the active alarm details
     public RealmResults<Alarm> getAlarms(){
 

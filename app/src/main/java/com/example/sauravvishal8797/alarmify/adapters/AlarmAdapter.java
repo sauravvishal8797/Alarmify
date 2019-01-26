@@ -57,6 +57,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         StringBuilder builder = new StringBuilder();
+        final boolean[] deactivateAlert = {true};
         final Alarm alarm = list.get(i);
         if(alarm.getTime().startsWith("0")&&alarm.getTime().substring(0, alarm.getTime().indexOf(":")).length()==3){
             viewHolder.timeText.setText(alarm.getTime().substring(1));
@@ -67,13 +68,15 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
         viewHolder.daysText.setText(alarm.getDays());
         if(alarm.isActivated()){
             viewHolder.button.setChecked(true);
+            deactivateAlert[0]=true;
         } else {
             viewHolder.button.setChecked(false);
+            deactivateAlert[0]=false;
         }
         viewHolder.button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(!b){
+                if(!b && deactivateAlert[0]){
                     final AlertDialog dialog = AlertDialogHelper.getTextDialog(context, context.getResources().getString
                             (R.string.deactivate_alarm_dialog_title), context.getResources().getString(R.string.deactivate_alarm_dialog_mssg));
                     dialog.setButton(DialogInterface.BUTTON_POSITIVE, context.getResources().getString(R.string.dialog_postive_button).
@@ -82,6 +85,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialog.dismiss();
                             deactivateAlarm(alarm.getTime());
+                            deactivateAlert[0]=false;
                             viewHolder.button.setChecked(false);
                         }
                     });
@@ -91,6 +95,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     dialog.dismiss();
                                     viewHolder.button.setChecked(true);
+                                    deactivateAlert[0]=true;
 
                                 }
                             });
@@ -106,18 +111,40 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
                     Intent intent = new Intent(context, AlarmReceiver.class);
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
                     alarmManager.cancel(pendingIntent);
-                } else {
-                    AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-                    Calendar now = Calendar.getInstance();
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.set(Calendar.HOUR_OF_DAY, alarm.getHour());
-                    calendar.set(Calendar.MINUTE, alarm.getMinute());
-                    if(calendar.before(now)){
-                        calendar.add(Calendar.DAY_OF_MONTH, 1);
-                    }
-                    Intent intent = new Intent(context, AlarmReceiver.class);
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-                    alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                } else if(b && !deactivateAlert[0]){
+                    final AlertDialog dialog = AlertDialogHelper.getTextDialog(context, context.getResources().getString
+                            (R.string.reactivate_alarm_dialog_title), context.getResources().getString(R.string.reactive_alarm_dialog_mssg));
+                    dialog.setButton(DialogInterface.BUTTON_POSITIVE, context.getResources().getString(R.string.dialog_postive_button).
+                            toUpperCase(), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialog.dismiss();
+                            reActivateAlarm(alarm.getTime());
+                            viewHolder.button.setChecked(true);
+                            AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+                            Calendar now = Calendar.getInstance();
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.set(Calendar.HOUR_OF_DAY, alarm.getHour());
+                            calendar.set(Calendar.MINUTE, alarm.getMinute());
+                            if(calendar.before(now)){
+                                calendar.add(Calendar.DAY_OF_MONTH, 1);
+                            }
+                            Intent intent = new Intent(context, AlarmReceiver.class);
+                            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+                            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                            deactivateAlert[0]=true;
+                        }
+                    });
+                    dialog.setButton(DialogInterface.BUTTON_NEGATIVE, context.getResources().getString(R.string.dialog_negative_mssg).toUpperCase(),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialog.dismiss();
+                                    viewHolder.button.setChecked(false);
+                                    deactivateAlert[0] =false;
+                                }
+                            });
+                    dialog.show();
                 }
             }
         });
@@ -127,6 +154,11 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
     private void deactivateAlarm(String alarmTime){
         realmController = RealmController.with(activity);
         realmController.deactivateAlarm(alarmTime);
+    }
+
+    private void reActivateAlarm(String alarmTime){
+        realmController = RealmController.with(activity);
+        realmController.reActivateAlarm(alarmTime);
     }
 
     @Override
