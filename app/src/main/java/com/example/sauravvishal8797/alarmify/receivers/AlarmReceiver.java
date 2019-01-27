@@ -16,7 +16,11 @@ public class AlarmReceiver extends BroadcastReceiver{
     public void onReceive(Context context, Intent intent) {
 
         RealmController controller = RealmController.with(context);
-        controller.deactivateAlarm(intent.getStringExtra("alarmtime"));
+        if(intent.getBooleanExtra("deleteAfterGoingOff", false)){
+            controller.deleteAlarm(intent.getStringExtra("alarmtime"), intent.getStringExtra("period"));
+        } else {
+            controller.deactivateAlarm(intent.getStringExtra("alarmtime"));
+        }
         Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         if (alarmUri == null) {
             alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

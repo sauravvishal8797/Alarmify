@@ -3,6 +3,7 @@ package com.example.sauravvishal8797.alarmify.realm;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import com.example.sauravvishal8797.alarmify.models.Alarm;
 
@@ -30,6 +31,7 @@ public class RealmController {
         return instance;
     }
 
+    /** Returns realmController object */
     public static RealmController with(Context context){
         if (instance == null) {
             instance = new RealmController(context);
@@ -37,17 +39,17 @@ public class RealmController {
         return instance;
     }
 
+    /** Instantiates a realmController instance */
     public static RealmController getInstance(){
         return instance;
     }
 
+    /** Retrieves the realm database instance */
     public Realm getRealm() {
         return realm;
     }
 
-    //Refresh the Realm instance
-
-    //Clear all the alarms from the database
+    /** Clears entire data at once from the realm database */
     public void clearAll(){
         realm.beginTransaction();
         realm.executeTransaction(new Realm.Transaction() {
@@ -60,13 +62,20 @@ public class RealmController {
         realm.commitTransaction();
     }
 
+    /** Deactivates an alarm by setting the setActivated boolean variable to true */
     public void deactivateAlarm(String time){
         Alarm alarm = realm.where(Alarm.class).equalTo("time", time).findFirst();
-        realm.beginTransaction();
-        alarm.setActivated(false);
-        realm.commitTransaction();
+        Log.i("sosososososos", alarm.getTime()+"   "+time);
+        if(alarm!=null){
+            realm.beginTransaction();
+            alarm.setActivated(false);
+            realm.commitTransaction();
+        } else {
+            Log.i("nullmessage", "alarm is null");
+        }
     }
 
+    /** Reactivates a deactivated alarm */
     public void reActivateAlarm(String time){
         Alarm alarm = realm.where(Alarm.class).equalTo("time", time).findFirst();
         realm.beginTransaction();
@@ -74,13 +83,14 @@ public class RealmController {
         realm.commitTransaction();
     }
 
-    //Retrieve all the active alarm details
+    /** Retrieves all the activated/deactivated alarm data from the database
+     * @return list of all the alarm realm objects stored in the database
+     * */
     public RealmResults<Alarm> getAlarms(){
-
         return realm.where(Alarm.class).findAll();
     }
 
-    //Add new alarm details to the database
+    /** Adds new activated alarm details to the database */
     public void addAlarm(Alarm alarm){
         realm.beginTransaction();
         Alarm alarm1 = realm.createObject(Alarm.class, alarm.getTime());
@@ -94,19 +104,22 @@ public class RealmController {
         realm.commitTransaction();
     }
 
-    //Delete an alarm from the database
-    public void deleteAlarm(final String time){
+    /** Deletes particular alarm data from the database */
+    public void deleteAlarm(final String time, final String period){
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 RealmResults<Alarm> realmResults = realm.where(Alarm.class).equalTo("time", time).findAll();
-                realmResults.deleteAllFromRealm();
+                if(realmResults.get(0).getPeriod().equals(period)||realmResults.get(1).getPeriod().equals(period))
+                    realmResults.deleteAllFromRealm();
             }
         });
     }
 
-
-    /** Checks if an alarm is already activated for a particular time */
+    /** Checks if an alarm is already activated for a particular time
+     * @return boolean array with first element determining whether the alarm already exists in the database
+     * and second element determines if the alarm is in activated state
+     * */
     public boolean[] checkIfAlarmExists(final String time, final String period){
         final boolean[] exists = {false, false};
         realm.executeTransaction(new Realm.Transaction() {
