@@ -59,6 +59,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
         StringBuilder builder = new StringBuilder();
         final boolean[] deactivateAlert = {true};
         final Alarm alarm = list.get(i);
+        Log.i("vcvcvcvc", alarm.getTime());
         if(alarm.getTime().startsWith("0")&&alarm.getTime().substring(0, alarm.getTime().indexOf(":")).length()==3){
             viewHolder.timeText.setText(alarm.getTime().substring(1));
         } else {

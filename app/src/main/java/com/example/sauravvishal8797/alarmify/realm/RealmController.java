@@ -104,4 +104,26 @@ public class RealmController {
             }
         });
     }
+
+
+    /** Checks if an alarm is already activated for a particular time */
+    public boolean[] checkIfAlarmExists(final String time, final String period){
+        final boolean[] exists = {false, false};
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RealmResults<Alarm> results = realm.where(Alarm.class).equalTo("time", time).findAll();
+                if(results.size() > 0){
+                    if(results.get(0).getPeriod().equals(period)&&results.get(0).isActivated()){
+                        exists[0] =true;
+                        exists[1] = true;
+                    } else if(results.get(0).getPeriod().equals(period)&&!results.get(0).isActivated()) {
+                        exists[0] = true;
+                        exists[0] = false;
+                    }
+                }
+            }
+        });
+        return exists;
+    }
 }

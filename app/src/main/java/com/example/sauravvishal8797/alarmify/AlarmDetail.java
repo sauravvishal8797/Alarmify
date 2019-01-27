@@ -31,6 +31,7 @@ import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.example.sauravvishal8797.alarmify.adapters.AlarmAdapter;
 import com.example.sauravvishal8797.alarmify.adapters.repeatAlarmAdapter;
@@ -72,6 +73,7 @@ public class AlarmDetail extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarm_detail);
+        realmController = RealmController.with(this);
         time_picker = (TimePicker) findViewById(R.id.timepicker22);
         time_picker.setIs24HourView(false);
         //setButton = (SwitchCompat) findViewById(R.id.set)
@@ -303,27 +305,36 @@ public class AlarmDetail extends AppCompatActivity {
     }
 
     private void setAlarm(){
-        creatingNewAlarmObject();
-        alarmManager = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-        Calendar now = Calendar.getInstance();
-        Log.i("lalalala", String.valueOf(now.get(Calendar.HOUR_OF_DAY)) +" "+String.valueOf(now.get(Calendar.MINUTE)));
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, time_picker.getCurrentHour());
-        calendar.set(Calendar.MINUTE, time_picker.getCurrentMinute());
-        if(calendar.before(now)){
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        boolean[] exists = checkIfAlreadyExists();
+        if (exists[0]&&exists[1]) {
+            Toast.makeText(this, "This Alarm already exists", Toast.LENGTH_SHORT).show();
+        } else if (exists[0]&&!exists[1]) {
+            realmController.reActivateAlarm(alarmTime);
+        } else if (!exists[0]) {
+            creatingNewAlarmObject();
+            alarmManager = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+            Calendar now = Calendar.getInstance();
+            Log.i("lalalala", String.valueOf(now.get(Calendar.HOUR_OF_DAY)) +" "+String.valueOf(now.get(Calendar.MINUTE)));
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, time_picker.getCurrentHour());
+            calendar.set(Calendar.MINUTE, time_picker.getCurrentMinute());
+            if(calendar.before(now)){
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
+            }
+            Intent intent = new Intent(AlarmDetail.this, AlarmReceiver.class);
+            intent.putExtra("alarmtime", alarmTime);
+            pendingIntent = PendingIntent.getBroadcast(AlarmDetail.this, 0, intent, 0);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }
-        Intent intent = new Intent(AlarmDetail.this, AlarmReceiver.class);
-        intent.putExtra("alarmtime", alarmTime);
-        pendingIntent = PendingIntent.getBroadcast(AlarmDetail.this, 0, intent, 0);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-        //Log.i("lalalala", time_picker.getC)
         finish();
+    }
+
+    private boolean[] checkIfAlreadyExists(){
+        return realmController.checkIfAlarmExists(alarmTime, period);
     }
 
     private void creatingNewAlarmObject(){
         StringBuilder builder = new StringBuilder();
-        realmController = RealmController.with(this);
         realm = realmController.getRealm();
         Alarm newAlarm = new Alarm();
         newAlarm.setTime(alarmTime);

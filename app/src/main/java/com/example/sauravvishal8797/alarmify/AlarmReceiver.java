@@ -27,19 +27,9 @@ public class AlarmReceiver extends BroadcastReceiver{
        // audioManager.setStreamVolume(AudioManager.STREAM_ALARM, 20, 1);
         audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
         MediaPlayer mediaPlayer = MediaPlayer.create(context, alarmUri);
+        mediaPlayer.setLooping(true);
         mediaPlayer.start();
         //mediaPlayer.
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                int c=3;
-                while (c>0){
-                    mediaPlayer.seekTo(0);
-                    mediaPlayer.start();
-                    c--;
-                }
-            }
-        });
 
         Intent intent1 = new Intent(context, Mathspuzzle.class);
         //intent1.putExtras(intent, );

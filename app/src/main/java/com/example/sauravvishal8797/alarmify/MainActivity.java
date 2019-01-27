@@ -1,5 +1,8 @@
 package com.example.sauravvishal8797.alarmify;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -22,6 +25,7 @@ import com.example.sauravvishal8797.alarmify.realm.RealmController;
 import com.jaeger.library.StatusBarUtil;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -93,6 +97,7 @@ public class MainActivity extends AppCompatActivity{
                     case R.id.delete_all_alarms:
                         Log.i("stephanie", "poi");
                         if(deleteAllAlarms()[0]){
+                            disableAllActiveAlarms();
                             setAdapter();
                             Log.i("chuitya", "semantic");
                         }else {
@@ -105,6 +110,14 @@ public class MainActivity extends AppCompatActivity{
         });
         inflater.inflate(R.menu.mainactivity_options_menu, popup.getMenu());
         popup.show();
+    }
+
+    /**Disables all the active alarms */
+    private void disableAllActiveAlarms(){
+        AlarmManager alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+        alarmManager.cancel(pendingIntent);
     }
 
     /**
