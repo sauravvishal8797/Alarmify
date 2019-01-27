@@ -10,17 +10,13 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
-import android.text.Layout;
-import android.text.method.CharacterPickerDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.sauravvishal8797.alarmify.AlarmDetail;
 import com.example.sauravvishal8797.alarmify.AlarmReceiver;
 import com.example.sauravvishal8797.alarmify.AlertDialogHelper;
 import com.example.sauravvishal8797.alarmify.R;
@@ -67,6 +63,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
         }
         viewHolder.periodText.setText(alarm.getPeriod());
         viewHolder.daysText.setText(alarm.getDays());
+        viewHolder.button.setOnCheckedChangeListener(null);
         if(alarm.isActivated()){
             viewHolder.button.setChecked(true);
             deactivateAlert[0]=true;
@@ -173,6 +170,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
         private TextView periodText;
         private SwitchCompat button;
         private TextView daysText;
+        //private TextView doysText;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
