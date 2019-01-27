@@ -17,8 +17,8 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.example.sauravvishal8797.alarmify.AlarmReceiver;
-import com.example.sauravvishal8797.alarmify.AlertDialogHelper;
+import com.example.sauravvishal8797.alarmify.receivers.AlarmReceiver;
+import com.example.sauravvishal8797.alarmify.helpers.AlertDialogHelper;
 import com.example.sauravvishal8797.alarmify.R;
 import com.example.sauravvishal8797.alarmify.models.Alarm;
 import com.example.sauravvishal8797.alarmify.realm.RealmController;

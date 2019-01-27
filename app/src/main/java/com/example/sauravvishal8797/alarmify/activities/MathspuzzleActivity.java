@@ -1,7 +1,6 @@
-package com.example.sauravvishal8797.alarmify;
+package com.example.sauravvishal8797.alarmify.activities;
 
 import android.app.ActivityManager;
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -18,11 +17,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sauravvishal8797.alarmify.services.Alarmservice;
+import com.example.sauravvishal8797.alarmify.R;
 import com.jaeger.library.StatusBarUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -32,7 +32,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class Mathspuzzle extends AppCompatActivity {
+public class MathspuzzleActivity extends AppCompatActivity {
 
     private boolean isFocus;
     private static boolean isPaused=false;
@@ -223,7 +223,7 @@ public class Mathspuzzle extends AppCompatActivity {
         isShutting=true;
         repeat=true;
 
-        //Intent intent = new Intent(Mathspuzzle.this, Restart.class);
+        //Intent intent = new Intent(MathspuzzleActivity.this, Restart.class);
         //startActivity(intent);
 
        // new ResumeActivity().execute();

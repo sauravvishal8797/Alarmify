@@ -1,16 +1,14 @@
-package com.example.sauravvishal8797.alarmify;
+package com.example.sauravvishal8797.alarmify.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.support.v4.content.WakefulBroadcastReceiver;
-import android.util.Log;
 
+import com.example.sauravvishal8797.alarmify.activities.MathspuzzleActivity;
 import com.example.sauravvishal8797.alarmify.realm.RealmController;
 
 public class AlarmReceiver extends BroadcastReceiver{
@@ -31,7 +29,7 @@ public class AlarmReceiver extends BroadcastReceiver{
         mediaPlayer.start();
         //mediaPlayer.
 
-        Intent intent1 = new Intent(context, Mathspuzzle.class);
+        Intent intent1 = new Intent(context, MathspuzzleActivity.class);
         //intent1.putExtras(intent, );
 
         intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

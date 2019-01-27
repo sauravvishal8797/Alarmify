@@ -1,10 +1,12 @@
-package com.example.sauravvishal8797.alarmify;
+package com.example.sauravvishal8797.alarmify.helpers;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
+import com.example.sauravvishal8797.alarmify.R;
 
 public class AlertDialogHelper {
 

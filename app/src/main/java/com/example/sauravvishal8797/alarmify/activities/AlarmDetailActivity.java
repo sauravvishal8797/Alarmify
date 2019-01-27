@@ -1,25 +1,20 @@
-package com.example.sauravvishal8797.alarmify;
+package com.example.sauravvishal8797.alarmify.activities;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Paint;
 import android.os.Build;
-import android.print.PrinterId;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,13 +22,13 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
-import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.sauravvishal8797.alarmify.adapters.AlarmAdapter;
+import com.example.sauravvishal8797.alarmify.receivers.AlarmReceiver;
+import com.example.sauravvishal8797.alarmify.R;
 import com.example.sauravvishal8797.alarmify.adapters.repeatAlarmAdapter;
 import com.example.sauravvishal8797.alarmify.models.Alarm;
 import com.example.sauravvishal8797.alarmify.realm.RealmController;
@@ -44,7 +39,7 @@ import java.util.Calendar;
 
 import io.realm.Realm;
 
-public class AlarmDetail extends AppCompatActivity {
+public class AlarmDetailActivity extends AppCompatActivity {
 
     private ImageView setButton;
     private ImageView abortButton;
@@ -225,7 +220,7 @@ public class AlarmDetail extends AppCompatActivity {
 
     private void showDialog(){
         final StringBuilder builder2 = new StringBuilder();
-        View dialogview = this.getLayoutInflater().from(AlarmDetail.this).inflate(R.layout.repeat_alarm_dialog, null);
+        View dialogview = this.getLayoutInflater().from(AlarmDetailActivity.this).inflate(R.layout.repeat_alarm_dialog, null);
         dialogview.setBackgroundColor(getResources().getColor(R.color.customPrimary));
         RecyclerView dayList = (RecyclerView) dialogview.findViewById(R.id.repeat_option_dialog);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -321,9 +316,9 @@ public class AlarmDetail extends AppCompatActivity {
             if(calendar.before(now)){
                 calendar.add(Calendar.DAY_OF_MONTH, 1);
             }
-            Intent intent = new Intent(AlarmDetail.this, AlarmReceiver.class);
+            Intent intent = new Intent(AlarmDetailActivity.this, AlarmReceiver.class);
             intent.putExtra("alarmtime", alarmTime);
-            pendingIntent = PendingIntent.getBroadcast(AlarmDetail.this, 0, intent, 0);
+            pendingIntent = PendingIntent.getBroadcast(AlarmDetailActivity.this, 0, intent, 0);
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }
         finish();

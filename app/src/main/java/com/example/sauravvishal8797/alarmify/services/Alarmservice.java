@@ -1,13 +1,10 @@
-package com.example.sauravvishal8797.alarmify;
+package com.example.sauravvishal8797.alarmify.services;
 
-import android.app.ActivityManager;
 import android.app.IntentService;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-import java.util.List;
+import com.example.sauravvishal8797.alarmify.activities.MathspuzzleActivity;
 
 public class Alarmservice extends IntentService {
 
@@ -23,9 +20,9 @@ public class Alarmservice extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
 
         String value = intent.getStringExtra("Data");
-        //Mathspuzzle.repeat=false;
+        //MathspuzzleActivity.repeat=false;
 
-        Intent intent1 = new Intent(getApplicationContext(), Mathspuzzle.class);
+        Intent intent1 = new Intent(getApplicationContext(), MathspuzzleActivity.class);
         //intent1.putExtra("putPauseFalse", "false");
         intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent1);

@@ -1,4 +1,4 @@
-package com.example.sauravvishal8797.alarmify;
+package com.example.sauravvishal8797.alarmify.activities;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -19,13 +19,14 @@ import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.sauravvishal8797.alarmify.R;
 import com.example.sauravvishal8797.alarmify.adapters.AlarmAdapter;
 import com.example.sauravvishal8797.alarmify.models.Alarm;
 import com.example.sauravvishal8797.alarmify.realm.RealmController;
+import com.example.sauravvishal8797.alarmify.receivers.AlarmReceiver;
 import com.jaeger.library.StatusBarUtil;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -176,7 +177,7 @@ public class MainActivity extends AppCompatActivity{
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
             switch (menuItem.getItemId()){
                 case R.id.create_alarm:
-                    Intent intent = new Intent(MainActivity.this, AlarmDetail.class);
+                    Intent intent = new Intent(MainActivity.this, AlarmDetailActivity.class);
                     startActivity(intent);
                     return true;
 
