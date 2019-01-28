@@ -9,4 +9,5 @@
     <string name="reactive_alarm_dialog_mssg">Are you sure you want to reactivate this alarm?</string>
     <string name="dialog_postive_button">OK</string>
     <string name="dialog_negative_mssg">CANCEL</string>
+    <string name="alarm_label_text_message">Its time to get reeady for office!</string>
 </resources>

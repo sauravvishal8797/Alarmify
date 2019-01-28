@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/customPrimary"
+    android:id="@+id/dismiss_view_layout">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:id="@+id/time_current"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="204dp"
+        android:gravity="center_horizontal"
+        android:text="It's 6:15 AM"
+        android:textColor="@color/grey_shade"
+        android:textSize="30dp"
+        android:textStyle="bold" />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/dismiss_button"
+        android:background="@color/colorAccent"
+        android:text="DISMISS ALARM"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:textColor="@color/customPrimary"
+        android:layout_centerInParent="true"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/alarm_label_message"
+        android:text="@string/alarm_label_text_message"
+        android:layout_below="@id/dismiss_button"
+        android:textColor="@color/grey_shade"
+        android:textSize="19dp"
+        android:layout_margin="15dp"
+        android:gravity="center_horizontal"/>
+
+</RelativeLayout>

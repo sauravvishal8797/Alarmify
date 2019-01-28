@@ -15,6 +15,18 @@ public class AlarmReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        AudioManager audioManager = (AudioManager) context.getSystemService(context.AUDIO_SERVICE);
+        //
+        if(audioManager.isMusicActive()){
+
+        }
+        Intent intent1 = new Intent(context, MathspuzzleActivity.class);
+        intent.putExtra("stop", "normal");
+        //intent1.putExtras(intent, );
+
+        intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent1);
+
         RealmController controller = RealmController.with(context);
         if(intent.getBooleanExtra("deleteAfterGoingOff", false)){
             controller.deleteAlarm(intent.getStringExtra("alarmtime"), intent.getStringExtra("period"));
@@ -25,18 +37,12 @@ public class AlarmReceiver extends BroadcastReceiver{
         if (alarmUri == null) {
             alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         }
-        AudioManager audioManager = (AudioManager) context.getSystemService(context.AUDIO_SERVICE);
+        //AudioManager audioManager = (AudioManager) context.getSystemService(context.AUDIO_SERVICE);
        // audioManager.setStreamVolume(AudioManager.STREAM_ALARM, 20, 1);
         audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
         MediaPlayer mediaPlayer = MediaPlayer.create(context, alarmUri);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
         //mediaPlayer.
-
-        Intent intent1 = new Intent(context, MathspuzzleActivity.class);
-        //intent1.putExtras(intent, );
-
-        intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent1);
     }
 }

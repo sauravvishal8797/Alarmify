@@ -14,6 +14,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,8 +25,6 @@ import com.jaeger.library.StatusBarUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -47,12 +47,20 @@ public class MathspuzzleActivity extends AppCompatActivity {
     private Button submitButton;
     public static boolean repeat=false;
     private EditText ansEdttxt;
+    private String typeDismiss;
+
+    private LinearLayout linearLayout;
+    private RelativeLayout dismiss_layout;
+    private Button dismiss_button;
+    private TextView dismiss_time;
+    private TextView dismiss_message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.maths_exp_view);
         Intent intent = getIntent();
+        typeDismiss = intent.getStringExtra("stop");
         statusBarTransparent();
         mActivityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
        // setUpUi();
@@ -67,32 +75,26 @@ public class MathspuzzleActivity extends AppCompatActivity {
     }
 
     private void setUpUi(){
-        final int[] count = {0};
-        final int[] ans = {0};
-        expText = (TextView) findViewById(R.id.math_exp);
-        final String[] result = generateExpression();
-        expText.setText(result[0]);
-        ans[0] =Integer.valueOf(result[1]);
-        ansEdttxt = (EditText) findViewById(R.id.ans_edittext);
-        submitButton = (Button) findViewById(R.id.submit_button);
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int a = checkAnswer(ans[0]);
-                if(!ansEdttxt.getText().toString().isEmpty() && count[0]<=3){
-                    String[] res = generateExpression();
-                    if(ansEdttxt.getText().toString().equals(ans[0])){
-                        ansEdttxt.getText().clear();
-                        //ansEdttxt.setText(res[0]);
-                        expText.setText(res[0]);
-                        ans[0] = ans[0] + (Integer.valueOf(res[1]) - ans[0]);
-                        count[0]++;
-                    }
-                }else {
-                    finish();
+        linearLayout = findViewById(R.id.calculator_layout);
+        if(typeDismiss.equals("normal")){
+            dismiss_layout = findViewById(R.id.layout_dismiss);
+            linearLayout.setVisibility(View.GONE);
+            dismiss_layout.setVisibility(View.VISIBLE);
+            dismiss_button = findViewById(R.id.dismiss_button);
+            dismiss_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
                 }
-            }
-        });
+            });
+            dismiss_time = findViewById(R.id.time_current);
+            dismiss_message = findViewById(R.id.alarm_label_message);
+        } else {
+            expText = (TextView) findViewById(R.id.math_exp);
+            final String[] result = generateExpression();
+            expText.setText(result[0]);
+            ansEdttxt = (EditText) findViewById(R.id.ans_edittext);
+        }
     }
 
     public int checkAnswer(int a){
@@ -285,24 +287,5 @@ public class MathspuzzleActivity extends AppCompatActivity {
                     }, 0, 2, TimeUnit.SECONDS);
             return null;
         }
-    }
-
-    String[] getActivePackagesCompat() {
-        final List<ActivityManager.RunningTaskInfo> taskInfo = mActivityManager.getRunningTasks(1);
-        final ComponentName componentName = taskInfo.get(0).topActivity;
-        final String[] activePackages = new String[1];
-        activePackages[0] = componentName.getPackageName();
-        return activePackages;
-    }
-
-    String[] getActivePackages() {
-        final Set<String> activePackages = new HashSet<String>();
-        final List<ActivityManager.RunningAppProcessInfo> processInfos = mActivityManager.getRunningAppProcesses();
-        for (ActivityManager.RunningAppProcessInfo processInfo : processInfos) {
-            if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-                activePackages.addAll(Arrays.asList(processInfo.pkgList));
-            }
-        }
-        return activePackages.toArray(new String[activePackages.size()]);
     }
 }

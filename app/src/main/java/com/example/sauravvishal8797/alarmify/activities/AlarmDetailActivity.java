@@ -8,6 +8,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Paint;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -61,6 +64,8 @@ public class AlarmDetailActivity extends AppCompatActivity {
     private String period;
     private RealmController realmController;
 
+    private static MediaPlayer mediaPlayer = null;
+
     private TimePicker time_picker;
     private Resources system;
 
@@ -71,6 +76,11 @@ public class AlarmDetailActivity extends AppCompatActivity {
         realmController = RealmController.with(this);
         time_picker = (TimePicker) findViewById(R.id.timepicker22);
         time_picker.setIs24HourView(false);
+        Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        if (alarmUri == null) {
+            alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        }
+        mediaPlayer = MediaPlayer.create(this, alarmUri);
         //setButton = (SwitchCompat) findViewById(R.id.set)
         setUI();
         statusBarTransparent();
@@ -171,6 +181,10 @@ public class AlarmDetailActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b){
                     showSnoozeDialog();
+                } else {
+                    if (snoozetime > 0){
+                        snoozetime = 0;
+                    }
                 }
             }
         });
@@ -276,12 +290,15 @@ public class AlarmDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialog.dismiss();
+                snooze.setChecked(true);
             }
         });
         dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL".toUpperCase(), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialog.dismiss();
+                snooze.setChecked(false);
+                snoozetime=0;
             }
         });
         dialog.show();
@@ -320,7 +337,8 @@ public class AlarmDetailActivity extends AppCompatActivity {
             intent.putExtra("alarmtime", alarmTime);
             intent.putExtra("deleteAfterGoingOff", deleteAfterGoesOff);
             intent.putExtra("period", period);
-            pendingIntent = PendingIntent.getBroadcast(AlarmDetailActivity.this, 0, intent, 0);
+            final int _id = (int) System.currentTimeMillis();
+            pendingIntent = PendingIntent.getBroadcast(AlarmDetailActivity.this, _id, intent, PendingIntent.FLAG_ONE_SHOT);
             Log.i("fafafafafa", String.valueOf(time_picker.getCurrentHour())+String.valueOf(time_picker.getCurrentMinute()));
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }
@@ -380,7 +398,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
 
     private void set_numberpicker_text_colour(NumberPicker number_picker){
         final int count = number_picker.getChildCount();
-        final int color = getResources().getColor(R.color.white);
+        final int color = getResources().getColor(R.color.grey_shade);
 
         for(int i = 0; i < count; i++){
             View child = number_picker.getChildAt(i);
