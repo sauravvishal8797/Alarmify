@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <header android:fragment="com.example.sauravvishal8797.alarmify.activities.MySettingsActivity$GeneralPreferences"
+        android:title="General"/>
+
+</preference-headers>

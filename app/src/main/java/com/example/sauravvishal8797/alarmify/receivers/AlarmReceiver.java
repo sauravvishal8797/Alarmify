@@ -8,7 +8,7 @@ import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 
-import com.example.sauravvishal8797.alarmify.activities.MathspuzzleActivity;
+import com.example.sauravvishal8797.alarmify.activities.DismissAlarmActivity;
 import com.example.sauravvishal8797.alarmify.realm.RealmController;
 
 public class AlarmReceiver extends BroadcastReceiver{
@@ -17,13 +17,13 @@ public class AlarmReceiver extends BroadcastReceiver{
 
         AudioManager audioManager = (AudioManager) context.getSystemService(context.AUDIO_SERVICE);
         //
-        if(audioManager.isMusicActive()){
-
-        }
-        Intent intent1 = new Intent(context, MathspuzzleActivity.class);
-        intent.putExtra("stop", "normal");
+        Intent intent1 = new Intent(context, DismissAlarmActivity.class);
+        intent1.putExtra("stop", "normal");
         //intent1.putExtras(intent, );
-
+        intent1.putExtra("time", intent.getStringExtra("alarmtime"));
+        intent1.putExtra("period", intent.getStringExtra("period"));
+        intent1.putExtra("hour", intent.getIntExtra("hour", 0));
+        intent1.putExtra("minutes", intent.getIntExtra("minutes", 0));
         intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent1);
 

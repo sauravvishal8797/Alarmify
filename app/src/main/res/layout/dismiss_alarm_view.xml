@@ -34,6 +34,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/alarm_label_message"
         android:text="@string/alarm_label_text_message"
+        android:textStyle="bold"
         android:layout_below="@id/dismiss_button"
         android:textColor="@color/grey_shade"
         android:textSize="19dp"

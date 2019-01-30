@@ -252,9 +252,4 @@
         android:layout_marginTop="15dp"
         android:text="It's time to get ready for office!"/>
 
-    <include
-        layout="@layout/dismiss_alarm_view"
-        android:id="@+id/layout_dismiss"
-        android:visibility="gone"/>
-
 </RelativeLayout>

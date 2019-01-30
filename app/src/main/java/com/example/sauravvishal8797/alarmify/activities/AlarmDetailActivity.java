@@ -64,8 +64,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
     private String period;
     private RealmController realmController;
 
-    private static MediaPlayer mediaPlayer = null;
-
     private TimePicker time_picker;
     private Resources system;
 
@@ -76,11 +74,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
         realmController = RealmController.with(this);
         time_picker = (TimePicker) findViewById(R.id.timepicker22);
         time_picker.setIs24HourView(false);
-        Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        if (alarmUri == null) {
-            alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        }
-        mediaPlayer = MediaPlayer.create(this, alarmUri);
         //setButton = (SwitchCompat) findViewById(R.id.set)
         setUI();
         statusBarTransparent();
@@ -316,6 +309,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
         return days;
     }
 
+    /** Sets an alarm using the AlarmManager class in Android */
     private void setAlarm(){
         boolean[] exists = checkIfAlreadyExists();
         if (exists[0]&&exists[1]) {
@@ -335,20 +329,26 @@ public class AlarmDetailActivity extends AppCompatActivity {
             }
             Intent intent = new Intent(AlarmDetailActivity.this, AlarmReceiver.class);
             intent.putExtra("alarmtime", alarmTime);
+            intent.putExtra("hour", time_picker.getCurrentHour());
+            intent.putExtra("minutes", time_picker.getCurrentMinute());
             intent.putExtra("deleteAfterGoingOff", deleteAfterGoesOff);
             intent.putExtra("period", period);
             final int _id = (int) System.currentTimeMillis();
-            pendingIntent = PendingIntent.getBroadcast(AlarmDetailActivity.this, _id, intent, PendingIntent.FLAG_ONE_SHOT);
+            pendingIntent = PendingIntent.getBroadcast(AlarmDetailActivity.this, _id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             Log.i("fafafafafa", String.valueOf(time_picker.getCurrentHour())+String.valueOf(time_picker.getCurrentMinute()));
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }
         finish();
     }
 
+    /** Checks if an alarm already exists, can be in either state active or inactive
+     * @return returns a boolean array, first element determines whether or not the alarm object exists in the database
+     * second boolean element gives the state of the alarm object if it exists i.e active or inactive */
     private boolean[] checkIfAlreadyExists(){
         return realmController.checkIfAlarmExists(alarmTime, period);
     }
 
+    /** Creates a new alarm object for storing in the local database */
     private void creatingNewAlarmObject(){
         StringBuilder builder = new StringBuilder();
         realm = realmController.getRealm();
@@ -372,7 +372,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
         realmController.addAlarm(newAlarm);
     }
 
-    //method to set the status bar transparent
+    /** Sets the status bar transparent */
     private void statusBarTransparent(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window w = getWindow(); // in Activity's onCreate() for instance

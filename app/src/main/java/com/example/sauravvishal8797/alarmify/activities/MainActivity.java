@@ -187,6 +187,8 @@ public class MainActivity extends AppCompatActivity{
                     return true;
 
                 case R.id.settings:
+                    Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivity(settingsIntent);
                     return true;
             }
             return false;

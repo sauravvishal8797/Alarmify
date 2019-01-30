@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +54,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
         StringBuilder builder = new StringBuilder();
         final boolean[] deactivateAlert = {true};
         final Alarm alarm = list.get(i);
-        Log.i("vcvcvcvc", alarm.getTime());
         if(alarm.getTime().startsWith("0")&&alarm.getTime().substring(0, alarm.getTime().indexOf(":")).length()==3){
             viewHolder.timeText.setText(alarm.getTime().substring(1));
         } else {

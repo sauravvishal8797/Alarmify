@@ -10,4 +10,15 @@
     <string name="dialog_postive_button">OK</string>
     <string name="dialog_negative_mssg">CANCEL</string>
     <string name="alarm_label_text_message">Its time to get reeady for office!</string>
+    <string name="dismiss_alarm_message">Alarm Dismissed..</string>
+    <string name="ringer_preference">Ringer Preference</string>
+    <string name="max_volume_preference">Set ringer volume to max</string>
+    <string name="using_built_in_speaker">Use the built-in speaker</string>
+    <string name="built_in_speaker_pref_summary">Always ring on phone speakers</string>
+    <string name="auto_dismiss_pref">Auto-Dismiss</string>
+    <string name="general_alarm_preferences">General</string>
+    <string name="active_alarms_to_top_preference">Move active alarms to the top</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
