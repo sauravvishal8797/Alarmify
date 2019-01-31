@@ -334,6 +334,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
             intent.putExtra("deleteAfterGoingOff", deleteAfterGoesOff);
             intent.putExtra("period", period);
             final int _id = (int) System.currentTimeMillis();
+            intent.putExtra("id", _id);
             pendingIntent = PendingIntent.getBroadcast(AlarmDetailActivity.this, _id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             Log.i("fafafafafa", String.valueOf(time_picker.getCurrentHour())+String.valueOf(time_picker.getCurrentMinute()));
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);

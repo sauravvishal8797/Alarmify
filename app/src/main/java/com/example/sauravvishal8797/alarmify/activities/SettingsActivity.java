@@ -24,5 +24,4 @@ public class SettingsActivity extends AppCompatActivity {
         StatusBarUtil.setTransparent(this);
     }
 
-
 }

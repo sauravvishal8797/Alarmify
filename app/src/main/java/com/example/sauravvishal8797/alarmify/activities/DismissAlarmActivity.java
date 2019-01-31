@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
@@ -21,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sauravvishal8797.alarmify.helpers.PreferenceUtil;
 import com.example.sauravvishal8797.alarmify.receivers.AlarmReceiver;
 import com.example.sauravvishal8797.alarmify.services.Alarmservice;
 import com.example.sauravvishal8797.alarmify.R;
@@ -70,17 +72,22 @@ public class DismissAlarmActivity extends AppCompatActivity {
     private int minutes;
     private String period;
     private String alamtime;
+    private int id;
+
+    private PreferenceUtil SP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dismiss_alarm_view);
         Intent intent = getIntent();
+        SP = PreferenceUtil.getInstance(this);
         hour = intent.getIntExtra("hour", 0);
         minutes = intent.getIntExtra("minutes", 0);
         period = intent.getStringExtra("period");
         alamtime = intent.getStringExtra("alarmtime");
         typeDismiss = intent.getStringExtra("stop");
+        id = intent.getIntExtra("id", 0);
         statusBarTransparent();
         mActivityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
        // setUpUi();
@@ -97,8 +104,17 @@ public class DismissAlarmActivity extends AppCompatActivity {
         dismissButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(AlarmReceiver.mediaPlayer.isPlaying()){
+                    AlarmReceiver.mediaPlayer.stop();
+                    AlarmReceiver.mediaPlayer.release();
+                }
                 dismissAlarm();
                 finish();
+                SharedPreferences.Editor editor = SP.getEditor();
+                if(SP.getBoolean("alarm_ringing", false)){
+                    editor.putBoolean("alarm_ringing", true);
+                    editor.commit();
+                }
                 Toast.makeText(view.getContext(), getResources().getString(R.string.dismiss_alarm_message), Toast.LENGTH_SHORT).show();
             }
         });
@@ -106,15 +122,11 @@ public class DismissAlarmActivity extends AppCompatActivity {
 
     private void dismissAlarm(){
         AlarmManager alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-        Calendar now = Calendar.getInstance();
+        Intent intent = new Intent(this, AlarmReceiver.class);
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, minutes   );
-        if(calendar.before(now)){
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
-        }
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        calendar.set(Calendar.MINUTE, minutes);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         alarmManager.cancel(pendingIntent);
     }
 
