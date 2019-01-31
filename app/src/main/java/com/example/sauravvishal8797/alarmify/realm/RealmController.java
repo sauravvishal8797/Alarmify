@@ -76,11 +76,13 @@ public class RealmController {
     }
 
     /** Reactivates a deactivated alarm */
-    public void reActivateAlarm(String time){
+    public int reActivateAlarm(String time){
         Alarm alarm = realm.where(Alarm.class).equalTo("time", time).findFirst();
+        int pendingIntentId = alarm.getPendingIntentId();
         realm.beginTransaction();
         alarm.setActivated(true);
         realm.commitTransaction();
+        return pendingIntentId;
     }
 
     /** Retrieves all the activated/deactivated alarm data from the database

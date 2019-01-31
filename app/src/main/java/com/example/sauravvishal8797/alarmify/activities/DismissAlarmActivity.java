@@ -111,16 +111,14 @@ public class DismissAlarmActivity extends AppCompatActivity {
         dismissButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(AlarmReceiver.mediaPlayer.isPlaying()){
+                if(AlarmReceiver.mediaPlayer!=null && AlarmReceiver.mediaPlayer.isPlaying()){
                     AlarmReceiver.mediaPlayer.stop();
                     AlarmReceiver.mediaPlayer.release();
-                }
-                finish();
-                SharedPreferences.Editor editor = SP.getEditor();
-                if(SP.getBoolean("alarm_ringing", false)){
-                    editor.putBoolean("alarm_ringing", true);
+                    SharedPreferences.Editor editor = SP.getEditor();
+                    editor.putString("ringing", "not");
                     editor.commit();
                 }
+                finish();
                 Toast.makeText(view.getContext(), getResources().getString(R.string.dismiss_alarm_message), Toast.LENGTH_SHORT).show();
             }
         });

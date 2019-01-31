@@ -30,11 +30,9 @@ import io.realm.Realm;
 public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> {
 
     private ArrayList<Alarm> list;
-    StringBuilder builder = new StringBuilder();
     private Context context;
     private RealmController realmController;
     private Activity activity;
-    private Realm realm;
 
     public AlarmAdapter(ArrayList<Alarm> list, Context context, Activity activity) {
         this.list=list;
@@ -51,7 +49,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
-        StringBuilder builder = new StringBuilder();
         final boolean[] deactivateAlert = {true};
         final Alarm alarm = list.get(i);
         if(alarm.getTime().startsWith("0")&&alarm.getTime().substring(0, alarm.getTime().indexOf(":")).length()==3){
@@ -128,25 +125,22 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
     private void deactivateAlarm(String alarmTime, int hour, int min, int pendingIntentId){
         realmController = RealmController.with(activity);
         realmController.deactivateAlarm(alarmTime);
-        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, null);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, pendingIntentId, intent, 0);
-        alarmManager.cancel(pendingIntent);
     }
 
     private void reActivateAlarm(String alarmTime, int hour, int min){
         realmController = RealmController.with(activity);
-        realmController.reActivateAlarm(alarmTime);
+        int pendingIntentId = realmController.reActivateAlarm(alarmTime);
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Calendar now = Calendar.getInstance();
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, min);
+        calendar.set(Calendar.SECOND, 0);
         if(calendar.before(now)){
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
         Intent intent = new Intent(context, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, pendingIntentId, intent, 0);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
     }
 

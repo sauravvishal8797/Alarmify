@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.sauravvishal8797.alarmify.adapters.AlarmAdapter;
 import com.example.sauravvishal8797.alarmify.receivers.AlarmReceiver;
 import com.example.sauravvishal8797.alarmify.R;
 import com.example.sauravvishal8797.alarmify.adapters.repeatAlarmAdapter;
@@ -333,11 +334,17 @@ public class AlarmDetailActivity extends AppCompatActivity {
             intent.putExtra("deleteAfterGoingOff", deleteAfterGoesOff);
             intent.putExtra("period", period);
             intent.putExtra("label", labelText);
+            int size = (repeatAlarmDays!=null)?repeatAlarmDays.size():0;
+            intent.putExtra("repeat", size);
             final int _id = (int) System.currentTimeMillis();
             intent.putExtra("id", _id);
             pendingIntent = PendingIntent.getBroadcast(AlarmDetailActivity.this, _id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             Log.i("fafafafafa", String.valueOf(time_picker.getCurrentHour())+String.valueOf(time_picker.getCurrentMinute()));
-            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            if(repeatAlarmAdapter.repeatDays.size()==7){
+                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+            } else {
+                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            }
             creatingNewAlarmObject(_id);
         }
         finish();

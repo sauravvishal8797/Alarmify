@@ -2,6 +2,7 @@ package com.example.sauravvishal8797.alarmify.models;
 
 import java.util.ArrayList;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
