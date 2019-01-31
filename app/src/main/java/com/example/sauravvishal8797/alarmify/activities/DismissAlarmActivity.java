@@ -67,12 +67,14 @@ public class DismissAlarmActivity extends AppCompatActivity {
     private TextView currentTimeView;
     private Button dismissButton;
     private TextView alarmLabelMessage;
+    private TextView alarmPeriod;
 
     private int hour;
     private int minutes;
     private String period;
     private String alamtime;
     private int id;
+    private String alarmLabel;
 
     private PreferenceUtil SP;
 
@@ -88,6 +90,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
         alamtime = intent.getStringExtra("alarmtime");
         typeDismiss = intent.getStringExtra("stop");
         id = intent.getIntExtra("id", 0);
+        alarmLabel = intent.getStringExtra("label");
         statusBarTransparent();
         mActivityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
        // setUpUi();
@@ -99,8 +102,12 @@ public class DismissAlarmActivity extends AppCompatActivity {
 
     private void setUpUiDefaultDismissView(){
         currentTimeView = findViewById(R.id.time_current);
+        currentTimeView.setText(alamtime);
         dismissButton = findViewById(R.id.dismiss_button);
         alarmLabelMessage = findViewById(R.id.alarm_label_message);
+        alarmLabelMessage.setText(alarmLabel);
+        alarmPeriod = findViewById(R.id.period);
+        alarmPeriod.setText(period);
         dismissButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,7 +115,6 @@ public class DismissAlarmActivity extends AppCompatActivity {
                     AlarmReceiver.mediaPlayer.stop();
                     AlarmReceiver.mediaPlayer.release();
                 }
-                dismissAlarm();
                 finish();
                 SharedPreferences.Editor editor = SP.getEditor();
                 if(SP.getBoolean("alarm_ringing", false)){
@@ -118,16 +124,6 @@ public class DismissAlarmActivity extends AppCompatActivity {
                 Toast.makeText(view.getContext(), getResources().getString(R.string.dismiss_alarm_message), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void dismissAlarm(){
-        AlarmManager alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, minutes);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        alarmManager.cancel(pendingIntent);
     }
 
     private void statusBarTransparent(){

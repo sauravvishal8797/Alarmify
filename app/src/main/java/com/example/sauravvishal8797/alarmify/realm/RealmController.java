@@ -116,6 +116,15 @@ public class RealmController {
         });
     }
 
+    public boolean checkAlarmState(String time){
+        boolean activeState = false;
+        Alarm alarm = realm.where(Alarm.class).equalTo("time", time).findFirst();
+        if(alarm!=null && alarm.isActivated()){
+            activeState = true;
+        }
+        return activeState;
+    }
+
     /** Checks if an alarm is already activated for a particular time
      * @return boolean array with first element determining whether the alarm already exists in the database
      * and second element determines if the alarm is in activated state

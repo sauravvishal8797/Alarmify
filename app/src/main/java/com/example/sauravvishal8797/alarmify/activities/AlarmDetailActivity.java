@@ -317,7 +317,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
         } else if (exists[0]&&!exists[1]) {
             realmController.reActivateAlarm(alarmTime);
         } else if (!exists[0]) {
-            creatingNewAlarmObject();
             alarmManager = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
             Calendar now = Calendar.getInstance();
             Log.i("lalalala", String.valueOf(now.get(Calendar.HOUR_OF_DAY)) +" "+String.valueOf(now.get(Calendar.MINUTE)));
@@ -333,11 +332,13 @@ public class AlarmDetailActivity extends AppCompatActivity {
             intent.putExtra("minutes", time_picker.getCurrentMinute());
             intent.putExtra("deleteAfterGoingOff", deleteAfterGoesOff);
             intent.putExtra("period", period);
+            intent.putExtra("label", labelText);
             final int _id = (int) System.currentTimeMillis();
             intent.putExtra("id", _id);
             pendingIntent = PendingIntent.getBroadcast(AlarmDetailActivity.this, _id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             Log.i("fafafafafa", String.valueOf(time_picker.getCurrentHour())+String.valueOf(time_picker.getCurrentMinute()));
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            creatingNewAlarmObject(_id);
         }
         finish();
     }
@@ -350,12 +351,13 @@ public class AlarmDetailActivity extends AppCompatActivity {
     }
 
     /** Creates a new alarm object for storing in the local database */
-    private void creatingNewAlarmObject(){
+    private void creatingNewAlarmObject(int pendingIntentId){
         StringBuilder builder = new StringBuilder();
         realm = realmController.getRealm();
         Alarm newAlarm = new Alarm();
         newAlarm.setTime(alarmTime);
         newAlarm.setHour(time_picker.getCurrentHour());
+        newAlarm.setPendingIntentId(pendingIntentId);
         newAlarm.setMinute(time_picker.getCurrentMinute());
         if(repeatAlarmDays==null)
             newAlarm.setDays("No Repeat");
