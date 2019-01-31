@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="general_alarm_preferences"
+        android:title="@string/general_alarm_preferences">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="active_alarms_to_top"
+            android:title="@string/active_alarms_to_top_preference"/>
+
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/dismiss_alarm_missions"
+            android:title="Dismiss Alarm Mission"
+            android:key="dismiss_alarm_mission"
+            />
+
+    </PreferenceCategory>
+
+   <PreferenceCategory
+       android:key="preference_category_ringer_control"
+       android:title="@string/ringer_preference">
+
+       <SwitchPreference
+           android:defaultValue="false"
+           android:key="volume_control"
+           android:title="@string/max_volume_preference"/>
+
+       <CheckBoxPreference
+           android:defaultValue="false"
+           android:key="speaker_control"
+           android:title="@string/using_built_in_speaker"
+           android:summary="@string/built_in_speaker_pref_summary"/>
+
+       <ListPreference
+           android:defaultValue="0"
+           android:entries="@array/auto_dismiss_options"
+           android:title="@string/auto_dismiss_pref"
+           android:key="auto_dismiss_pref"
+           android:summary="Off"/>
+
+   </PreferenceCategory>
+    
+</PreferenceScreen>
+
+

@@ -1,9 +1,12 @@
 package com.example.sauravvishal8797.alarmify.activities;
 
 import android.app.ActivityManager;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
@@ -19,12 +22,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sauravvishal8797.alarmify.helpers.PreferenceUtil;
+import com.example.sauravvishal8797.alarmify.receivers.AlarmReceiver;
 import com.example.sauravvishal8797.alarmify.services.Alarmservice;
 import com.example.sauravvishal8797.alarmify.R;
 import com.jaeger.library.StatusBarUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -32,7 +38,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class MathspuzzleActivity extends AppCompatActivity {
+public class DismissAlarmActivity extends AppCompatActivity {
 
     private boolean isFocus;
     private static boolean isPaused=false;
@@ -55,18 +61,67 @@ public class MathspuzzleActivity extends AppCompatActivity {
     private TextView dismiss_time;
     private TextView dismiss_message;
 
+    /**
+     * UI elements for the default dismiss view
+     */
+    private TextView currentTimeView;
+    private Button dismissButton;
+    private TextView alarmLabelMessage;
+    private TextView alarmPeriod;
+
+    private int hour;
+    private int minutes;
+    private String period;
+    private String alamtime;
+    private int id;
+    private String alarmLabel;
+
+    private PreferenceUtil SP;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.maths_exp_view);
+        setContentView(R.layout.dismiss_alarm_view);
         Intent intent = getIntent();
+        SP = PreferenceUtil.getInstance(this);
+        hour = intent.getIntExtra("hour", 0);
+        minutes = intent.getIntExtra("minutes", 0);
+        period = intent.getStringExtra("period");
+        alamtime = intent.getStringExtra("alarmtime");
         typeDismiss = intent.getStringExtra("stop");
+        id = intent.getIntExtra("id", 0);
+        alarmLabel = intent.getStringExtra("label");
         statusBarTransparent();
         mActivityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
        // setUpUi();
+        setUpUiDefaultDismissView();
         isPaused=false;
         Toast.makeText(getApplicationContext(), "Hey there buddy", Toast.LENGTH_SHORT).show();
         Log.i("papapa", "lalalopappaa");
+    }
+
+    private void setUpUiDefaultDismissView(){
+        currentTimeView = findViewById(R.id.time_current);
+        currentTimeView.setText(alamtime);
+        dismissButton = findViewById(R.id.dismiss_button);
+        alarmLabelMessage = findViewById(R.id.alarm_label_message);
+        alarmLabelMessage.setText(alarmLabel);
+        alarmPeriod = findViewById(R.id.period);
+        alarmPeriod.setText(period);
+        dismissButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(AlarmReceiver.mediaPlayer!=null && AlarmReceiver.mediaPlayer.isPlaying()){
+                    AlarmReceiver.mediaPlayer.stop();
+                    AlarmReceiver.mediaPlayer.release();
+                    SharedPreferences.Editor editor = SP.getEditor();
+                    editor.putString("ringing", "not");
+                    editor.commit();
+                }
+                finish();
+                Toast.makeText(view.getContext(), getResources().getString(R.string.dismiss_alarm_message), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void statusBarTransparent(){
@@ -77,7 +132,7 @@ public class MathspuzzleActivity extends AppCompatActivity {
     private void setUpUi(){
         linearLayout = findViewById(R.id.calculator_layout);
         if(typeDismiss.equals("normal")){
-            dismiss_layout = findViewById(R.id.layout_dismiss);
+            //dismiss_layout = findViewById(R.id.layout_dismiss);
             linearLayout.setVisibility(View.GONE);
             dismiss_layout.setVisibility(View.VISIBLE);
             dismiss_button = findViewById(R.id.dismiss_button);
@@ -225,7 +280,7 @@ public class MathspuzzleActivity extends AppCompatActivity {
         isShutting=true;
         repeat=true;
 
-        //Intent intent = new Intent(MathspuzzleActivity.this, Restart.class);
+        //Intent intent = new Intent(DismissAlarmActivity.this, Restart.class);
         //startActivity(intent);
 
        // new ResumeActivity().execute();

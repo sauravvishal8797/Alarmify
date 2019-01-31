@@ -19,6 +19,11 @@
         <item name="android:background">@color/customPrimary</item>
     </style>
 
+    <!-- Settings fragment theme -->
+    <style name="SettingsFragmentTheme">
+        <item name="android:background">@color/customPrimary</item>
+    </style>
+
     <style name="AlertDialog_Dark" parent="Theme.AppCompat.Dialog.Alert"><!--BOTTONI-->
         <item name="android:backgroundTint" tools:targetApi="lollipop">
            @color/customPrimary

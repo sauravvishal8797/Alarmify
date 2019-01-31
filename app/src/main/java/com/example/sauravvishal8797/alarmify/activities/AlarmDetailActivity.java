@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.sauravvishal8797.alarmify.adapters.AlarmAdapter;
 import com.example.sauravvishal8797.alarmify.receivers.AlarmReceiver;
 import com.example.sauravvishal8797.alarmify.R;
 import com.example.sauravvishal8797.alarmify.adapters.repeatAlarmAdapter;
@@ -64,8 +65,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
     private String period;
     private RealmController realmController;
 
-    private static MediaPlayer mediaPlayer = null;
-
     private TimePicker time_picker;
     private Resources system;
 
@@ -76,11 +75,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
         realmController = RealmController.with(this);
         time_picker = (TimePicker) findViewById(R.id.timepicker22);
         time_picker.setIs24HourView(false);
-        Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        if (alarmUri == null) {
-            alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        }
-        mediaPlayer = MediaPlayer.create(this, alarmUri);
         //setButton = (SwitchCompat) findViewById(R.id.set)
         setUI();
         statusBarTransparent();
@@ -316,6 +310,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
         return days;
     }
 
+    /** Sets an alarm using the AlarmManager class in Android */
     private void setAlarm(){
         boolean[] exists = checkIfAlreadyExists();
         if (exists[0]&&exists[1]) {
@@ -323,7 +318,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
         } else if (exists[0]&&!exists[1]) {
             realmController.reActivateAlarm(alarmTime);
         } else if (!exists[0]) {
-            creatingNewAlarmObject();
             alarmManager = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
             Calendar now = Calendar.getInstance();
             Log.i("lalalala", String.valueOf(now.get(Calendar.HOUR_OF_DAY)) +" "+String.valueOf(now.get(Calendar.MINUTE)));
@@ -335,26 +329,42 @@ public class AlarmDetailActivity extends AppCompatActivity {
             }
             Intent intent = new Intent(AlarmDetailActivity.this, AlarmReceiver.class);
             intent.putExtra("alarmtime", alarmTime);
+            intent.putExtra("hour", time_picker.getCurrentHour());
+            intent.putExtra("minutes", time_picker.getCurrentMinute());
             intent.putExtra("deleteAfterGoingOff", deleteAfterGoesOff);
             intent.putExtra("period", period);
+            intent.putExtra("label", labelText);
+            int size = (repeatAlarmDays!=null)?repeatAlarmDays.size():0;
+            intent.putExtra("repeat", size);
             final int _id = (int) System.currentTimeMillis();
-            pendingIntent = PendingIntent.getBroadcast(AlarmDetailActivity.this, _id, intent, PendingIntent.FLAG_ONE_SHOT);
+            intent.putExtra("id", _id);
+            pendingIntent = PendingIntent.getBroadcast(AlarmDetailActivity.this, _id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             Log.i("fafafafafa", String.valueOf(time_picker.getCurrentHour())+String.valueOf(time_picker.getCurrentMinute()));
-            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            if(repeatAlarmAdapter.repeatDays.size()==7){
+                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+            } else {
+                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            }
+            creatingNewAlarmObject(_id);
         }
         finish();
     }
 
+    /** Checks if an alarm already exists, can be in either state active or inactive
+     * @return returns a boolean array, first element determines whether or not the alarm object exists in the database
+     * second boolean element gives the state of the alarm object if it exists i.e active or inactive */
     private boolean[] checkIfAlreadyExists(){
         return realmController.checkIfAlarmExists(alarmTime, period);
     }
 
-    private void creatingNewAlarmObject(){
+    /** Creates a new alarm object for storing in the local database */
+    private void creatingNewAlarmObject(int pendingIntentId){
         StringBuilder builder = new StringBuilder();
         realm = realmController.getRealm();
         Alarm newAlarm = new Alarm();
         newAlarm.setTime(alarmTime);
         newAlarm.setHour(time_picker.getCurrentHour());
+        newAlarm.setPendingIntentId(pendingIntentId);
         newAlarm.setMinute(time_picker.getCurrentMinute());
         if(repeatAlarmDays==null)
             newAlarm.setDays("No Repeat");
@@ -372,7 +382,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
         realmController.addAlarm(newAlarm);
     }
 
-    //method to set the status bar transparent
+    /** Sets the status bar transparent */
     private void statusBarTransparent(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window w = getWindow(); // in Activity's onCreate() for instance

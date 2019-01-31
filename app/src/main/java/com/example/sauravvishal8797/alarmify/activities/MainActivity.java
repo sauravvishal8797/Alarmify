@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.example.sauravvishal8797.alarmify.R;
 import com.example.sauravvishal8797.alarmify.adapters.AlarmAdapter;
+import com.example.sauravvishal8797.alarmify.helpers.PreferenceUtil;
 import com.example.sauravvishal8797.alarmify.models.Alarm;
 import com.example.sauravvishal8797.alarmify.realm.RealmController;
 import com.example.sauravvishal8797.alarmify.receivers.AlarmReceiver;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity{
 
     private RealmController realmController;
     private Realm realm;
+    private PreferenceUtil SP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,6 +189,8 @@ public class MainActivity extends AppCompatActivity{
                     return true;
 
                 case R.id.settings:
+                    Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivity(settingsIntent);
                     return true;
             }
             return false;

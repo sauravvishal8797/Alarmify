@@ -14,8 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/NoActionBar">
-        <activity android:name=".activities.MainActivity"
-                  android:screenOrientation="portrait">
+        <activity
+            android:name=".activities.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,16 +25,25 @@
         </activity>
         <activity
             android:name=".activities.AlarmDetailActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".activities.MainActivity" />
+            android:parentActivityName=".activities.MainActivity"
+            android:screenOrientation="portrait" />
 
         <receiver android:name=".receivers.AlarmReceiver" />
 
-        <activity android:name=".activities.MathspuzzleActivity"
+        <activity
+            android:name=".activities.DismissAlarmActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
-        <service android:name=".services.Alarmservice"
-            android:exported="false"/>
+        <service
+            android:name=".services.Alarmservice"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.MySettingsActivity"
+            android:parentActivityName=".activities.MainActivity" />
+        <activity android:name=".fragments.SettingsFragment" />
+        <activity android:name=".activities.SettingsActivity"></activity>
     </application>
+
 </manifest>

@@ -76,11 +76,13 @@ public class RealmController {
     }
 
     /** Reactivates a deactivated alarm */
-    public void reActivateAlarm(String time){
+    public int reActivateAlarm(String time){
         Alarm alarm = realm.where(Alarm.class).equalTo("time", time).findFirst();
+        int pendingIntentId = alarm.getPendingIntentId();
         realm.beginTransaction();
         alarm.setActivated(true);
         realm.commitTransaction();
+        return pendingIntentId;
     }
 
     /** Retrieves all the activated/deactivated alarm data from the database
@@ -114,6 +116,15 @@ public class RealmController {
                     realmResults.deleteAllFromRealm();
             }
         });
+    }
+
+    public boolean checkAlarmState(String time){
+        boolean activeState = false;
+        Alarm alarm = realm.where(Alarm.class).equalTo("time", time).findFirst();
+        if(alarm!=null && alarm.isActivated()){
+            activeState = true;
+        }
+        return activeState;
     }
 
     /** Checks if an alarm is already activated for a particular time

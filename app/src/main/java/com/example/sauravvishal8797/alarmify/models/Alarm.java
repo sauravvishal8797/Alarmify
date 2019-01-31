@@ -2,6 +2,7 @@ package com.example.sauravvishal8797.alarmify.models;
 
 import java.util.ArrayList;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -17,6 +18,7 @@ public class Alarm extends RealmObject{
     private String label;
     private boolean deleteAfterGoesOff;
     private boolean isActivated;
+    private int pendingIntentId;
 
     public void setTime(String time) {
         this.time = time;
@@ -88,5 +90,13 @@ public class Alarm extends RealmObject{
 
     public boolean isActivated() {
         return isActivated;
+    }
+
+    public void setPendingIntentId(int pendingIntentId) {
+        this.pendingIntentId = pendingIntentId;
+    }
+
+    public int getPendingIntentId() {
+        return pendingIntentId;
     }
 }
