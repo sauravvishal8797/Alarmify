@@ -10,10 +10,15 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.example.sauravvishal8797.alarmify.activities.DismissAlarmActivity;
+import com.example.sauravvishal8797.alarmify.helpers.Constants;
 import com.example.sauravvishal8797.alarmify.helpers.PreferenceUtil;
 import com.example.sauravvishal8797.alarmify.realm.RealmController;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 
 public class AlarmReceiver extends BroadcastReceiver{
 
@@ -44,6 +49,8 @@ public class AlarmReceiver extends BroadcastReceiver{
         } else if(!intent.getBooleanExtra("deleteAfterGoingOff", false) &&
                 intent.getIntExtra("repeat", 0)==0){
             realmController.deactivateAlarm(intent.getStringExtra("alarmtime"));
+        } else {
+            setNextAlarm(intent.getStringArrayListExtra("repeatDyas"));
         }
         Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         if (alarmUri == null) {
@@ -76,5 +83,22 @@ public class AlarmReceiver extends BroadcastReceiver{
             mediaPlayer.setLooping(true);
             mediaPlayer.start();
         }*/
+    }
+
+    private void setNextAlarm(ArrayList<String> daysRepeat){
+        getNextAlarmTime(daysRepeat);
+        int n = Calendar.MONDAY + (7 - Calendar.DAY_OF_WEEK);
+        Log.i("llllllll", );
+    }
+
+    private void getNextAlarmTime(ArrayList<String> days){
+        for(int i=0; i<days.size(); i++){
+            switch (days.get(i)){
+
+                case Constants.MONDAY:
+                    int n
+
+            }
+        }
     }
 }

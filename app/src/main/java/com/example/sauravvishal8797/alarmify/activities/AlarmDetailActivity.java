@@ -334,6 +334,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
             intent.putExtra("deleteAfterGoingOff", deleteAfterGoesOff);
             intent.putExtra("period", period);
             intent.putExtra("label", labelText);
+            intent.putStringArrayListExtra("repeatList", repeatAlarmDays);
             int size = (repeatAlarmDays!=null)?repeatAlarmDays.size():0;
             intent.putExtra("repeat", size);
             final int _id = (int) System.currentTimeMillis();
