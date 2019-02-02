@@ -86,19 +86,8 @@ public class AlarmReceiver extends BroadcastReceiver{
     }
 
     private void setNextAlarm(ArrayList<String> daysRepeat){
-        getNextAlarmTime(daysRepeat);
+       // getNextAlarmTime(daysRepeat);
         int n = Calendar.MONDAY + (7 - Calendar.DAY_OF_WEEK);
-        Log.i("llllllll", );
-    }
-
-    private void getNextAlarmTime(ArrayList<String> days){
-        for(int i=0; i<days.size(); i++){
-            switch (days.get(i)){
-
-                case Constants.MONDAY:
-                    int n
-
-            }
-        }
+        //Log.i("llllllll", );
     }
 }

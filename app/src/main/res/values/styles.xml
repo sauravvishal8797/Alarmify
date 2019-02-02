@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
     </style>
 
     <!-- NoActionbar application theme -->
@@ -17,6 +18,7 @@
     <!-- AlertDialog theme -->
     <style name="AlertDialogTheme">
         <item name="android:background">@color/customPrimary</item>
+        <item name="android:textColor">@color/grey_shade</item>
     </style>
 
     <!-- Settings fragment theme -->
@@ -28,6 +30,11 @@
         <item name="android:backgroundTint" tools:targetApi="lollipop">
            @color/customPrimary
         </item>
+    </style>
+
+    <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
+        <item name="android:popupBackground">@color/customPrimary</item>
+        <item name="android:textColor">@color/grey_shade</item>
     </style>
 
 </resources>

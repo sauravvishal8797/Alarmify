@@ -19,6 +19,14 @@
     <string name="general_alarm_preferences">General</string>
     <string name="active_alarms_to_top_preference">Move active alarms to the top</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- SharedPreferences key strings -->
+    <string name="move_active_alarms_mssg">Move active alarms to the top</string>
+    <string name="set_ringer_value_max_mssg">Set Ringer value to the max</string>
+    <string name="use_built_in_speaker_mssg">Use built in speaker</string>
+    <string name="dismiss_default_text">Dismiss Mission</string>
+
+    <!-- Dismiss Mission strings -->
+    <string name="default_dismiss_mission">Default</string>
+    <string name="maths_mission_dismiss">Maths Puzzle</string>
+
 </resources>

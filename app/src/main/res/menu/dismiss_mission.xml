@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/deafault"
+        android:title="@string/default_dismiss_mission" />
+
+    <item android:id="@+id/maths_mission"
+        android:title="@string/maths_mission_dismiss" />
+
+</menu>

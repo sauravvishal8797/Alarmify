@@ -49,6 +49,7 @@
             <android.support.v7.widget.SwitchCompat
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/move_active_alarms_switch"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"/>
 
@@ -61,19 +62,27 @@
             android:layout_marginBottom="20dp"
             android:background="#00344D"/>
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="19dp"
-            android:textColor="@color/grey_shade"
-            android:text="Dismiss Alarm Mission"/>
+            android:id="@+id/dismiss_alarm_mission_view"
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/grey_shade"
-            android:textSize="15dp"
-            android:text="Default"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="19dp"
+                android:textColor="@color/grey_shade"
+                android:text="Dismiss Alarm Mission"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_shade"
+                android:textSize="15dp"
+                android:text="Default"/>
+
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
@@ -106,6 +115,7 @@
             <android.support.v7.widget.SwitchCompat
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/ringer_max_button"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"/>
 
@@ -141,6 +151,7 @@
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/use_built_in_speakers_checkbox"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:buttonTint="@color/grey_shade"/>
@@ -154,19 +165,29 @@
             android:layout_marginBottom="20dp"
             android:background="#00344D"/>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="19dp"
-            android:textColor="@color/grey_shade"
-            android:text="Auto-Dismiss"/>
+            android:id="@+id/auto_dismiss_layout"
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/grey_shade"
-            android:textSize="15dp"
-            android:text="Off"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="19dp"
+                android:textColor="@color/grey_shade"
+                android:text="Auto-Dismiss"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/auto_dismiss"
+                android:textColor="@color/grey_shade"
+                android:textSize="15dp"
+                android:text="Off"/>
+
+
+        </LinearLayout>
 
     </LinearLayout>
 
