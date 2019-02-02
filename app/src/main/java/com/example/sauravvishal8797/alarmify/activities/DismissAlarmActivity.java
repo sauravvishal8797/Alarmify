@@ -224,6 +224,10 @@ public class DismissAlarmActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         isFocus=hasFocus;
+        if(!hasFocus && SP.getBoolean(getResources().getString(R.string.prevent_phone_power_off), false)){
+            Intent closeDialog = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+            sendBroadcast(closeDialog);
+        }
         if(!hasFocus && !isShutting){
             collapseNow();
         }else if(!hasFocus && isPaused){
