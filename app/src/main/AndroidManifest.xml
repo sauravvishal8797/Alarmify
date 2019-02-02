@@ -39,11 +39,8 @@
             android:name=".services.Alarmservice"
             android:exported="false" />
 
-        <activity
-            android:name=".activities.MySettingsActivity"
-            android:parentActivityName=".activities.MainActivity" />
-        <activity android:name=".fragments.SettingsFragment" />
-        <activity android:name=".activities.SettingsActivity"></activity>
+        <activity android:name=".activities.SettingsActivity"
+            android:parentActivityName=".activities.MainActivity"></activity>
     </application>
 
 </manifest>

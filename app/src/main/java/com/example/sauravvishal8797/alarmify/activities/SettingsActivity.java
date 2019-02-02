@@ -28,6 +28,7 @@ public class SettingsActivity extends AppCompatActivity{
     private LinearLayout dismissAlarmMissionView;
     private TextView dismissMissionText;
     private LinearLayout autoDismissView;
+    private CheckBox preventPowerOffCheckbox;
 
     /** Obtaining an instance of PreferenceUtil for SharedPreferences cammunications */
     private PreferenceUtil SP;
@@ -66,6 +67,30 @@ public class SettingsActivity extends AppCompatActivity{
                 }
             }
         });
+
+        /** Prevent phone power-off */
+        preventPowerOffCheckbox = findViewById(R.id.prevent_power_off_checkbox);
+        preventPowerOffCheckbox.setOnCheckedChangeListener(null);
+        if(SP.getBoolean(getResources().getString(R.string.prevent_phone_power_off), false)){
+            preventPowerOffCheckbox.setChecked(true);
+        } else {
+            preventPowerOffCheckbox.setChecked(false);
+        }
+        preventPowerOffCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    SharedPreferences.Editor editor = SP.getEditor();
+                    editor.putBoolean(getResources().getString(R.string.prevent_phone_power_off), true);
+                    editor.commit();
+                } else {
+                    SharedPreferences.Editor editor = SP.getEditor();
+                    editor.putBoolean(getResources().getString(R.string.prevent_phone_power_off), false);
+                    editor.commit();
+                }
+            }
+        });
+
 
         /** Ringer Volume Max */
         ringerMaxButton = findViewById(R.id.ringer_max_button);
@@ -178,7 +203,8 @@ public class SettingsActivity extends AppCompatActivity{
                 AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this, R.style.AlertDialog_Dark);
                 builder.setTitle("Choose Auto-dismiss period");
                 // builder.s
-                builder.setSingleChoiceItems(getResources().getStringArray(R.array.auto_dismiss_options), 0, new DialogInterface.OnClickListener() {
+                builder.setSingleChoiceItems(getResources().getStringArray(R.array.auto_dismiss_options), 0,
+                        new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if(i==0){

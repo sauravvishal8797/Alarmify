@@ -15,7 +15,6 @@
     <string name="max_volume_preference">Set ringer volume to max</string>
     <string name="using_built_in_speaker">Use the built-in speaker</string>
     <string name="built_in_speaker_pref_summary">Always ring on phone speakers</string>
-    <string name="auto_dismiss_pref">Auto-Dismiss</string>
     <string name="general_alarm_preferences">General</string>
     <string name="active_alarms_to_top_preference">Move active alarms to the top</string>
 
@@ -23,6 +22,9 @@
     <string name="move_active_alarms_mssg">Move active alarms to the top</string>
     <string name="set_ringer_value_max_mssg">Set Ringer value to the max</string>
     <string name="use_built_in_speaker_mssg">Use built in speaker</string>
+    <string name="dismiss_alarm_mission">Dismiss alarm mission</string>
+    <string name="prevent_phone_power_off">Prevent phone power-off</string>
+    <string name="auto_dismiss_pref">Auto-Dismiss</string>
     <string name="dismiss_default_text">Dismiss Mission</string>
 
     <!-- Dismiss Mission strings -->
