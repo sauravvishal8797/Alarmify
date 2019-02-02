@@ -28,6 +28,7 @@ public class SettingsActivity extends AppCompatActivity{
     private LinearLayout autoDismissView;
     private TextView autoDismissTimeText;
     private CheckBox preventPowerOffCheckbox;
+    private CheckBox setAlarmconfirmationCheckbox;
 
     /** Obtaining an instance of PreferenceUtil for SharedPreferences cammunications */
     private PreferenceUtil SP;
@@ -94,6 +95,28 @@ public class SettingsActivity extends AppCompatActivity{
             }
         });
 
+        /** Set-Alarm confirmation */
+        setAlarmconfirmationCheckbox = findViewById(R.id.set_alarm_confirmation_checkbox);
+        setAlarmconfirmationCheckbox.setOnCheckedChangeListener(null);
+        if(SP.getBoolean(getResources().getString(R.string.set_alarm_confirmation), false)){
+            setAlarmconfirmationCheckbox.setChecked(true);
+        } else {
+            setAlarmconfirmationCheckbox.setChecked(false);
+        }
+        setAlarmconfirmationCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    SharedPreferences.Editor editor = SP.getEditor();
+                    editor.putBoolean(getResources().getString(R.string.set_alarm_confirmation), true);
+                    editor.commit();
+                } else {
+                    SharedPreferences.Editor editor = SP.getEditor();
+                    editor.putBoolean(getResources().getString(R.string.set_alarm_confirmation), false);
+                    editor.commit();
+                }
+            }
+        });
 
         /** Ringer Volume Max */
         ringerMaxButton = findViewById(R.id.ringer_max_button);

@@ -31,6 +31,8 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.sauravvishal8797.alarmify.adapters.AlarmAdapter;
+import com.example.sauravvishal8797.alarmify.helpers.AlertDialogHelper;
+import com.example.sauravvishal8797.alarmify.helpers.PreferenceUtil;
 import com.example.sauravvishal8797.alarmify.receivers.AlarmReceiver;
 import com.example.sauravvishal8797.alarmify.R;
 import com.example.sauravvishal8797.alarmify.adapters.repeatAlarmAdapter;
@@ -68,10 +70,13 @@ public class AlarmDetailActivity extends AppCompatActivity {
     private TimePicker time_picker;
     private Resources system;
 
+    private PreferenceUtil SP;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarm_detail);
+        SP = PreferenceUtil.getInstance(this);
         realmController = RealmController.with(this);
         time_picker = (TimePicker) findViewById(R.id.timepicker22);
         time_picker.setIs24HourView(false);
@@ -152,7 +157,29 @@ public class AlarmDetailActivity extends AppCompatActivity {
         setButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setAlarm();
+                if(SP.getBoolean(getResources().getString(R.string.set_alarm_confirmation), false)){
+                    final AlertDialog dialog = AlertDialogHelper.getTextDialog(AlarmDetailActivity.this, getResources().getString
+                            (R.string.confirm_alarm_dialog_title), getResources().getString(R.string.confirm_alarm_dislog_mssg));
+                    dialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getString(R.string.dialog_postive_button).
+                            toUpperCase(), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialog.dismiss();
+                            setAlarm();
+                        }
+                    });
+                    dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getString(R.string.dialog_negative_mssg).toUpperCase(),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            });
+                    dialog.show();
+                } else {
+                    setAlarm();
+                }
             }
         });
         abortButton = (ImageView) findViewById(R.id.abort_button);
