@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.example.sauravvishal8797.alarmify.R;
 import com.example.sauravvishal8797.alarmify.activities.DismissAlarmActivity;
 import com.example.sauravvishal8797.alarmify.helpers.Constants;
 import com.example.sauravvishal8797.alarmify.helpers.PreferenceUtil;
@@ -56,10 +57,15 @@ public class AlarmReceiver extends BroadcastReceiver{
         if (alarmUri == null) {
             alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         }
-        audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
         if(SP.getString("ringing", "not").equals("not")){
             mediaPlayer = MediaPlayer.create(context, alarmUri);
             mediaPlayer.setLooping(true);
+            if(SP.getBoolean(context.getResources().getString(R.string.set_ringer_value_max_mssg), false)){
+                audioManager.setStreamVolume(
+                        AudioManager.STREAM_MUSIC,
+                        audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),
+                        0);
+            }
             mediaPlayer.start();
             Intent intent1 = new Intent(context, DismissAlarmActivity.class);
             intent1.putExtra("stop", "normal");

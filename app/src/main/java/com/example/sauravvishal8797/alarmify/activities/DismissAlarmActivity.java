@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
@@ -77,6 +78,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
     private String alarmLabel;
 
     private PreferenceUtil SP;
+    private AudioManager audioManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +95,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
         alarmLabel = intent.getStringExtra("label");
         statusBarTransparent();
         mActivityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
+        audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
        // setUpUi();
         setUpUiDefaultDismissView();
         isPaused=false;
@@ -175,23 +178,47 @@ public class DismissAlarmActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_HOME) {
-          //  new ResumeActivity().execute();
-            return true;
-
-        } else {
-            return super.onKeyDown(keyCode, event);
-        }
-    }
-
-    @Override
     protected void onUserLeaveHint() {
         //super.onUserLeaveHint();
         isShutting=true;
         //onWindowFocusChanged(false);
 
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        boolean ringerMax = false;
+        if(SP.getBoolean(getResources().getString(R.string.set_ringer_value_max_mssg), false)){
+            ringerMax = true;
+        }
+        if (keyCode == KeyEvent.KEYCODE_HOME) {
+            //  new ResumeActivity().execute();
+            return true;
+
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP && ringerMax){
+            audioManager.setStreamVolume(
+                    AudioManager.STREAM_MUSIC,
+                    audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),
+                    0);
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN && ringerMax){
+            audioManager.setStreamVolume(
+                    AudioManager.STREAM_MUSIC,
+                    audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),
+                    0);
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_MUTE && ringerMax){
+            audioManager.setStreamVolume(
+                    AudioManager.STREAM_MUSIC,
+                    audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),
+                    0);
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_POWER) {
+            return false;
+        } else{
+            return super.onKeyDown(keyCode, event);
+        }
     }
 
     @Override
