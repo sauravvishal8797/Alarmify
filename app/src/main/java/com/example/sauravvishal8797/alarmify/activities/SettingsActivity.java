@@ -1,5 +1,7 @@
 package com.example.sauravvishal8797.alarmify.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,13 +19,14 @@ import com.example.sauravvishal8797.alarmify.R;
 import com.example.sauravvishal8797.alarmify.helpers.PreferenceUtil;
 import com.jaeger.library.StatusBarUtil;
 
-public class SettingsActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
+public class SettingsActivity extends AppCompatActivity{
 
     /** Declaring UI elements */
     private SwitchCompat moveActiveAlarmsTopButton;
     private SwitchCompat ringerMaxButton;
     private CheckBox useBuiltInSpeakerCheckbox;
     private LinearLayout dismissAlarmMissionView;
+    private TextView dismissMissionText;
     private LinearLayout autoDismissView;
 
     /** Obtaining an instance of PreferenceUtil for SharedPreferences cammunications */
@@ -112,63 +115,99 @@ public class SettingsActivity extends AppCompatActivity implements PopupMenu.OnM
 
         /** Dismiss Mission */
         dismissAlarmMissionView = findViewById(R.id.dismiss_alarm_mission_view);
+        dismissMissionText = findViewById(R.id.dismiss_mission_text);
         dismissAlarmMissionView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                popupMenu(1, view);
+                int setchecked = 0;
+                AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this, R.style.AlertDialog_Dark);
+                builder.setTitle("Choose Dismiss mission");
+                // builder.s
+                String dismiss_miss = SP.getString(getResources().getString(R.string.dismiss_default_text),
+                        getResources().getString(R.string.default_dismiss_mission));
+                if(dismiss_miss.equals(getResources().getString(R.string.default_dismiss_mission))){
+                    setchecked = 0;
+                } else {
+                    setchecked = 1;
+                }
+                builder.setSingleChoiceItems(getResources().getStringArray(R.array.dismiss_mission_options), setchecked, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if(i==0){
+                            SharedPreferences.Editor editor = SP.getEditor();
+                            editor.putString(getResources().getString(R.string.dismiss_default_text), getResources().
+                                    getString(R.string.default_dismiss_mission));
+                            editor.commit();
+                        }else {
+                            SharedPreferences.Editor editor2 = SP.getEditor();
+                            editor2.putString(getResources().getString(R.string.dismiss_default_text), getResources().
+                                    getString(R.string.maths_mission_dismiss));
+                            editor2.commit();
+                            //dismissMissionText.setText(getResources().getString(R.string.maths_mission_dismiss));
+                        }
+                    }
+                });
+                final AlertDialog dialog = builder.create();
+                dialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK".toUpperCase(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialog.dismiss();
+                        String dismiss_miss = SP.getString(getResources().getString(R.string.dismiss_default_text),
+                                getResources().getString(R.string.default_dismiss_mission));
+                        dismissMissionText.setText(dismiss_miss);
+                    }
+                });
+                dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL".toUpperCase(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialog.dismiss();
+                        String dismiss_miss = SP.getString(getResources().getString(R.string.dismiss_default_text),
+                                getResources().getString(R.string.default_dismiss_mission));
+                        dismissMissionText.setText(dismiss_miss);
+                    }
+                });
+                dialog.show();
             }
         });
-
 
         /** Auto-Dismiss Alarm */
         autoDismissView = findViewById(R.id.auto_dismiss_layout);
         autoDismissView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                popupMenu(0, view);
+                AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this, R.style.AlertDialog_Dark);
+                builder.setTitle("Choose Auto-dismiss period");
+                // builder.s
+                builder.setSingleChoiceItems(getResources().getStringArray(R.array.auto_dismiss_options), 0, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if(i==0){
+
+                        }else {
+
+                        }
+                    }
+                });
+                final AlertDialog dialog = builder.create();
+                dialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK".toUpperCase(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL".toUpperCase(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
             }
         });
     }
 
-    /** Displays popup menu options for alarmDismiss mission and autodismiss */
-    private void popupMenu(int id, View view){
-        PopupMenu popupMenu = new PopupMenu(this, view);
-        MenuInflater menuInflater = popupMenu.getMenuInflater();
-        // id==1 displays alarmDismiss mission
-        if (id == 1){
-            menuInflater.inflate(R.menu.dismiss_mission, popupMenu.getMenu());
-            popupMenu.show();
-        } else if (id == 0){
-        }
-    }
-
-
-
     /** Sets the status bar to transparent */
     private void statusBarTransparent(){
         StatusBarUtil.setTransparent(this);
-    }
-
-    /** Popup menu option click */
-    @Override
-    public boolean onMenuItemClick(MenuItem menuItem) {
-        switch (menuItem.getItemId()){
-
-            case R.id.deafault:
-                SharedPreferences.Editor editor = SP.getEditor();
-                editor.putString(getResources().getString(R.string.dismiss_default_text), getResources().
-                        getString(R.string.default_dismiss_mission));
-                editor.commit();
-                return true;
-
-            case R.id.maths_mission:
-                SharedPreferences.Editor editor2 = SP.getEditor();
-                editor2.putString(getResources().getString(R.string.dismiss_default_text), getResources().
-                        getString(R.string.maths_mission_dismiss));
-                editor2.commit();
-                return true;
-
-        }
-        return false;
     }
 }
