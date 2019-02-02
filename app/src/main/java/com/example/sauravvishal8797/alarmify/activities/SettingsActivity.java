@@ -39,7 +39,7 @@ public class SettingsActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_settings);
+        setContentView(R.layout.nest);
         SP = PreferenceUtil.getInstance(this);
         statusBarTransparent();
         setUI();
