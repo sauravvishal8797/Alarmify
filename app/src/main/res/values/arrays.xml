@@ -17,4 +17,9 @@
         <item>default</item>
         <item>Maths Puzzle</item>
     </array>
+
+    <array name="dismiss_mission_options">
+        <item>@string/default_dismiss_mission</item>
+        <item>@string/maths_mission_dismiss</item>
+    </array>
 </resources>

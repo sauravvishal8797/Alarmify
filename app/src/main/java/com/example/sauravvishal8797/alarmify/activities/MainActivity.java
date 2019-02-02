@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -57,6 +58,10 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
        // mediaPlayer = MediaPlayer.create()
        // ButterKnife.bind(this);
+        SP = PreferenceUtil.getInstance(this);
+        SharedPreferences.Editor editor = SP.getEditor();
+        editor.putString("ringing", "not");
+        editor.commit();
         setUpUI();
         statusBarTransparent();
     }

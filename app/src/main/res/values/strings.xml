@@ -15,10 +15,22 @@
     <string name="max_volume_preference">Set ringer volume to max</string>
     <string name="using_built_in_speaker">Use the built-in speaker</string>
     <string name="built_in_speaker_pref_summary">Always ring on phone speakers</string>
-    <string name="auto_dismiss_pref">Auto-Dismiss</string>
     <string name="general_alarm_preferences">General</string>
     <string name="active_alarms_to_top_preference">Move active alarms to the top</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- SharedPreferences key strings -->
+    <string name="move_active_alarms_mssg">Move active alarms to the top</string>
+    <string name="set_ringer_value_max_mssg">Set Ringer value to the max</string>
+    <string name="use_built_in_speaker_mssg">Use built in speaker</string>
+    <string name="dismiss_alarm_mission">Dismiss alarm mission</string>
+    <string name="prevent_phone_power_off">Prevent phone power-off</string>
+    <string name="auto_dismiss_pref">Auto-Dismiss</string>
+    <string name="dismiss_default_text">Dismiss Mission</string>
+    <string name="auto_dismiss_time">Auto-Dismiss time</string>
+    <string name="auto_dismiss_timr_pos">Auto-Dismiss time position</string>
+
+    <!-- Dismiss Mission strings -->
+    <string name="default_dismiss_mission">Default</string>
+    <string name="maths_mission_dismiss">Maths Puzzle</string>
+
 </resources>
