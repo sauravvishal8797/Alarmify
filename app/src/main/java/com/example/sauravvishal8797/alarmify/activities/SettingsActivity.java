@@ -6,13 +6,11 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.sauravvishal8797.alarmify.R;
@@ -28,10 +26,15 @@ public class SettingsActivity extends AppCompatActivity{
     private LinearLayout dismissAlarmMissionView;
     private TextView dismissMissionText;
     private LinearLayout autoDismissView;
+    private TextView autoDismissTimeText;
     private CheckBox preventPowerOffCheckbox;
 
     /** Obtaining an instance of PreferenceUtil for SharedPreferences cammunications */
     private PreferenceUtil SP;
+
+    /** Keeping track of the auto-dismiss time if alloted */
+    private int autoDismissTime = 0;
+    private int autoDismissTimeArrayPos = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,21 +200,72 @@ public class SettingsActivity extends AppCompatActivity{
 
         /** Auto-Dismiss Alarm */
         autoDismissView = findViewById(R.id.auto_dismiss_layout);
+        autoDismissTimeText = findViewById(R.id.auto_dismiss_time_text);
+        if(SP.getInt(getResources().getString(R.string.auto_dismiss_time), 0)>0){
+            autoDismissTimeText.setText(String.valueOf(SP.getInt(getResources().getString(R.string.auto_dismiss_time), 0)) + " minutes");
+        }
+        final int checkedItem = SP.getInt(getResources().getString(R.string.auto_dismiss_timr_pos), 0);
         autoDismissView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this, R.style.AlertDialog_Dark);
                 builder.setTitle("Choose Auto-dismiss period");
                 // builder.s
-                builder.setSingleChoiceItems(getResources().getStringArray(R.array.auto_dismiss_options), 0,
+                builder.setSingleChoiceItems(getResources().getStringArray(R.array.auto_dismiss_options), checkedItem,
                         new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if(i==0){
+                       switch (i){
+                           case 0:
+                               autoDismissTime = 0;
+                               autoDismissTimeArrayPos=0;
+                               break;
 
-                        }else {
+                           case 1:
+                               autoDismissTime = 1;
+                               autoDismissTimeArrayPos=1;
+                               break;
 
-                        }
+                           case 2:
+                               autoDismissTime = 5;
+                               autoDismissTimeArrayPos=2;
+                               break;
+
+                           case 3:
+                               autoDismissTime = 7;
+                               autoDismissTimeArrayPos=3;
+                               break;
+
+                           case 4:
+                               autoDismissTime = 10;
+                               autoDismissTimeArrayPos=4;
+                               break;
+
+                           case 5:
+                               autoDismissTime = 15;
+                               autoDismissTimeArrayPos=5;
+                               break;
+
+                           case 6:
+                               autoDismissTime = 20;
+                               autoDismissTimeArrayPos=6;
+                               break;
+
+                           case 7:
+                               autoDismissTime = 25;
+                               autoDismissTimeArrayPos=7;
+                               break;
+
+                           case 8:
+                               autoDismissTime = 30;
+                               autoDismissTimeArrayPos=8;
+                               break;
+
+                               default:
+                                   autoDismissTime=0;
+                                   autoDismissTimeArrayPos=0;
+
+                       }
                     }
                 });
                 final AlertDialog dialog = builder.create();
@@ -219,6 +273,16 @@ public class SettingsActivity extends AppCompatActivity{
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialog.dismiss();
+                        SharedPreferences.Editor editor = SP.getEditor();
+                        editor.putInt(getResources().getString(R.string.auto_dismiss_time), autoDismissTime);
+                        editor.putInt(getResources().getString(R.string.auto_dismiss_timr_pos), autoDismissTimeArrayPos);
+                        editor.commit();
+                        if(autoDismissTime==0){
+                            autoDismissTimeText.setText("Off");
+                        } else {
+                            autoDismissTimeText.setText(String.valueOf(autoDismissTime) + " minutes");
+                        }
+                        Log.i("cunttttttttttttt", String.valueOf(autoDismissTime));
                     }
                 });
                 dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL".toUpperCase(), new DialogInterface.OnClickListener() {

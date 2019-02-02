@@ -26,6 +26,8 @@
     <string name="prevent_phone_power_off">Prevent phone power-off</string>
     <string name="auto_dismiss_pref">Auto-Dismiss</string>
     <string name="dismiss_default_text">Dismiss Mission</string>
+    <string name="auto_dismiss_time">Auto-Dismiss time</string>
+    <string name="auto_dismiss_timr_pos">Auto-Dismiss time position</string>
 
     <!-- Dismiss Mission strings -->
     <string name="default_dismiss_mission">Default</string>

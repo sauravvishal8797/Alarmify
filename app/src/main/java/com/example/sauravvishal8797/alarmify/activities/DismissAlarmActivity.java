@@ -80,6 +80,9 @@ public class DismissAlarmActivity extends AppCompatActivity {
     private PreferenceUtil SP;
     private AudioManager audioManager;
 
+    private int auto_dismiss=0;
+    int count = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,13 +92,60 @@ public class DismissAlarmActivity extends AppCompatActivity {
         hour = intent.getIntExtra("hour", 0);
         minutes = intent.getIntExtra("minutes", 0);
         period = intent.getStringExtra("period");
-        alamtime = intent.getStringExtra("alarmtime");
+        alamtime = intent.getStringExtra("time");
         typeDismiss = intent.getStringExtra("stop");
         id = intent.getIntExtra("id", 0);
         alarmLabel = intent.getStringExtra("label");
         statusBarTransparent();
         mActivityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
         audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
+        if(SP.getInt(getResources().getString(R.string.auto_dismiss_time), 0) > 0){
+            auto_dismiss = SP.getInt(getResources().getString(R.string.auto_dismiss_time), 0);
+           /** Handler handler = new Handler();
+            Runnable runnable = new Runnable() {
+               @Override
+               public void run() {
+                   if (count < auto_dismiss){
+                       count++;
+                       Log.i("cunttttt", String.valueOf(count));
+                   } else {
+                       Log.i("cuntt", "kaka");
+                       if(AlarmReceiver.mediaPlayer!=null && AlarmReceiver.mediaPlayer.isPlaying()){
+                           AlarmReceiver.mediaPlayer.stop();
+                           AlarmReceiver.mediaPlayer.release();
+                           SharedPreferences.Editor editor = SP.getEditor();
+                           editor.putString("ringing", "not");
+                           editor.commit();
+                           finish();
+                       }
+                   }
+               }
+           };
+           handler.postDelayed(runnable, 60000);*/
+            ScheduledExecutorService scheduler =
+                    Executors.newSingleThreadScheduledExecutor();
+
+            scheduler.scheduleAtFixedRate
+                    (new Runnable() {
+                        public void run() {
+                            if (count < auto_dismiss) {
+                                count++;
+                                Log.i("cunttttt", String.valueOf(count));
+                            } else {
+                                Log.i("cuntt", "kaka");
+                                if (AlarmReceiver.mediaPlayer != null && AlarmReceiver.mediaPlayer.isPlaying()) {
+                                    AlarmReceiver.mediaPlayer.stop();
+                                    AlarmReceiver.mediaPlayer.release();
+                                    SharedPreferences.Editor editor = SP.getEditor();
+                                    editor.putString("ringing", "not");
+                                    editor.commit();
+                                    finish();
+                                }
+                                // call service
+                            }
+                        }
+                    }, 0, 60, TimeUnit.SECONDS);
+        }
        // setUpUi();
         setUpUiDefaultDismissView();
         isPaused=false;
@@ -105,7 +155,8 @@ public class DismissAlarmActivity extends AppCompatActivity {
 
     private void setUpUiDefaultDismissView(){
         currentTimeView = findViewById(R.id.time_current);
-        currentTimeView.setText(alamtime);
+        currentTimeView.setText("It's " +Calendar.getInstance().getTime().getHours()+":"+Calendar.getInstance().getTime().getMinutes());
+        currentTimeView.setTextSize(40);
         dismissButton = findViewById(R.id.dismiss_button);
         alarmLabelMessage = findViewById(R.id.alarm_label_message);
         alarmLabelMessage.setText(alarmLabel);
