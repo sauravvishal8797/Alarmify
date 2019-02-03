@@ -29,6 +29,7 @@ public class SettingsActivity extends AppCompatActivity{
     private TextView autoDismissTimeText;
     private CheckBox preventPowerOffCheckbox;
     private CheckBox setAlarmconfirmationCheckbox;
+    private CheckBox displayDismissScreenCheckbox;
 
     /** Obtaining an instance of PreferenceUtil for SharedPreferences cammunications */
     private PreferenceUtil SP;
@@ -113,6 +114,29 @@ public class SettingsActivity extends AppCompatActivity{
                 } else {
                     SharedPreferences.Editor editor = SP.getEditor();
                     editor.putBoolean(getResources().getString(R.string.set_alarm_confirmation), false);
+                    editor.commit();
+                }
+            }
+        });
+
+        /** Display Dismiss Screen even when the screen is off */
+        displayDismissScreenCheckbox = findViewById(R.id.display_dismiss_screen_onlock_checkbox);
+        displayDismissScreenCheckbox.setOnCheckedChangeListener(null);
+        if(SP.getBoolean(getResources().getString(R.string.dismiss_view_display_lockscreen), false)){
+            displayDismissScreenCheckbox.setChecked(true);
+        } else {
+            displayDismissScreenCheckbox.setChecked(false);
+        }
+        displayDismissScreenCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    SharedPreferences.Editor editor = SP.getEditor();
+                    editor.putBoolean(getResources().getString(R.string.dismiss_view_display_lockscreen), true);
+                    editor.commit();
+                } else {
+                    SharedPreferences.Editor editor = SP.getEditor();
+                    editor.putBoolean(getResources().getString(R.string.dismiss_view_display_lockscreen), false);
                     editor.commit();
                 }
             }
