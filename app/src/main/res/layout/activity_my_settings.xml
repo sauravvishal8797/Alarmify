@@ -123,6 +123,81 @@
                 android:layout_marginBottom="20dp"
                 android:background="#00344D"/>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="19dp"
+                    android:id="@+id/set_alarm_confirmation"
+                    android:text="@string/set_alarm_confirmation"
+                    android:textColor="@color/grey_shade"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/set_alarm_confirmation"
+                    android:textColor="@color/grey_shade"
+                    android:textSize="15dp"
+                    android:text="@string/set_alarm_confirmation_mssg"/>
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/set_alarm_confirmation_checkbox"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:buttonTint="@color/grey_shade"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="#00344D"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="19dp"
+                    android:id="@+id/dismiss_view_display_lock_screen"
+                    android:text="@string/dismiss_view_display_lockscreen"
+                    android:textColor="@color/grey_shade"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/dismiss_view_display_lock_screen"
+                    android:textColor="@color/grey_shade"
+                    android:textSize="15dp"
+                    android:text="@string/dismiss_view_display_lockscreen_summary"/>
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/display_dismiss_screen_onlock_checkbox"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:buttonTint="@color/grey_shade"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="#00344D"/>
+
+
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -232,3 +307,4 @@
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>
+

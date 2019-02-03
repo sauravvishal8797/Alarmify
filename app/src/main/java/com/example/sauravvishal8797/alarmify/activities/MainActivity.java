@@ -220,12 +220,26 @@ public class MainActivity extends AppCompatActivity{
      */
     private ArrayList<Alarm> getData(){
         ArrayList<Alarm> allAlarms = new ArrayList<>();
+        ArrayList<Alarm> activeAlarms = new ArrayList<>();
+        ArrayList<Alarm> inActiveAlarms = new ArrayList<>();
         realmController = RealmController.with(this);
         realm = realmController.getRealm();
         RealmResults<Alarm> realmResults = realmController.getAlarms();
         if (realmResults.size()==0) return allAlarms;
-        for(int i = 0; i < realmResults.size(); i++){
-            allAlarms.add(realmResults.get(i));
+        if(SP.getBoolean(getResources().getString(R.string.move_active_alarms_mssg), false)){
+            for(int i = 0; i < realmResults.size(); i++){
+                if(realmResults.get(i).isActivated()){
+                    activeAlarms.add(realmResults.get(i));
+                } else {
+                    inActiveAlarms.add(realmResults.get(i));
+                }
+            }
+            allAlarms.addAll(activeAlarms);
+            allAlarms.addAll(inActiveAlarms);
+        } else {
+            for(int i = 0; i < realmResults.size(); i++){
+                allAlarms.add(realmResults.get(i));
+            }
         }
        return allAlarms;
     }

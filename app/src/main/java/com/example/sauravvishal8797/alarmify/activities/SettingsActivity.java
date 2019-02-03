@@ -28,6 +28,8 @@ public class SettingsActivity extends AppCompatActivity{
     private LinearLayout autoDismissView;
     private TextView autoDismissTimeText;
     private CheckBox preventPowerOffCheckbox;
+    private CheckBox setAlarmconfirmationCheckbox;
+    private CheckBox displayDismissScreenCheckbox;
 
     /** Obtaining an instance of PreferenceUtil for SharedPreferences cammunications */
     private PreferenceUtil SP;
@@ -39,7 +41,7 @@ public class SettingsActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.nest);
+        setContentView(R.layout.activity_my_settings);
         SP = PreferenceUtil.getInstance(this);
         statusBarTransparent();
         setUI();
@@ -94,6 +96,51 @@ public class SettingsActivity extends AppCompatActivity{
             }
         });
 
+        /** Set-Alarm confirmation */
+        setAlarmconfirmationCheckbox = findViewById(R.id.set_alarm_confirmation_checkbox);
+        setAlarmconfirmationCheckbox.setOnCheckedChangeListener(null);
+        if(SP.getBoolean(getResources().getString(R.string.set_alarm_confirmation), false)){
+            setAlarmconfirmationCheckbox.setChecked(true);
+        } else {
+            setAlarmconfirmationCheckbox.setChecked(false);
+        }
+        setAlarmconfirmationCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    SharedPreferences.Editor editor = SP.getEditor();
+                    editor.putBoolean(getResources().getString(R.string.set_alarm_confirmation), true);
+                    editor.commit();
+                } else {
+                    SharedPreferences.Editor editor = SP.getEditor();
+                    editor.putBoolean(getResources().getString(R.string.set_alarm_confirmation), false);
+                    editor.commit();
+                }
+            }
+        });
+
+        /** Display Dismiss Screen even when the screen is off */
+        displayDismissScreenCheckbox = findViewById(R.id.display_dismiss_screen_onlock_checkbox);
+        displayDismissScreenCheckbox.setOnCheckedChangeListener(null);
+        if(SP.getBoolean(getResources().getString(R.string.dismiss_view_display_lockscreen), false)){
+            displayDismissScreenCheckbox.setChecked(true);
+        } else {
+            displayDismissScreenCheckbox.setChecked(false);
+        }
+        displayDismissScreenCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    SharedPreferences.Editor editor = SP.getEditor();
+                    editor.putBoolean(getResources().getString(R.string.dismiss_view_display_lockscreen), true);
+                    editor.commit();
+                } else {
+                    SharedPreferences.Editor editor = SP.getEditor();
+                    editor.putBoolean(getResources().getString(R.string.dismiss_view_display_lockscreen), false);
+                    editor.commit();
+                }
+            }
+        });
 
         /** Ringer Volume Max */
         ringerMaxButton = findViewById(R.id.ringer_max_button);
