@@ -20,6 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.example.sauravvishal8797.alarmify.activities.DismissAlarmActivity;
 import com.example.sauravvishal8797.alarmify.helpers.BasicCallback;
 import com.example.sauravvishal8797.alarmify.receivers.AlarmReceiver;
 import com.example.sauravvishal8797.alarmify.helpers.AlertDialogHelper;
@@ -152,6 +153,9 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
                                 return true;
 
                             case R.id.preview_alarm:
+                                Intent intent = new Intent(view.getContext(), DismissAlarmActivity.class);
+                                intent.putExtra("preview", true);
+                                view.getContext().startActivity(intent);
                                 return true;
 
                             case R.id.edit_alarm:

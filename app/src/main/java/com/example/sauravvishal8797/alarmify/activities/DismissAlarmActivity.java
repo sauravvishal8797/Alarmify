@@ -7,7 +7,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.Shape;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
@@ -19,6 +24,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -63,6 +69,8 @@ public class DismissAlarmActivity extends AppCompatActivity {
     private TextView dismiss_time;
     private TextView dismiss_message;
 
+    private boolean previewScreen = false;
+
     /**
      * UI elements for the default dismiss view
      */
@@ -80,6 +88,9 @@ public class DismissAlarmActivity extends AppCompatActivity {
 
     private PreferenceUtil SP;
     private AudioManager audioManager;
+    private MediaPlayer previewMediaPlayer;
+    private RelativeLayout previewModeLayout;
+    private ImageView previewAbortButton;
 
     private int auto_dismiss=0;
     int count = 0;
@@ -88,12 +99,29 @@ public class DismissAlarmActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dismiss_alarm_view);
+        audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
+        SP = PreferenceUtil.getInstance(this);
         Intent intent = getIntent();
+        if(intent.hasExtra("preview")){
+           previewScreen = intent.getBooleanExtra("preview", false);
+           Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+           if (alarmUri == null) {
+               alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+           }
+           previewMediaPlayer = MediaPlayer.create(this, alarmUri);
+           previewMediaPlayer.setLooping(true);
+           if(SP.getBoolean(getResources().getString(R.string.set_ringer_value_max_mssg), false)){
+               audioManager.setStreamVolume(
+                       AudioManager.STREAM_MUSIC,
+                       audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),
+                       0);
+           }
+           previewMediaPlayer.start();
+        }
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
                 + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
                 + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        SP = PreferenceUtil.getInstance(this);
         hour = intent.getIntExtra("hour", 0);
         minutes = intent.getIntExtra("minutes", 0);
         period = intent.getStringExtra("period");
@@ -103,7 +131,6 @@ public class DismissAlarmActivity extends AppCompatActivity {
         alarmLabel = intent.getStringExtra("label");
         statusBarTransparent();
         mActivityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
-        audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
         if(SP.getInt(getResources().getString(R.string.auto_dismiss_time), 0) > 0){
             auto_dismiss = SP.getInt(getResources().getString(R.string.auto_dismiss_time), 0);
            /** Handler handler = new Handler();
@@ -159,6 +186,21 @@ public class DismissAlarmActivity extends AppCompatActivity {
     }
 
     private void setUpUiDefaultDismissView(){
+        previewModeLayout = findViewById(R.id.preview_mode_textView);
+        previewAbortButton = findViewById(R.id.preview_abort_button);
+        if(previewScreen){
+            previewModeLayout.setVisibility(View.VISIBLE);
+            previewAbortButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(previewMediaPlayer.isPlaying()){
+                        previewMediaPlayer.stop();
+                        previewMediaPlayer.release();
+                        finish();
+                    }
+                }
+            });
+        }
         currentTimeView = findViewById(R.id.time_current);
         currentTimeView.setText("It's " +Calendar.getInstance().getTime().getHours()+":"+Calendar.getInstance().getTime().getMinutes());
         currentTimeView.setTextSize(40);
@@ -170,15 +212,23 @@ public class DismissAlarmActivity extends AppCompatActivity {
         dismissButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(AlarmReceiver.mediaPlayer!=null && AlarmReceiver.mediaPlayer.isPlaying()){
-                    AlarmReceiver.mediaPlayer.stop();
-                    AlarmReceiver.mediaPlayer.release();
-                    SharedPreferences.Editor editor = SP.getEditor();
-                    editor.putString("ringing", "not");
-                    editor.commit();
+                if(previewScreen){
+                    if(previewMediaPlayer.isPlaying()){
+                        previewMediaPlayer.stop();
+                        previewMediaPlayer.release();
+                        finish();
+                    }
+                } else {
+                    if(AlarmReceiver.mediaPlayer!=null && AlarmReceiver.mediaPlayer.isPlaying()){
+                        AlarmReceiver.mediaPlayer.stop();
+                        AlarmReceiver.mediaPlayer.release();
+                        SharedPreferences.Editor editor = SP.getEditor();
+                        editor.putString("ringing", "not");
+                        editor.commit();
+                    }
+                    finish();
+                    Toast.makeText(view.getContext(), getResources().getString(R.string.dismiss_alarm_message), Toast.LENGTH_SHORT).show();
                 }
-                finish();
-                Toast.makeText(view.getContext(), getResources().getString(R.string.dismiss_alarm_message), Toast.LENGTH_SHORT).show();
             }
         });
     }
