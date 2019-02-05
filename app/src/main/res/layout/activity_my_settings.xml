@@ -159,6 +159,34 @@
                 android:layout_marginBottom="20dp"
                 android:background="#00344D"/>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="19dp"
+                    android:id="@+id/enable_alarm_edit"
+                    android:textColor="@color/grey_shade"
+                    android:text="@string/edit_saved_alarm_action_mssg"/>
+
+                <android.support.v7.widget.SwitchCompat
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/enable_alarm_edit_switch"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="#00344D"/>
+
 
             <TextView
                 android:layout_width="wrap_content"

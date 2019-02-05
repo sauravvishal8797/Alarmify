@@ -29,6 +29,7 @@ public class SettingsActivity extends AppCompatActivity{
     private TextView autoDismissTimeText;
     private CheckBox preventPowerOffCheckbox;
     private CheckBox setAlarmconfirmationCheckbox;
+    private SwitchCompat editSavedAlarmsButton;
 
     /** Obtaining an instance of PreferenceUtil for SharedPreferences cammunications */
     private PreferenceUtil SP;
@@ -113,6 +114,29 @@ public class SettingsActivity extends AppCompatActivity{
                 } else {
                     SharedPreferences.Editor editor = SP.getEditor();
                     editor.putBoolean(getResources().getString(R.string.set_alarm_confirmation), false);
+                    editor.commit();
+                }
+            }
+        });
+
+        /** Edit saved alarms */
+        editSavedAlarmsButton = findViewById(R.id.enable_alarm_edit_switch);
+        editSavedAlarmsButton.setOnCheckedChangeListener(null);
+        if(SP.getBoolean(getResources().getString(R.string.edit_saved_alarm_action_mssg), false)){
+            editSavedAlarmsButton.setChecked(true);
+        } else {
+            editSavedAlarmsButton.setChecked(false);
+        }
+        editSavedAlarmsButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    SharedPreferences.Editor editor = SP.getEditor();
+                    editor.putBoolean(getResources().getString(R.string.edit_saved_alarm_action_mssg), true);
+                    editor.commit();
+                } else {
+                    SharedPreferences.Editor editor = SP.getEditor();
+                    editor.putBoolean(getResources().getString(R.string.edit_saved_alarm_action_mssg), false);
                     editor.commit();
                 }
             }
