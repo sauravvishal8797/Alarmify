@@ -32,6 +32,8 @@
     <string name="auto_dismiss_timr_pos">Auto-Dismiss time position</string>
     <string name="set_alarm_confirmation">Set-Alarm confirmation</string>
     <string name="set_alarm_confirmation_mssg">Asks for confirmation while setting alarm</string>
+    <string name="dismiss_view_display_lockscreen">Display dismiss view </string>
+    <string name="dismiss_view_display_lockscreen_summary">Displays dismiss view when the screen is off</string>
 
     <!-- Dismiss Mission strings -->
     <string name="default_dismiss_mission">Default</string>
