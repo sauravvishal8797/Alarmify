@@ -26,7 +26,7 @@
     <string name="use_built_in_speaker_mssg">Use built in speaker</string>
     <string name="dismiss_alarm_mission">Dismiss alarm mission</string>
     <string name="prevent_phone_power_off">Prevent phone power-off</string>
-    <string name="edit_saved_alarm_action_mssg">Edit saved alarms</string>
+    <string name="edit_saved_alarm_action_mssg">Edit alarms before ringing</string>
     <string name="auto_dismiss_pref">Auto-Dismiss</string>
     <string name="dismiss_default_text">Dismiss Mission</string>
     <string name="auto_dismiss_time">Auto-Dismiss time</string>

@@ -99,6 +99,10 @@ public class DismissAlarmActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dismiss_alarm_view);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
+                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
         SP = PreferenceUtil.getInstance(this);
         Intent intent = getIntent();
@@ -118,10 +122,6 @@ public class DismissAlarmActivity extends AppCompatActivity {
            }
            previewMediaPlayer.start();
         }
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
-                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
-                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         hour = intent.getIntExtra("hour", 0);
         minutes = intent.getIntExtra("minutes", 0);
         period = intent.getStringExtra("period");
