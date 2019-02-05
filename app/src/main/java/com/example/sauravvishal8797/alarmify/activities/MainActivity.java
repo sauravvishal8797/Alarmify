@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.example.sauravvishal8797.alarmify.R;
 import com.example.sauravvishal8797.alarmify.adapters.AlarmAdapter;
+import com.example.sauravvishal8797.alarmify.helpers.BasicCallback;
 import com.example.sauravvishal8797.alarmify.helpers.PreferenceUtil;
 import com.example.sauravvishal8797.alarmify.models.Alarm;
 import com.example.sauravvishal8797.alarmify.realm.RealmController;
@@ -51,6 +52,16 @@ public class MainActivity extends AppCompatActivity{
     private RealmController realmController;
     private Realm realm;
     private PreferenceUtil SP;
+
+    private BasicCallback basicCallback = new BasicCallback() {
+        @Override
+        public void callBack(int statusCode) {
+            if(statusCode == 2){
+                emptyView.setVisibility(VISIBLE);
+                optionsMenuTextView.setVisibility(GONE);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,7 +177,7 @@ public class MainActivity extends AppCompatActivity{
             if(optionsMenuTextView.getVisibility() == View.GONE){
                 optionsMenuTextView.setVisibility(View.VISIBLE);
             }
-            AlarmAdapter alarmAdapter = new AlarmAdapter(getData(), this, this);
+            AlarmAdapter alarmAdapter = new AlarmAdapter(getData(), this, this, basicCallback);
             alarmRecyclerView.setAdapter(alarmAdapter);
         }
     }

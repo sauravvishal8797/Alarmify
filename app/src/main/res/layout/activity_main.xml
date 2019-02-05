@@ -27,7 +27,7 @@
         android:layout_alignParentTop="true"
         android:textColor="@color/whitishtint"
         android:layout_marginTop="35dp"
-        android:layout_marginRight="40dp"
+        android:layout_marginRight="20dp"
         android:text="&#8942;"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
@@ -35,7 +35,10 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/viewalarm"
-        android:layout_margin="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="20dp"
         android:layout_below="@id/text"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

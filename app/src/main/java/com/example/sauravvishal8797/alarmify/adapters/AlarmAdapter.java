@@ -10,12 +10,17 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.example.sauravvishal8797.alarmify.helpers.BasicCallback;
 import com.example.sauravvishal8797.alarmify.receivers.AlarmReceiver;
 import com.example.sauravvishal8797.alarmify.helpers.AlertDialogHelper;
 import com.example.sauravvishal8797.alarmify.R;
@@ -33,11 +38,13 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
     private Context context;
     private RealmController realmController;
     private Activity activity;
+    private BasicCallback basicCallback;
 
-    public AlarmAdapter(ArrayList<Alarm> list, Context context, Activity activity) {
+    public AlarmAdapter(ArrayList<Alarm> list, Context context, Activity activity, BasicCallback basicCallback) {
         this.list=list;
         this.context=context;
         this.activity = activity;
+        this.basicCallback = basicCallback;
     }
 
     @NonNull
@@ -48,7 +55,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
         final boolean[] deactivateAlert = {true};
         final Alarm alarm = list.get(i);
         if(alarm.getTime().startsWith("0")&&alarm.getTime().substring(0, alarm.getTime().indexOf(":")).length()==3){
@@ -120,6 +127,44 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
             }
         });
         viewHolder.periodText.setText(alarm.getPeriod());
+        viewHolder.sideMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
+                MenuInflater inflater = popupMenu.getMenuInflater();
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()){
+
+                            case R.id.delete_alarm:
+                                realmController = RealmController.with(view.getContext());
+                                if(alarm.isActivated()){
+                                    deactivateAlarm(alarm.getTime(), alarm.getHour(), alarm.getMinute(), alarm.getPendingIntentId());
+                                }
+                                realmController.deleteAlarm(alarm.getTime(), alarm.getPeriod());
+                                list.remove(i);
+                                notifyItemRemoved(i);
+                                notifyItemRangeChanged(i, list.size());
+                                if(list.size() == 0){
+                                    basicCallback.callBack(2);
+                                }
+                                return true;
+
+                            case R.id.preview_alarm:
+                                return true;
+
+                            case R.id.edit_alarm:
+                                return true;
+
+                        }
+                        return false;
+                    }
+                });
+                inflater.inflate(R.menu.alarm_item_view_popup, popupMenu.getMenu());
+                popupMenu.show();
+            }
+        });
     }
 
     private void deactivateAlarm(String alarmTime, int hour, int min, int pendingIntentId){
@@ -155,6 +200,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
         private TextView periodText;
         private SwitchCompat button;
         private TextView daysText;
+        private TextView sideMenu;
         //private TextView doysText;
 
         public ViewHolder(@NonNull View itemView) {
@@ -163,6 +209,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
             daysText = itemView.findViewById(R.id.days);
             button = itemView.findViewById(R.id.button);
             timeText = itemView.findViewById(R.id.timetextalarm);
+            sideMenu = itemView.findViewById(R.id.side_menu);
         }
     }
 }
