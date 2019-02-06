@@ -165,6 +165,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
                                 Intent intent1 = new Intent(view.getContext(), AlarmDetailActivity.class);
                                 intent1.putExtra("alarm_edit", true);
                                 intent1.putExtra("hour", alarm.getHour());
+                                intent1.putExtra("time", alarm.getTime());
                                 intent1.putExtra("minute", alarm.getMinute());
                                 intent1.putExtra("period", alarm.getPeriod());
                                 intent1.putExtra("delete_after_going_off", alarm.isDeleteAfterGoesOff());
