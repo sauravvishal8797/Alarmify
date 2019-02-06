@@ -72,11 +72,18 @@ public class AlarmDetailActivity extends AppCompatActivity {
 
     private PreferenceUtil SP;
 
+    private boolean edit_mode = false;
+    private Intent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarm_detail);
         SP = PreferenceUtil.getInstance(this);
+        intent = getIntent();
+        if(intent.hasExtra("alarm_edit")){
+            edit_mode = intent.getBooleanExtra("alarm_edit", false);
+        }
         realmController = RealmController.with(this);
         time_picker = (TimePicker) findViewById(R.id.timepicker22);
         time_picker.setIs24HourView(false);
@@ -152,12 +159,25 @@ public class AlarmDetailActivity extends AppCompatActivity {
         alarmMessage = (TextView) findViewById(R.id.set_alarm_mssg);
         setButton = (ImageView) findViewById(R.id.set_button);
         daytext = (TextView) findViewById(R.id.daytext);
+        if(edit_mode){
+            daytext.setText(intent.getStringExtra("repeatDays"));
+        }
         alarmLabel = (TextView) findViewById(R.id.labeltext);
+        if(edit_mode){
+            alarmLabel.setText(intent.getStringExtra("label"));
+        }
         timePickerChange();
+        if(edit_mode){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                Log.i("oaoaoaoaoa", String.valueOf(intent.getIntExtra("hour", 0)));
+                time_picker.setHour(intent.getIntExtra("hour", 0));
+                time_picker.setMinute(intent.getIntExtra("minute", 0));
+            }
+        }
         setButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(SP.getBoolean(getResources().getString(R.string.set_alarm_confirmation), false)){
+                if(SP.getBoolean(getResources().getString(R.string.set_alarm_confirmation), false)&&!edit_mode){
                     final AlertDialog dialog = AlertDialogHelper.getTextDialog(AlarmDetailActivity.this, getResources().getString
                             (R.string.confirm_alarm_dialog_title), getResources().getString(R.string.confirm_alarm_dislog_mssg));
                     dialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getString(R.string.dialog_postive_button).
@@ -177,7 +197,29 @@ public class AlarmDetailActivity extends AppCompatActivity {
                                 }
                             });
                     dialog.show();
-                } else {
+                } else if ((SP.getBoolean(getResources().getString(R.string.set_alarm_confirmation), false)&&edit_mode) ||
+                        (!SP.getBoolean(getResources().getString(R.string.set_alarm_confirmation), false)&&edit_mode) ){
+                    final AlertDialog dialog = AlertDialogHelper.getTextDialog(AlarmDetailActivity.this, getResources().getString
+                            (R.string.edit_alarm_dialog_title), getResources().getString(R.string.edit_alarm_dialog_mssg));
+                    dialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getString(R.string.dialog_postive_button).
+                            toUpperCase(), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialog.dismiss();
+                            setAlarm();
+                        }
+                    });
+                    dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getString(R.string.dialog_negative_mssg).toUpperCase(),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            });
+                    dialog.show();
+
+                } else if (!SP.getBoolean(getResources().getString(R.string.set_alarm_confirmation), false)&&!edit_mode){
                     setAlarm();
                 }
             }
@@ -197,6 +239,9 @@ public class AlarmDetailActivity extends AppCompatActivity {
             }
         });
         snooze = (SwitchCompat) findViewById(R.id.snooze_button);
+        if(edit_mode){
+            snooze.setChecked(intent.getBooleanExtra("snooze", false));
+        }
         snooze.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -210,6 +255,9 @@ public class AlarmDetailActivity extends AppCompatActivity {
             }
         });
         deleteAfterButton = (SwitchCompat) findViewById(R.id.delete_after_button);
+        if(edit_mode){
+            deleteAfterButton.setChecked(intent.getBooleanExtra("delete_after_going_off", false));
+        }
         deleteAfterButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -249,6 +297,10 @@ public class AlarmDetailActivity extends AppCompatActivity {
                 });
                 dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 dialog.show();
+                if(edit_mode){
+                    editText.setText(intent.getStringExtra("label"));
+                    editText.setSelection(0);
+                }
             }
         });
     }
@@ -392,6 +444,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
         Alarm newAlarm = new Alarm();
         newAlarm.setTime(alarmTime);
         newAlarm.setHour(time_picker.getCurrentHour());
+        Log.i("mmmmmmm", String.valueOf(time_picker.getCurrentHour()));
         newAlarm.setPendingIntentId(pendingIntentId);
         newAlarm.setMinute(time_picker.getCurrentMinute());
         if(repeatAlarmDays==null)

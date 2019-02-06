@@ -97,6 +97,8 @@ public class RealmController {
         realm.beginTransaction();
         Alarm alarm1 = realm.createObject(Alarm.class, alarm.getTime());
        // alarm1.setTime(alarm.getTime());
+        alarm1.setHour(alarm.getHour());
+        alarm1.setMinute(alarm.getMinute());
         alarm1.setDays(alarm.getDays());
         alarm1.setPeriod(alarm.getPeriod());
         alarm1.setActivated(alarm.isActivated());

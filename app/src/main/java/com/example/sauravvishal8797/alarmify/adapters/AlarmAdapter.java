@@ -17,9 +17,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.example.sauravvishal8797.alarmify.activities.AlarmDetailActivity;
 import com.example.sauravvishal8797.alarmify.activities.DismissAlarmActivity;
 import com.example.sauravvishal8797.alarmify.helpers.BasicCallback;
 import com.example.sauravvishal8797.alarmify.receivers.AlarmReceiver;
@@ -59,6 +61,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
         final boolean[] deactivateAlert = {true};
         final Alarm alarm = list.get(i);
+        Log.i("papapapapapa", String.valueOf(alarm.getHour()));
         if(alarm.getTime().startsWith("0")&&alarm.getTime().substring(0, alarm.getTime().indexOf(":")).length()==3){
             viewHolder.timeText.setText(alarm.getTime().substring(1));
         } else {
@@ -159,6 +162,17 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
                                 return true;
 
                             case R.id.edit_alarm:
+                                Intent intent1 = new Intent(view.getContext(), AlarmDetailActivity.class);
+                                intent1.putExtra("alarm_edit", true);
+                                intent1.putExtra("hour", alarm.getHour());
+                                intent1.putExtra("minute", alarm.getMinute());
+                                intent1.putExtra("period", alarm.getPeriod());
+                                intent1.putExtra("delete_after_going_off", alarm.isDeleteAfterGoesOff());
+                                intent1.putExtra("label", alarm.getLabel());
+                                intent1.putExtra("snooze", alarm.getSnoozeTime());
+                                intent1.putExtra("repeatDays", alarm.getDays());
+                                Log.i("oaoaoaoaoaoajuioo", String.valueOf(alarm.getHour()));
+                                view.getContext().startActivity(intent1);
                                 return true;
 
                         }
@@ -204,7 +218,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
         private TextView periodText;
         private SwitchCompat button;
         private TextView daysText;
-        private TextView sideMenu;
+        private ImageView sideMenu;
         //private TextView doysText;
 
         public ViewHolder(@NonNull View itemView) {

@@ -6,7 +6,9 @@
     <string name="deactivate_alarm_dialog_title">Deactivate Alarm</string>
     <string name="reactivate_alarm_dialog_title">Reactivate Alarm</string>
     <string name="confirm_alarm_dialog_title">Confirm Alarm</string>
+    <string name="edit_alarm_dialog_title">Edit Alarm</string>
     <string name="confirm_alarm_dislog_mssg">Are you sure you want to set this alarm?</string>
+    <string name="edit_alarm_dialog_mssg">Are you sure you want to edit this alarm?</string>
     <string name="deactivate_alarm_dialog_mssg">Are you sure you want to turn-off this alarm?</string>
     <string name="reactive_alarm_dialog_mssg">Are you sure you want to reactivate this alarm?</string>
     <string name="dialog_postive_button">OK</string>

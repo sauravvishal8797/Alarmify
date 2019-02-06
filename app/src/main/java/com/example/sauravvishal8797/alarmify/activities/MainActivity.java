@@ -97,6 +97,8 @@ public class MainActivity extends AppCompatActivity{
             }
         });
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setReverseLayout(false);
+        linearLayoutManager.setStackFromEnd(false);
         alarmRecyclerView.setLayoutManager(linearLayoutManager);
         if (getData().size()==0)
             emptyView.setVisibility(View.VISIBLE);
