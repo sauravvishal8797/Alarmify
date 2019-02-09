@@ -30,7 +30,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sauravvishal8797.alarmify.adapters.repeatAlarmAdapter;
 import com.example.sauravvishal8797.alarmify.helpers.PreferenceUtil;
+import com.example.sauravvishal8797.alarmify.models.Alarm;
+import com.example.sauravvishal8797.alarmify.realm.RealmController;
 import com.example.sauravvishal8797.alarmify.receivers.AlarmReceiver;
 import com.example.sauravvishal8797.alarmify.services.Alarmservice;
 import com.example.sauravvishal8797.alarmify.R;
@@ -45,6 +48,8 @@ import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import io.realm.Realm;
 
 public class DismissAlarmActivity extends AppCompatActivity {
 
@@ -76,15 +81,18 @@ public class DismissAlarmActivity extends AppCompatActivity {
      */
     private TextView currentTimeView;
     private Button dismissButton;
+    private Button snoozeButton;
     private TextView alarmLabelMessage;
     private TextView alarmPeriod;
 
-    private int hour;
-    private int minutes;
+    private int hour=0;
+    private int minutes=0;
     private String period;
     private String alamtime;
     private int id;
     private String alarmLabel;
+    private int snoozeTime=0;
+    private boolean deleteAfterGpingoff;
 
     private PreferenceUtil SP;
     private AudioManager audioManager;
@@ -128,6 +136,9 @@ public class DismissAlarmActivity extends AppCompatActivity {
         alamtime = intent.getStringExtra("time");
         typeDismiss = intent.getStringExtra("stop");
         id = intent.getIntExtra("id", 0);
+        deleteAfterGpingoff = intent.getBooleanExtra("deleteAfterGoingOff", false);
+        snoozeTime = intent.getIntExtra("snooze", 0);
+        Log.i("angmassssssssss", String.valueOf(snoozeTime));
         alarmLabel = intent.getStringExtra("label");
         statusBarTransparent();
         mActivityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
@@ -205,6 +216,21 @@ public class DismissAlarmActivity extends AppCompatActivity {
         currentTimeView.setText("It's " +Calendar.getInstance().getTime().getHours()+":"+Calendar.getInstance().getTime().getMinutes());
         currentTimeView.setTextSize(40);
         dismissButton = findViewById(R.id.dismiss_button);
+        snoozeButton = findViewById(R.id.snooze_button);
+        snoozeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(AlarmReceiver.mediaPlayer!=null && AlarmReceiver.mediaPlayer.isPlaying()){
+                    AlarmReceiver.mediaPlayer.stop();
+                    AlarmReceiver.mediaPlayer.release();
+                    SharedPreferences.Editor editor = SP.getEditor();
+                    editor.putString("ringing", "not");
+                    editor.commit();
+                    setAlarmAfterSnooze(snoozeTime);
+                }
+                finish();
+            }
+        });
         alarmLabelMessage = findViewById(R.id.alarm_label_message);
         alarmLabelMessage.setText(alarmLabel);
         alarmPeriod = findViewById(R.id.period);
@@ -232,6 +258,89 @@ public class DismissAlarmActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void setAlarmAfterSnooze(int snoozeTime){
+        String alarmTime = " ";
+        final String[] hours = new String[1];
+        final String[] minutesf = new String[1];
+       AlarmManager alarmManager = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        Calendar now = Calendar.getInstance();
+        Log.i("latinnnnn", String.valueOf(snoozeTime));
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        Log.i("minutesssssssssss", String.valueOf(minutes));
+        minutes = minutes+snoozeTime;
+        Log.i("minutesssss",String.valueOf(minutes));
+        if(minutes>59){
+            minutes = minutes - 60;
+        }
+        calendar.set(Calendar.MINUTE, minutes);
+        if(calendar.before(now)){
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        if(hour>=12){
+            if(hour-12>0)
+                hours[0] = "0"+String.valueOf(hour-12);
+            else
+                hours[0] = String.valueOf(hour);
+            if(hour>=0 && minutes<=9)
+                minutesf[0] = "0"+minutes;
+            else
+                minutesf[0] = String.valueOf(minutes);
+
+            alarmTime = hours[0]+":"+minutesf[0];
+                   /* alarmTime = (time_picker.getCurrentHour()-12>0)?(String.valueOf(time_picker.getCurrentHour()-12)):
+                            time_picker.getCurrentHour()+":" +
+                            ((time_picker.getCurrentMinute()>=0 && time_picker.getCurrentMinute()<=9)?String.valueOf(0) +
+                                    time_picker.getCurrentMinute().toString():time_picker.getCurrentMinute().toString());*/
+            period = "PM";
+        } else {
+            alarmTime = String.valueOf(hour) +":" +
+                    ((minutes>=0 && minutes<=9)?String.valueOf(0) +
+                            String.valueOf(minutes):String.valueOf(minutes));
+            period = "AM";
+        }
+        Intent intent = new Intent(DismissAlarmActivity.this, AlarmReceiver.class);
+        intent.putExtra("alarmtime", alarmTime);
+        intent.putExtra("hour", hour);
+        intent.putExtra("minutes", minutes);
+        intent.putExtra("deleteAfterGoingOff", true);
+        intent.putExtra("period", period);
+        intent.putExtra("snooze", snoozeTime);
+        intent.putExtra("label", alarmLabel);
+        intent.putExtra("repeat", 0);
+        final int _id = (int) System.currentTimeMillis();
+        intent.putExtra("id", _id);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(DismissAlarmActivity.this, _id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        //Log.i("fafafafafa", String.valueOf(time_picker.getCurrentHour())+String.valueOf(time_picker.getCurrentMinute()));
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        Log.i("ldldldld", String.valueOf(alarmTime));
+        creatingNewAlarmObject(_id, alarmTime, 0);
+        finish();
+    }
+
+    private void creatingNewAlarmObject(int pendingIntentId, String alamtime, int rep){
+        StringBuilder builder = new StringBuilder();
+        RealmController realmController = RealmController.with(this);
+        Realm realm = realmController.getRealm();
+        Alarm newAlarm = new Alarm();
+        newAlarm.setTime(alamtime);
+        newAlarm.setHour(hour);
+        //Log.i("mmmmmmm", String.valueOf(time_picker.getCurrentHour()));
+        newAlarm.setPendingIntentId(pendingIntentId);
+        newAlarm.setMinute(minutes);
+        if(rep == 0)
+            newAlarm.setDays("No Repeat");
+        newAlarm.setActivated(true);
+        newAlarm.setSnoozeTime(snoozeTime);
+        newAlarm.setDeleteAfterGoesOff(deleteAfterGpingoff);
+        newAlarm.setLabel(alarmLabel);
+        newAlarm.setPeriod(period);
+        realmController.addAlarm(newAlarm);
+    }
+
+
+
 
     private void statusBarTransparent(){
         StatusBarUtil.setTransparent(this);

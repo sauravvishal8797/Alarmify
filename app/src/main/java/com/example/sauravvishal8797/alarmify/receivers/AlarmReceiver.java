@@ -76,6 +76,9 @@ public class AlarmReceiver extends BroadcastReceiver{
             intent1.putExtra("minutes", intent.getIntExtra("minutes", 0));
             intent1.putExtra("id", intent.getIntExtra("id", 0));
             intent1.putExtra("label", intent.getStringExtra("label"));
+            intent1.putExtra("snooze", intent.getIntExtra("snooze", 0));
+            Log.i("angmassssssss", String.valueOf(intent.getIntExtra("snooze", 0)));
+            intent1.putExtra("deleteAfterGoingOff", intent.getBooleanExtra("deleteAfterGoingOff", false));
             // intent1.putExtra("time", intent.getStringExtra("alarmtime"));
             intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent1);

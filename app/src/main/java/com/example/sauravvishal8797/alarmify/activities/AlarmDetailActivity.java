@@ -424,6 +424,9 @@ public class AlarmDetailActivity extends AppCompatActivity {
                 intent.putExtra("minutes", time_picker.getCurrentMinute());
                 intent.putExtra("deleteAfterGoingOff", deleteAfterGoesOff);
                 intent.putExtra("period", period);
+                Log.i("monutery", String.valueOf(snoozetime));
+                intent.putExtra("snooze", snoozetime);
+                Log.i("angmas", String.valueOf(snoozetime));
                 intent.putExtra("label", labelText);
                 intent.putStringArrayListExtra("repeatList", repeatAlarmDays);
                 int size = (repeatAlarmDays!=null)?repeatAlarmDays.size():0;
@@ -456,6 +459,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
             intent.putExtra("minutes", time_picker.getCurrentMinute());
             intent.putExtra("deleteAfterGoingOff", deleteAfterGoesOff);
             intent.putExtra("period", period);
+            intent.putExtra("snooze", snoozetime);
             intent.putExtra("label", labelText);
             intent.putStringArrayListExtra("repeatList", repeatAlarmDays);
             int size = (repeatAlarmDays!=null)?repeatAlarmDays.size():0;
