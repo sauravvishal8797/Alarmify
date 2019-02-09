@@ -311,6 +311,9 @@ public class AlarmDetailActivity extends AppCompatActivity {
                         editText.setText(labelText);
                         editText.setSelection(editText.getText().length());
                     }
+                } else {
+                    editText.setText(labelText);
+                    editText.setSelection(editText.getText().length());
                 }
             }
         });
@@ -334,6 +337,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialog.dismiss();
                 repeatAlarmDays = repeatAlarmAdapter.repeatDays;
+               // repeatAlarmAdapter.repeatDays.clear();
                 for(int k=0; k<repeatAlarmDays.size(); k++){
                     builder2.append(repeatAlarmDays.get(k)+",");
                 }
@@ -502,6 +506,10 @@ public class AlarmDetailActivity extends AppCompatActivity {
                 builder.append(repeatAlarmDays.get(i)+" ");
             }
             newAlarm.setDays(builder.toString());
+            String[] str = builder.toString().split(" ");
+            for(int i=0; i<str.length; i++){
+                Log.i("daysR", str[i]);
+            }
         }
         newAlarm.setActivated(true);
         newAlarm.setSnoozeTime(snoozetime);

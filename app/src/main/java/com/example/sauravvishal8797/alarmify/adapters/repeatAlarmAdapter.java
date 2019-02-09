@@ -24,6 +24,7 @@ public class repeatAlarmAdapter extends RecyclerView.Adapter<repeatAlarmAdapter.
     public repeatAlarmAdapter(ArrayList<String> daysList, Context context) {
         this.daysList=daysList;
         this.context = context;
+        repeatDays = new ArrayList<>();
     }
 
     @NonNull

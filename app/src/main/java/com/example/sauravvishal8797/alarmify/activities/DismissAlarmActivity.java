@@ -217,6 +217,11 @@ public class DismissAlarmActivity extends AppCompatActivity {
         currentTimeView.setTextSize(40);
         dismissButton = findViewById(R.id.dismiss_button);
         snoozeButton = findViewById(R.id.snooze_button);
+        if(snoozeTime>0){
+            snoozeButton.setVisibility(View.VISIBLE);
+        } else {
+            snoozeButton.setVisibility(View.GONE);
+        }
         snoozeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -267,16 +272,11 @@ public class DismissAlarmActivity extends AppCompatActivity {
         Calendar now = Calendar.getInstance();
         Log.i("latinnnnn", String.valueOf(snoozeTime));
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
         Log.i("minutesssssssssss", String.valueOf(minutes));
         minutes = minutes+snoozeTime;
         Log.i("minutesssss",String.valueOf(minutes));
         if(minutes>59){
             minutes = minutes - 60;
-        }
-        calendar.set(Calendar.MINUTE, minutes);
-        if(calendar.before(now)){
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
         if(hour>=12){
             if(hour-12>0)
@@ -300,9 +300,15 @@ public class DismissAlarmActivity extends AppCompatActivity {
                             String.valueOf(minutes):String.valueOf(minutes));
             period = "AM";
         }
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minutes);
+        if(calendar.before(now)){
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
         Intent intent = new Intent(DismissAlarmActivity.this, AlarmReceiver.class);
         intent.putExtra("alarmtime", alarmTime);
         intent.putExtra("hour", hour);
+        Log.i("lalammmmmmmm", String.valueOf(hour));
         intent.putExtra("minutes", minutes);
         intent.putExtra("deleteAfterGoingOff", true);
         intent.putExtra("period", period);

@@ -1,5 +1,7 @@
 package com.example.sauravvishal8797.alarmify.receivers;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,15 +13,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import com.example.sauravvishal8797.alarmify.R;
 import com.example.sauravvishal8797.alarmify.activities.DismissAlarmActivity;
+import com.example.sauravvishal8797.alarmify.helpers.BasicCallback;
 import com.example.sauravvishal8797.alarmify.helpers.Constants;
 import com.example.sauravvishal8797.alarmify.helpers.PreferenceUtil;
 import com.example.sauravvishal8797.alarmify.realm.RealmController;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 
 public class AlarmReceiver extends BroadcastReceiver{
 
@@ -51,7 +57,7 @@ public class AlarmReceiver extends BroadcastReceiver{
                 intent.getIntExtra("repeat", 0)==0){
             realmController.deactivateAlarm(intent.getStringExtra("alarmtime"));
         } else {
-            setNextAlarm(intent.getStringArrayListExtra("repeatDyas"));
+            setNextAlarm(intent.getStringArrayListExtra("repeatList"), intent, context);
         }
         Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         if (alarmUri == null) {
@@ -94,9 +100,77 @@ public class AlarmReceiver extends BroadcastReceiver{
         }*/
     }
 
-    private void setNextAlarm(ArrayList<String> daysRepeat){
-       // getNextAlarmTime(daysRepeat);
-        int n = Calendar.MONDAY + (7 - Calendar.DAY_OF_WEEK);
+    private void setNextAlarm(ArrayList<String> daysRepeat, Intent intent, Context context){
+        int[] list = new int[10];
+        for(int i=0; i<daysRepeat.size(); i++){
+            int dayofweek = daysMap(daysRepeat.get(i));
+            switch (dayofweek){
+                case 1:
+                   list[i] = (Calendar.SUNDAY + (7 - Calendar.DAY_OF_WEEK));
+                   break;
+
+                case 2:
+                    list[i] = (Calendar.MONDAY + (7 - Calendar.DAY_OF_WEEK));
+                    break;
+
+                case 3:
+                    list[i] = (Calendar.TUESDAY + (7 - Calendar.DAY_OF_WEEK));
+                    break;
+
+                case 4:
+                    list[i] = (Calendar.WEDNESDAY + (7 - Calendar.DAY_OF_WEEK));
+                    break;
+
+                case 5:
+                    list[i] = (Calendar.THURSDAY + (7 - Calendar.DAY_OF_WEEK));
+                    break;
+
+                case 6:
+                    list[i] = (Calendar.FRIDAY + (7 - Calendar.DAY_OF_WEEK));
+                    break;
+
+                case 7:
+                    list[i] = (Calendar.SATURDAY + (7 - Calendar.DAY_OF_WEEK));
+                    break;
+            }
+        }
+        Arrays.sort(list);
+        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR_OF_DAY, intent.getIntExtra("hour", 0));
+        calendar.add(Calendar.MINUTE, intent.getIntExtra("minutes", 0));
+        calendar.add(Calendar.DAY_OF_MONTH, list[0]);
+        Intent intent1 = new Intent(context, AlarmReceiver.class);
+        intent.putExtra("alarmtime", intent.getStringExtra("alarmtime"));
+        intent.putExtra("hour", intent.getStringExtra("hour"));
+       // Log.i("lalammmmmmmm", String.valueOf(hour));
+        intent.putExtra("minutes", intent.getStringExtra("minutes"));
+        intent.putExtra("deleteAfterGoingOff", false);
+        intent.putExtra("period", intent.getStringExtra("period"));
+        intent.putExtra("snooze", intent.getStringExtra("snooze"));
+        intent.putExtra("label", intent.getStringExtra("label"));
+        intent.putExtra("repeat", 0);
+        final int _id = (int) System.currentTimeMillis();
+        intent.putExtra("id", _id);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, _id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        //Log.i("fafafafafa", String.valueOf(time_picker.getCurrentHour())+String.valueOf(time_picker.getCurrentMinute()));
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         //Log.i("llllllll", );
+    }
+
+    private int daysMap(String day){
+        int value = 0;
+        HashMap<String, Integer> days = new HashMap<>();
+        days.put("Sun", 1);
+        days.put("Mon", 2);
+        days.put("Tue", 3);
+        days.put("Wed", 4);
+        days.put("Thr", 5);
+        days.put("Fri", 6);
+        days.put("Sat", 7);
+        if(days.containsKey(day)){
+            value = days.get(day);
+        }
+        return value;
     }
 }
