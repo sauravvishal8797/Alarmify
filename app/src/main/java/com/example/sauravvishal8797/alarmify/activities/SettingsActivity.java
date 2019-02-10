@@ -47,6 +47,10 @@ public class SettingsActivity extends AppCompatActivity{
     private String dismissLevel = " ";
     private int levelArrayPos = 0;
 
+    //For keeping track of the question count selected by users
+    private int noOfQuestions = 0;
+    private int questionsArrayPos=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -197,9 +201,154 @@ public class SettingsActivity extends AppCompatActivity{
             }
         });
 
+        /**Dismiss mission level */
+        dismissMissionLevelView = findViewById(R.id.dismiss_alarm_mission_level_view);
+        dismissMissionLevelText = findViewById(R.id.dismiss_mission_level_text);
+        dismissMissionLevelText.setText(SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level), "None"));
+        final int checkedItem2 = SP.getInt(getResources().getString(R.string.dismiss_level_pos), 0);
+        dismissMissionLevelView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this, R.style.AlertDialog_Dark);
+                builder.setTitle("Choose Dismiss Mission Level");
+                builder.setSingleChoiceItems(getResources().getStringArray(R.array.dismiss_mission_level), checkedItem2, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i){
+                            case 0:
+                                dismissLevel = getResources().getString(R.string.dismiss_mission_level_default);
+                                levelArrayPos = 0;
+                                break;
+
+                            case 1:
+                                dismissLevel = getResources().getString(R.string.dismiss_mission_level_easy);
+                                levelArrayPos = 1;
+                                break;
+
+                            case 2:
+                                dismissLevel = getResources().getString(R.string.dismiss_mission_level_medium);
+                                levelArrayPos = 2;
+                                break;
+
+                            case 3:
+                                dismissLevel = getResources().getString(R.string.dismiss_mission_level_hard);
+                                levelArrayPos = 3;
+                                break;
+
+                                default:
+                                    dismissLevel = getResources().getString(R.string.dismiss_mission_level_default);
+                                    levelArrayPos = 0;
+                        }
+                    }
+                });
+                final AlertDialog dialog = builder.create();
+                dialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK".toUpperCase(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialog.dismiss();
+                        SharedPreferences.Editor editor = SP.getEditor();
+                        editor.putString(getResources().getString(R.string.dismiss_alarm_mission_level), dismissLevel);
+                        editor.putInt(getResources().getString(R.string.dismiss_level_pos), levelArrayPos);
+                        editor.commit();
+                        if(levelArrayPos==0){
+                            dismissMissionLevelText.setText("None");
+                        } else {
+                            dismissMissionLevelText.setText(dismissLevel);
+                        }
+                    }
+                });
+                dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL".toUpperCase(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+        /** Dismiss Questions View */
+        dismissQuestionsLayout = findViewById(R.id.dismiss_question_no_view);
+        noOfDismissQuestions = findViewById(R.id.no_of_dismiss_questions);
+        final int checkPos = SP.getInt(getResources().getString(R.string.dismiss_maths_mission_quest_array_pos), 0);
+        noOfDismissQuestions.setText(String.valueOf(SP.getInt(getResources().getString(R.string.dismiss_maths_mission_ques), 3)));
+        dismissQuestionsLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this, R.style.AlertDialog_Dark);
+                builder.setTitle("Choose no of questions");
+                builder.setSingleChoiceItems(getResources().getStringArray(R.array.dismiss_mission_questions), checkPos, new
+                        DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        switch (i){
+                            case 0:
+                                noOfQuestions = 3;
+                                questionsArrayPos = 0;
+                                break;
+
+                            case 1:
+                                noOfQuestions = 4;
+                                questionsArrayPos = 1;
+                                break;
+
+                            case 2:
+                                noOfQuestions = 5;
+                                questionsArrayPos = 2;
+                                break;
+
+                            case 3:
+                                noOfQuestions = 6;
+                                questionsArrayPos = 3;
+                                break;
+
+                            case 4:
+                                noOfQuestions = 7;
+                                questionsArrayPos = 4;
+                                break;
+
+                            case 5:
+                                noOfQuestions = 8;
+                                questionsArrayPos = 5;
+                                break;
+
+                                default:
+                                    noOfQuestions = 3;
+                                    questionsArrayPos = 0;
+                        }
+
+                    }
+                });
+
+                final AlertDialog dialog = builder.create();
+                dialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK".toUpperCase(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialog.dismiss();
+                        SharedPreferences.Editor editor = SP.getEditor();
+                        editor.putInt(getResources().getString(R.string.dismiss_maths_mission_ques), noOfQuestions);
+                        editor.putInt(getResources().getString(R.string.dismiss_maths_mission_quest_array_pos), questionsArrayPos);
+                        editor.commit();
+                        noOfDismissQuestions.setText(String.valueOf(noOfQuestions));
+                        Log.i("cunttttttttttttt", String.valueOf(autoDismissTime));
+                    }
+                });
+                dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL".toUpperCase(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
+        });
+
         /** Dismiss Mission */
         dismissAlarmMissionView = findViewById(R.id.dismiss_alarm_mission_view);
         dismissMissionText = findViewById(R.id.dismiss_mission_text);
+        dismissMissionText.setText(SP.getString(getResources().getString(R.string.dismiss_default_text),
+                getResources().getString(R.string.default_dismiss_mission)));
         dismissAlarmMissionView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -241,6 +390,16 @@ public class SettingsActivity extends AppCompatActivity{
                         String dismiss_miss = SP.getString(getResources().getString(R.string.dismiss_default_text),
                                 getResources().getString(R.string.default_dismiss_mission));
                         dismissMissionText.setText(dismiss_miss);
+                        if (dismiss_miss.equals(getResources().getString(R.string.default_dismiss_mission))){
+                            //disabaling the questions preference
+                            dismissQuestionsLayout.setVisibility(View.GONE);
+                            dismissMissionLevelText.setText("None");
+                           // dismissMissionLevelView.setOnClickListener(null);
+                        } else {
+                            dismissQuestionsLayout.setVisibility(View.VISIBLE);
+                            dismissMissionLevelText.setText(SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level),
+                                    getResources().getString(R.string.dismiss_mission_level_default)));
+                        }
                     }
                 });
                 dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL".toUpperCase(), new DialogInterface.OnClickListener() {
@@ -255,85 +414,6 @@ public class SettingsActivity extends AppCompatActivity{
                 dialog.show();
             }
         });
-
-        /**Dismiss mission level */
-        dismissMissionLevelView = findViewById(R.id.dismiss_alarm_mission_level_view);
-        dismissMissionLevelText = findViewById(R.id.dismiss_mission_level_text);
-        dismissMissionLevelText.setText(SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level), "None"));
-        final int checkedItem2 = SP.getInt(getResources().getString(R.string.dismiss_level_pos), 0);
-        dismissMissionLevelView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this, R.style.AlertDialog_Dark);
-                builder.setTitle("Choose Dismiss Mission Level");
-                builder.setSingleChoiceItems(getResources().getStringArray(R.array.dismiss_mission_level), checkedItem2, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        switch (i){
-                            case 0:
-                                dismissLevel = getResources().getString(R.string.dismiss_mission_level_default);
-                                levelArrayPos = 0;
-                                break;
-
-                            case 1:
-                                dismissLevel = getResources().getString(R.string.dismiss_mission_level_easy);
-                                levelArrayPos = 1;
-                                break;
-
-                            case 2:
-                                dismissLevel = getResources().getString(R.string.dismiss_mission_level_medium);
-                                levelArrayPos = 2;
-                                break;
-
-                            case 3:
-                                dismissLevel = getResources().getString(R.string.dismiss_mission_level_hard);
-                                levelArrayPos = 2;
-                                break;
-
-                                default:
-                                    dismissLevel = getResources().getString(R.string.dismiss_mission_level_default);
-                                    levelArrayPos = 0;
-                        }
-                    }
-                });
-                final AlertDialog dialog = builder.create();
-                dialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK".toUpperCase(), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialog.dismiss();
-                        SharedPreferences.Editor editor = SP.getEditor();
-                        editor.putString(getResources().getString(R.string.dismiss_alarm_mission_level), dismissLevel);
-                        editor.putInt(getResources().getString(R.string.dismiss_level_pos), levelArrayPos);
-                        editor.commit();
-                        if(levelArrayPos==0){
-                            dismissMissionLevelText.setText("None");
-                        } else {
-                            dismissMissionLevelText.setText(dismissLevel);
-                        }
-                    }
-                });
-                dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL".toUpperCase(), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialog.dismiss();
-                    }
-                });
-                dialog.show();
-            }
-        });
-
-        /** Dismiss Questions View */
-        dismissQuestionsLayout = findViewById(R.id.dismiss_question_no_view);
-        noOfDismissQuestions = findViewById(R.id.no_of_dismiss_questions);
-        noOfDismissQuestions.setText(SP.getInt(getResources().getString(R.string.dismiss_maths_mission_ques), 3));
-        dismissQuestionsLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-
 
         /** Auto-Dismiss Alarm */
         autoDismissView = findViewById(R.id.auto_dismiss_layout);

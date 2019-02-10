@@ -238,7 +238,8 @@ public class DismissAlarmActivity extends AppCompatActivity {
         mathsPuzz = new ArrayList<>();
         final int[] count = {0};
         mathsExpression = findViewById(R.id.expression_view);
-        for(int i = 0; i<3; i++){
+        final int nofOfQuestion = SP.getInt(getResources().getString(R.string.dismiss_maths_mission_ques), 3);
+        for(int i = 0; i<nofOfQuestion; i++){
             String[] exp = generateExpression();
             MathsExpression mathsExpression = new MathsExpression();
             mathsExpression.setExpression(exp[0]);
@@ -353,11 +354,11 @@ public class DismissAlarmActivity extends AppCompatActivity {
                 mathsAnswer = Integer.parseInt(answerBuilder.toString());
                 ansEdttxt.setText("");
                 answerBuilder.delete(0, answerBuilder.toString().length());
-                if(mathsAnswer == mathsPuzz.get(count[0]).getExpAnswer()&& count[0]<2){
+                if(mathsAnswer == mathsPuzz.get(count[0]).getExpAnswer()&& count[0]<nofOfQuestion-1){
                     count[0]++;
                     mathsExpression.setText(mathsPuzz.get(count[0]).getExpression());
                     Log.i("nextexppppr", mathsPuzz.get(count[0]).getExpression());
-                } else if (mathsAnswer == mathsPuzz.get(count[0]).getExpAnswer()&& count[0]==2){
+                } else if (mathsAnswer == mathsPuzz.get(count[0]).getExpAnswer()&& count[0]==nofOfQuestion-1){
                     if(AlarmReceiver.mediaPlayer!=null && AlarmReceiver.mediaPlayer.isPlaying()){
                         AlarmReceiver.mediaPlayer.stop();
                         AlarmReceiver.mediaPlayer.release();
@@ -373,11 +374,22 @@ public class DismissAlarmActivity extends AppCompatActivity {
     }
 
     public String[] generateExpression(){
+        int x=0, y=0, z=0;
         String[] exp = new String[2];
         Random random = new Random();
-        int x = random.nextInt(9) + 1;
-        int y = random.nextInt(9)+ 1;
-        int z = random.nextInt(9) + 1;
+        if(SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level), "None").equals("Easy")){
+            x = random.nextInt(9) + 10;
+            y = random.nextInt(9)+ 10;
+            z = random.nextInt(9) + 1;
+        } else if (SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level), "None").equals("Medium")){
+            x = random.nextInt(99) + 100;
+            y = random.nextInt(999)+ 1;
+            z = random.nextInt(99) + 100;
+        } else if (SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level), "None").equals("Hard")){
+            x = random.nextInt(999) + 100;
+            y = random.nextInt(999)+ 1000;
+            z = random.nextInt(999) + 1000;
+        }
         int sum = x+y+z;
         exp[0]=String.valueOf(x) + "+" + String.valueOf(y) + "+" + String.valueOf(z) + "=" + "?";
         exp[1]=String.valueOf(sum);
@@ -708,6 +720,8 @@ public class DismissAlarmActivity extends AppCompatActivity {
         isPaused=true;
         isShutting=true;
         repeat=true;
+        //new ResumeActivity().execute();
+
         /**if(!dismissButtonPress){
             SharedPreferences.Editor editor = SP.getEditor();
             editor.putString(getResources().getString(R.string.home_button_pressed), "yes");
@@ -740,7 +754,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.i("stopping", "onDestroy");
-       // new ResumeActivity().execute();
+        //new ResumeActivity().execute();
     }
 
 

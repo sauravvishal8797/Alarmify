@@ -29,4 +29,13 @@
         <item>@string/dismiss_mission_level_medium</item>
         <item>@string/dismiss_mission_level_hard</item>
     </array>
+
+    <array name="dismiss_mission_questions">
+        <item>3 questions</item>
+        <item>4 questions</item>
+        <item>5 questions</item>
+        <item>6 questions</item>
+        <item>7 questions</item>
+        <item>8 questions</item>
+    </array>
 </resources>
