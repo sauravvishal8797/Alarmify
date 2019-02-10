@@ -27,6 +27,8 @@
     <string name="set_ringer_value_max_mssg">Set Ringer value to the max</string>
     <string name="use_built_in_speaker_mssg">Use built in speaker</string>
     <string name="dismiss_alarm_mission">Dismiss alarm mission</string>
+    <string name="dismiss_alarm_mission_level">Dismiss mission level</string>
+    <string name="dismiss_maths_mission_ques">Set the no of questions</string>
     <string name="prevent_phone_power_off">Prevent phone power-off</string>
     <string name="edit_saved_alarm_action_mssg">Edit alarms before ringing</string>
     <string name="auto_dismiss_pref">Auto-Dismiss</string>

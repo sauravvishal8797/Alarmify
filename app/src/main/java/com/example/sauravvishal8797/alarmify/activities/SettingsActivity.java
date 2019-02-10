@@ -202,8 +202,10 @@ public class SettingsActivity extends AppCompatActivity{
                         getResources().getString(R.string.default_dismiss_mission));
                 if(dismiss_miss.equals(getResources().getString(R.string.default_dismiss_mission))){
                     setchecked = 0;
+                    dismissMissionText.setText(getResources().getString(R.string.default_dismiss_mission));
                 } else {
                     setchecked = 1;
+                    dismissMissionText.setText(getResources().getString(R.string.maths_mission_dismiss));
                 }
                 builder.setSingleChoiceItems(getResources().getStringArray(R.array.dismiss_mission_options), setchecked, new DialogInterface.OnClickListener() {
                     @Override

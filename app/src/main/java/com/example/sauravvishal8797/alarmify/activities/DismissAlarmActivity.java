@@ -223,7 +223,12 @@ public class DismissAlarmActivity extends AppCompatActivity {
         }
        // setUpUi();
         //setUpUiDefaultDismissView();
-        setUpMathsPuzzleView();
+        if(SP.getString(getResources().getString(R.string.dismiss_default_text), getResources().getString(R.string.default_dismiss_mission))
+                .equals(getResources().getString(R.string.maths_mission_dismiss))){
+            setUpMathsPuzzleView();
+        } else {
+            setUpUiDefaultDismissView();
+        }
         isPaused=false;
         Toast.makeText(getApplicationContext(), "Hey there buddy", Toast.LENGTH_SHORT).show();
         Log.i("papapa", "lalalopappaa");
@@ -239,7 +244,6 @@ public class DismissAlarmActivity extends AppCompatActivity {
             mathsExpression.setExpression(exp[0]);
             mathsExpression.setExpAnswer(Integer.parseInt(exp[1]));
             mathsPuzz.add(mathsExpression);
-            Log.i("nanananana", mathsExpression.getExpression()+"    "+String.valueOf(mathsExpression.getExpAnswer()));
         }
         mathsExpression.setText(mathsPuzz.get(count[0]).getExpression());
         ansEdttxt = findViewById(R.id.exp_edittext);
@@ -364,21 +368,6 @@ public class DismissAlarmActivity extends AppCompatActivity {
                     finish();
                     Toast.makeText(view.getContext(), getResources().getString(R.string.dismiss_alarm_message), Toast.LENGTH_SHORT).show();
                 }
-               /** while (count[0] <= 3){
-                    if(mathsAnswer == mathsPuzz.get(count[0]).getExpAnswer()){
-                        count[0]++;
-                        mathsExpression.setText(mathsPuzz.get(count[0]).getExpression());
-                    }
-                }
-                if(AlarmReceiver.mediaPlayer!=null && AlarmReceiver.mediaPlayer.isPlaying()){
-                    AlarmReceiver.mediaPlayer.stop();
-                    AlarmReceiver.mediaPlayer.release();
-                    SharedPreferences.Editor editor = SP.getEditor();
-                    editor.putString("ringing", "not");
-                    editor.commit();
-                }
-                finish();
-                Toast.makeText(view.getContext(), getResources().getString(R.string.dismiss_alarm_message), Toast.LENGTH_SHORT).show();*/
             }
         });
     }
