@@ -42,10 +42,13 @@ import com.jaeger.library.StatusBarUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.Executors;
@@ -83,8 +86,8 @@ public class DismissAlarmActivity extends AppCompatActivity {
      * UI elements for the default dismiss view
      */
     private TextView currentTimeView;
-    private Button dismissButton;
-    private Button snoozeButton;
+    private TextView dismissButton;
+    private TextView snoozeButton;
     private TextView alarmLabelMessage;
     private TextView alarmPeriod;
 
@@ -120,11 +123,17 @@ public class DismissAlarmActivity extends AppCompatActivity {
     private EditText answerEditText;
     private TextView questionText;
     private TextView snoozeButtonMathsPuzzle;
+    private TextView currentTime;
+    private TextView currentPeriod;
+    private TextView alarmLabelTextMathsPuzz;
 
     private StringBuilder answerBuilder = new StringBuilder();
     private int mathsAnswer;
     private HashMap<String, Integer> mathsPuzzle = new HashMap<>();
     private ArrayList<MathsExpression> mathsPuzz;
+
+    private Handler someHandler;
+    private Runnable runnable;
 
     private boolean dismissButtonPress = false;
 
@@ -144,6 +153,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
                 + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+                + WindowManager.LayoutParams.FLAG_FULLSCREEN|
                 + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
         Intent intent = getIntent();
@@ -227,8 +237,52 @@ public class DismissAlarmActivity extends AppCompatActivity {
         if(SP.getString(getResources().getString(R.string.dismiss_default_text), getResources().getString(R.string.default_dismiss_mission))
                 .equals(getResources().getString(R.string.maths_mission_dismiss))){
             setUpMathsPuzzleView();
+            someHandler = new Handler(getMainLooper());
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    String timenow=" ", periodnow = " ";
+                    int hours=0;
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                    String datetime = simpleDateFormat.format(new Date());
+                    if (Integer.valueOf(datetime.substring(0, 2))>12){
+                        hours = Integer.valueOf(datetime.substring(0, 2)) - 12;
+                        timenow = (hours>10)?String.valueOf(hours)+":"+datetime.substring(3,
+                                datetime.length()):"0"+String.valueOf(hours)+":"+datetime.substring(3, datetime.length());
+                        periodnow = "PM";
+
+                    } else {
+                        timenow = datetime;
+                        periodnow = "AM";
+                    }
+                    currentTime.setText(timenow);
+                    currentPeriod.setText(periodnow);
+                    someHandler.postDelayed(this, 1000);
+                }
+            };
+            someHandler.postDelayed(runnable, 10);
         } else {
             setUpUiDefaultDismissView();
+            someHandler = new Handler(getMainLooper());
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    String timenow=" ";
+                    int hours=0;
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                    String datetime = simpleDateFormat.format(new Date());
+                    if (Integer.valueOf(datetime.substring(0, 2))>12){
+                        hours = Integer.valueOf(datetime.substring(0, 2)) - 12;
+                        timenow = (hours>10)?String.valueOf(hours)+":"+datetime.substring(3,
+                                datetime.length())+" PM":"0"+String.valueOf(hours)+":"+datetime.substring(3, datetime.length())+" PM";
+                    } else {
+                        timenow = datetime+" AM";
+                    }
+                    currentTimeView.setText(timenow);
+                    someHandler.postDelayed(this, 1000);
+                }
+            };
+            someHandler.postDelayed(runnable, 10);
         }
         isPaused=false;
         Toast.makeText(getApplicationContext(), "Hey there buddy", Toast.LENGTH_SHORT).show();
@@ -258,6 +312,8 @@ public class DismissAlarmActivity extends AppCompatActivity {
                 ansEdttxt.setSelection(ansEdttxt.getText().length());
             }
         });
+        currentTime = findViewById(R.id.dialog_title);
+        currentPeriod =  findViewById(R.id.am_pm);
         twoButton = findViewById(R.id.two);
         twoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -372,6 +428,8 @@ public class DismissAlarmActivity extends AppCompatActivity {
                 }
             }
         });
+        alarmLabelTextMathsPuzz = findViewById(R.id.alarmlabeltextMathsPuzzle);
+        alarmLabelTextMathsPuzz.setText(alarmLabel);
         snoozeButtonMathsPuzzle = findViewById(R.id.snoozeButton);
         if(snoozeTime>0){
             snoozeButtonMathsPuzzle.setVisibility(View.VISIBLE);
@@ -484,6 +542,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
     private void setAlarmAfterSnooze(int snoozeTime){
@@ -581,7 +640,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
             //dismiss_layout = findViewById(R.id.layout_dismiss);
             linearLayout.setVisibility(View.GONE);
             dismiss_layout.setVisibility(View.VISIBLE);
-            dismiss_button = findViewById(R.id.dismiss_button);
+            //dismiss_button = findViewById(R.id.dismiss_button);
             dismiss_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -742,6 +801,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
         isShutting=true;
         repeat=true;
         //new ResumeActivity().execute();
+        someHandler.removeCallbacks(runnable);
 
         /**if(!dismissButtonPress){
             SharedPreferences.Editor editor = SP.getEditor();
@@ -753,7 +813,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
         //Intent intent = new Intent(DismissAlarmActivity.this, Restart.class);
         //startActivity(intent);
 
-        Log.i("stopper", "pause");
+       // Log.i("stopper", "pause");
     }
 
 
@@ -775,6 +835,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.i("stopping", "onDestroy");
+        someHandler.removeCallbacks(runnable);
         //new ResumeActivity().execute();
     }
 
@@ -784,6 +845,56 @@ public class DismissAlarmActivity extends AppCompatActivity {
         super.onResume();
         isPaused=false;
         repeat=false;
+        if(SP.getString(getResources().getString(R.string.dismiss_default_text), getResources().getString(R.string.default_dismiss_mission))
+                .equals(getResources().getString(R.string.maths_mission_dismiss))){
+           // setUpMathsPuzzleView();
+            someHandler = new Handler(getMainLooper());
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    String timenow=" ", periodnow = " ";
+                    int hours=0;
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                    String datetime = simpleDateFormat.format(new Date());
+                    if (Integer.valueOf(datetime.substring(0, 2))>12){
+                        hours = Integer.valueOf(datetime.substring(0, 2)) - 12;
+                        timenow = (hours>10)?String.valueOf(hours)+":"+datetime.substring(3,
+                                datetime.length()):"0"+String.valueOf(hours)+":"+datetime.substring(3, datetime.length());
+                        periodnow = "PM";
+
+                    } else {
+                        timenow = datetime;
+                        periodnow = "AM";
+                    }
+                    currentTime.setText(timenow);
+                    currentPeriod.setText(periodnow);
+                    someHandler.postDelayed(this, 1000);
+                }
+            };
+            someHandler.postDelayed(runnable, 10);
+        } else {
+            //setUpUiDefaultDismissView();
+            someHandler = new Handler(getMainLooper());
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    String timenow=" ";
+                    int hours=0;
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                    String datetime = simpleDateFormat.format(new Date());
+                    if (Integer.valueOf(datetime.substring(0, 2))>12){
+                        hours = Integer.valueOf(datetime.substring(0, 2)) - 12;
+                        timenow = (hours>10)?String.valueOf(hours)+":"+datetime.substring(3,
+                                datetime.length())+" PM":"0"+String.valueOf(hours)+":"+datetime.substring(3, datetime.length())+" PM";
+                    } else {
+                        timenow = datetime+" AM";
+                    }
+                    currentTimeView.setText(timenow);
+                    someHandler.postDelayed(this, 1000);
+                }
+            };
+            someHandler.postDelayed(runnable, 10);
+        }
         Log.i("lalalalal", "lolo");
         Log.i("papapapap", "lalalalallll");
     }

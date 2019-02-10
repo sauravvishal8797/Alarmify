@@ -390,16 +390,16 @@ public class SettingsActivity extends AppCompatActivity{
                         String dismiss_miss = SP.getString(getResources().getString(R.string.dismiss_default_text),
                                 getResources().getString(R.string.default_dismiss_mission));
                         dismissMissionText.setText(dismiss_miss);
-                        if (dismiss_miss.equals(getResources().getString(R.string.default_dismiss_mission))){
+                       /** if (dismiss_miss.equals(getResources().getString(R.string.default_dismiss_mission))){
                             //disabaling the questions preference
-                            dismissQuestionsLayout.setVisibility(View.GONE);
-                            dismissMissionLevelText.setText("None");
+                           // dismissQuestionsLayout.setVisibility(View.GONE);
+                            //dismissMissionLevelText.setText("None");
                            // dismissMissionLevelView.setOnClickListener(null);
                         } else {
-                            dismissQuestionsLayout.setVisibility(View.VISIBLE);
-                            dismissMissionLevelText.setText(SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level),
-                                    getResources().getString(R.string.dismiss_mission_level_default)));
-                        }
+                            //dismissQuestionsLayout.setVisibility(View.VISIBLE);
+                            //dismissMissionLevelText.setText(SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level),
+                              //      getResources().getString(R.string.dismiss_mission_level_default)));
+                        }*/
                     }
                 });
                 dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL".toUpperCase(), new DialogInterface.OnClickListener() {
