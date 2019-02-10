@@ -35,6 +35,7 @@
     <string name="dismiss_default_text">Dismiss Mission</string>
     <string name="auto_dismiss_time">Auto-Dismiss time</string>
     <string name="auto_dismiss_timr_pos">Auto-Dismiss time position</string>
+    <string name="dismiss_level_pos">Dismiss level array pos</string>
     <string name="set_alarm_confirmation">Set-Alarm confirmation</string>
     <string name="set_alarm_confirmation_mssg">Asks for confirmation while setting alarm</string>
 
@@ -42,5 +43,9 @@
     <string name="default_dismiss_mission">Default</string>
     <string name="maths_mission_dismiss">Maths Puzzle</string>
     <string name="home_button_pressed">Home Button Press</string>
+    <string name="dismiss_mission_level_easy">Easy</string>
+    <string name="dismiss_mission_level_medium">Medium</string>
+    <string name="dismiss_mission_level_hard">Hard</string>
+    <string name="dismiss_mission_level_default">None</string>
 
 </resources>

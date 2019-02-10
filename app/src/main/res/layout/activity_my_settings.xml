@@ -215,17 +215,6 @@
                         android:textColor="@color/grey_shade"
                         android:text="@string/dismiss_alarm_mission_level"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="19dp"
-                        android:id="@+id/no_of_questions"
-                        android:textColor="@color/grey_shade"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="7dp"
-                        android:text="3"/>
-
                 </RelativeLayout>
 
                 <TextView
@@ -237,6 +226,38 @@
                     android:text="Easy"/>
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="#00344D"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/dismiss_question_no_view">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="19dp"
+                    android:textColor="@color/grey_shade"
+                    android:text="@string/dismiss_maths_mission_ques"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/no_of_dismiss_questions"
+                    android:textSize="19dp"
+                    android:text="3"
+                    android:textColor="@color/grey_shade"
+                    android:layout_marginRight="7dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"

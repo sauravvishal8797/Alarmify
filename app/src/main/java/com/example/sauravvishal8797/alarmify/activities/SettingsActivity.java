@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.sauravvishal8797.alarmify.R;
@@ -25,6 +26,10 @@ public class SettingsActivity extends AppCompatActivity{
     private CheckBox useBuiltInSpeakerCheckbox;
     private LinearLayout dismissAlarmMissionView;
     private TextView dismissMissionText;
+    private TextView dismissMissionLevelText;
+    private RelativeLayout dismissQuestionsLayout;
+    private TextView noOfDismissQuestions;
+    private LinearLayout dismissMissionLevelView;
     private LinearLayout autoDismissView;
     private TextView autoDismissTimeText;
     private CheckBox preventPowerOffCheckbox;
@@ -37,6 +42,10 @@ public class SettingsActivity extends AppCompatActivity{
     /** Keeping track of the auto-dismiss time if alloted */
     private int autoDismissTime = 0;
     private int autoDismissTimeArrayPos = 0;
+
+    /**Keeping track of the dismiss mission level */
+    private String dismissLevel = " ";
+    private int levelArrayPos = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -246,6 +255,85 @@ public class SettingsActivity extends AppCompatActivity{
                 dialog.show();
             }
         });
+
+        /**Dismiss mission level */
+        dismissMissionLevelView = findViewById(R.id.dismiss_alarm_mission_level_view);
+        dismissMissionLevelText = findViewById(R.id.dismiss_mission_level_text);
+        dismissMissionLevelText.setText(SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level), "None"));
+        final int checkedItem2 = SP.getInt(getResources().getString(R.string.dismiss_level_pos), 0);
+        dismissMissionLevelView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this, R.style.AlertDialog_Dark);
+                builder.setTitle("Choose Dismiss Mission Level");
+                builder.setSingleChoiceItems(getResources().getStringArray(R.array.dismiss_mission_level), checkedItem2, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i){
+                            case 0:
+                                dismissLevel = getResources().getString(R.string.dismiss_mission_level_default);
+                                levelArrayPos = 0;
+                                break;
+
+                            case 1:
+                                dismissLevel = getResources().getString(R.string.dismiss_mission_level_easy);
+                                levelArrayPos = 1;
+                                break;
+
+                            case 2:
+                                dismissLevel = getResources().getString(R.string.dismiss_mission_level_medium);
+                                levelArrayPos = 2;
+                                break;
+
+                            case 3:
+                                dismissLevel = getResources().getString(R.string.dismiss_mission_level_hard);
+                                levelArrayPos = 2;
+                                break;
+
+                                default:
+                                    dismissLevel = getResources().getString(R.string.dismiss_mission_level_default);
+                                    levelArrayPos = 0;
+                        }
+                    }
+                });
+                final AlertDialog dialog = builder.create();
+                dialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK".toUpperCase(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialog.dismiss();
+                        SharedPreferences.Editor editor = SP.getEditor();
+                        editor.putString(getResources().getString(R.string.dismiss_alarm_mission_level), dismissLevel);
+                        editor.putInt(getResources().getString(R.string.dismiss_level_pos), levelArrayPos);
+                        editor.commit();
+                        if(levelArrayPos==0){
+                            dismissMissionLevelText.setText("None");
+                        } else {
+                            dismissMissionLevelText.setText(dismissLevel);
+                        }
+                    }
+                });
+                dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL".toUpperCase(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+        /** Dismiss Questions View */
+        dismissQuestionsLayout = findViewById(R.id.dismiss_question_no_view);
+        noOfDismissQuestions = findViewById(R.id.no_of_dismiss_questions);
+        noOfDismissQuestions.setText(SP.getInt(getResources().getString(R.string.dismiss_maths_mission_ques), 3));
+        dismissQuestionsLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+
 
         /** Auto-Dismiss Alarm */
         autoDismissView = findViewById(R.id.auto_dismiss_layout);
