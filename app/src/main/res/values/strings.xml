@@ -39,5 +39,6 @@
     <!-- Dismiss Mission strings -->
     <string name="default_dismiss_mission">Default</string>
     <string name="maths_mission_dismiss">Maths Puzzle</string>
+    <string name="home_button_pressed">Home Button Press</string>
 
 </resources>

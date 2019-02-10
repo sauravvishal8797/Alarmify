@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.example.sauravvishal8797.alarmify.adapters.repeatAlarmAdapter;
 import com.example.sauravvishal8797.alarmify.helpers.PreferenceUtil;
 import com.example.sauravvishal8797.alarmify.models.Alarm;
+import com.example.sauravvishal8797.alarmify.models.MathsExpression;
 import com.example.sauravvishal8797.alarmify.realm.RealmController;
 import com.example.sauravvishal8797.alarmify.receivers.AlarmReceiver;
 import com.example.sauravvishal8797.alarmify.services.Alarmservice;
@@ -41,7 +42,9 @@ import com.jaeger.library.StatusBarUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -100,19 +103,48 @@ public class DismissAlarmActivity extends AppCompatActivity {
     private RelativeLayout previewModeLayout;
     private ImageView previewAbortButton;
 
+    /**Maths Puzzle dismiss view UI elements */
+    private TextView mathsExpression;
+    private TextView onebutton;
+    private TextView twoButton;
+    private TextView threeButton;
+    private TextView fourButton;
+    private TextView fiveButton;
+    private TextView sixButton;
+    private TextView sevenButton;
+    private TextView eightButton;
+    private TextView nineButton;
+    private TextView zeroButton;
+    private TextView deleteButton;
+    private TextView okButton;
+    private EditText answerEditText;
+    private TextView questionText;
+
+    private StringBuilder answerBuilder = new StringBuilder();
+    private int mathsAnswer;
+    private HashMap<String, Integer> mathsPuzzle = new HashMap<>();
+    private ArrayList<MathsExpression> mathsPuzz;
+
+    private boolean dismissButtonPress = false;
+
     private int auto_dismiss=0;
     int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dismiss_alarm_view);
+        SP = PreferenceUtil.getInstance(this);
+        if(SP.getString(getResources().getString(R.string.dismiss_default_text), getResources().getString(R.string.default_dismiss_mission))
+                .equals(getResources().getString(R.string.maths_mission_dismiss))){
+            setContentView(R.layout.maths_exp_view);
+        } else {
+            setContentView(R.layout.dismiss_alarm_view);
+        }
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
                 + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
                 + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
-        SP = PreferenceUtil.getInstance(this);
         Intent intent = getIntent();
         if(intent.hasExtra("preview")){
            previewScreen = intent.getBooleanExtra("preview", false);
@@ -190,10 +222,177 @@ public class DismissAlarmActivity extends AppCompatActivity {
                     }, 0, 60, TimeUnit.SECONDS);
         }
        // setUpUi();
-        setUpUiDefaultDismissView();
+        //setUpUiDefaultDismissView();
+        setUpMathsPuzzleView();
         isPaused=false;
         Toast.makeText(getApplicationContext(), "Hey there buddy", Toast.LENGTH_SHORT).show();
         Log.i("papapa", "lalalopappaa");
+    }
+
+    private void setUpMathsPuzzleView(){
+        mathsPuzz = new ArrayList<>();
+        final int[] count = {0};
+        mathsExpression = findViewById(R.id.expression_view);
+        for(int i = 0; i<3; i++){
+            String[] exp = generateExpression();
+            MathsExpression mathsExpression = new MathsExpression();
+            mathsExpression.setExpression(exp[0]);
+            mathsExpression.setExpAnswer(Integer.parseInt(exp[1]));
+            mathsPuzz.add(mathsExpression);
+            Log.i("nanananana", mathsExpression.getExpression()+"    "+String.valueOf(mathsExpression.getExpAnswer()));
+        }
+        mathsExpression.setText(mathsPuzz.get(count[0]).getExpression());
+        ansEdttxt = findViewById(R.id.exp_edittext);
+        onebutton = findViewById(R.id.one);
+        onebutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                answerBuilder.append("1");
+                ansEdttxt.setText(answerBuilder.toString());
+                ansEdttxt.setSelection(ansEdttxt.getText().length());
+            }
+        });
+        twoButton = findViewById(R.id.two);
+        twoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                answerBuilder.append("2");
+                ansEdttxt.setText(answerBuilder.toString());
+                ansEdttxt.setSelection(ansEdttxt.getText().length());
+            }
+        });
+        threeButton = findViewById(R.id.three);
+        threeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                answerBuilder.append("3");
+                ansEdttxt.setText(answerBuilder.toString());
+                ansEdttxt.setSelection(ansEdttxt.getText().length());
+            }
+        });
+        fourButton = findViewById(R.id.four);
+        fourButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                answerBuilder.append("4");
+                ansEdttxt.setText(answerBuilder.toString());
+                ansEdttxt.setSelection(ansEdttxt.getText().length());
+            }
+        });
+        fiveButton = findViewById(R.id.five);
+        fiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                answerBuilder.append("5");
+                ansEdttxt.setText(answerBuilder.toString());
+                ansEdttxt.setSelection(ansEdttxt.getText().length());
+            }
+        });
+        sixButton = findViewById(R.id.six);
+        sixButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                answerBuilder.append("6");
+                ansEdttxt.setText(answerBuilder.toString());
+                ansEdttxt.setSelection(ansEdttxt.getText().length());
+            }
+        });
+        sevenButton = findViewById(R.id.seven);
+        sevenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                answerBuilder.append("7");
+                ansEdttxt.setText(answerBuilder.toString());
+                ansEdttxt.setSelection(ansEdttxt.getText().length());
+            }
+        });
+        eightButton = findViewById(R.id.eight);
+        eightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                answerBuilder.append("8");
+                ansEdttxt.setText(answerBuilder.toString());
+                ansEdttxt.setSelection(ansEdttxt.getText().length());
+            }
+        });
+        nineButton = findViewById(R.id.nine);
+        nineButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                answerBuilder.append("9");
+                ansEdttxt.setText(answerBuilder.toString());
+                ansEdttxt.setSelection(ansEdttxt.getText().length());
+            }
+        });
+        zeroButton = findViewById(R.id.zero);
+        zeroButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                answerBuilder.append("0");
+                ansEdttxt.setText(answerBuilder.toString());
+                ansEdttxt.setSelection(ansEdttxt.getText().length());
+            }
+        });
+        deleteButton = findViewById(R.id.delete_button);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                answerBuilder.delete(0, answerBuilder.toString().length());
+                ansEdttxt.setText(answerBuilder.toString());
+                ansEdttxt.setSelection(ansEdttxt.getText().length());
+            }
+        });
+        okButton = findViewById(R.id.ok_button);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mathsAnswer = Integer.parseInt(answerBuilder.toString());
+                ansEdttxt.setText("");
+                answerBuilder.delete(0, answerBuilder.toString().length());
+                if(mathsAnswer == mathsPuzz.get(count[0]).getExpAnswer()&& count[0]<2){
+                    count[0]++;
+                    mathsExpression.setText(mathsPuzz.get(count[0]).getExpression());
+                    Log.i("nextexppppr", mathsPuzz.get(count[0]).getExpression());
+                } else if (mathsAnswer == mathsPuzz.get(count[0]).getExpAnswer()&& count[0]==2){
+                    if(AlarmReceiver.mediaPlayer!=null && AlarmReceiver.mediaPlayer.isPlaying()){
+                        AlarmReceiver.mediaPlayer.stop();
+                        AlarmReceiver.mediaPlayer.release();
+                        SharedPreferences.Editor editor = SP.getEditor();
+                        editor.putString("ringing", "not");
+                        editor.commit();
+                    }
+                    finish();
+                    Toast.makeText(view.getContext(), getResources().getString(R.string.dismiss_alarm_message), Toast.LENGTH_SHORT).show();
+                }
+               /** while (count[0] <= 3){
+                    if(mathsAnswer == mathsPuzz.get(count[0]).getExpAnswer()){
+                        count[0]++;
+                        mathsExpression.setText(mathsPuzz.get(count[0]).getExpression());
+                    }
+                }
+                if(AlarmReceiver.mediaPlayer!=null && AlarmReceiver.mediaPlayer.isPlaying()){
+                    AlarmReceiver.mediaPlayer.stop();
+                    AlarmReceiver.mediaPlayer.release();
+                    SharedPreferences.Editor editor = SP.getEditor();
+                    editor.putString("ringing", "not");
+                    editor.commit();
+                }
+                finish();
+                Toast.makeText(view.getContext(), getResources().getString(R.string.dismiss_alarm_message), Toast.LENGTH_SHORT).show();*/
+            }
+        });
+    }
+
+    public String[] generateExpression(){
+        String[] exp = new String[2];
+        Random random = new Random();
+        int x = random.nextInt(9) + 1;
+        int y = random.nextInt(9)+ 1;
+        int z = random.nextInt(9) + 1;
+        int sum = x+y+z;
+        exp[0]=String.valueOf(x) + "+" + String.valueOf(y) + "+" + String.valueOf(z) + "=" + "?";
+        exp[1]=String.valueOf(sum);
+        return exp;
     }
 
     private void setUpUiDefaultDismissView(){
@@ -247,6 +446,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
                     if(previewMediaPlayer.isPlaying()){
                         previewMediaPlayer.stop();
                         previewMediaPlayer.release();
+                        dismissButtonPress=true;
                         finish();
                     }
                 } else {
@@ -379,18 +579,6 @@ public class DismissAlarmActivity extends AppCompatActivity {
     public int checkAnswer(int a){
 
         return a;
-    }
-
-    public String[] generateExpression(){
-        String[] exp = new String[2];
-        Random random = new Random();
-        int x = random.nextInt(9) + 1;
-        int y = random.nextInt(9)+ 1;
-        int z = random.nextInt(9) + 1;
-        int sum = x+y+z;
-        exp[0]=String.valueOf(x) + "+" + String.valueOf(y) + "+" + String.valueOf(z) + "=" + "?";
-        exp[1]=String.valueOf(sum);
-        return exp;
     }
 
     @Override
@@ -531,11 +719,15 @@ public class DismissAlarmActivity extends AppCompatActivity {
         isPaused=true;
         isShutting=true;
         repeat=true;
+        /**if(!dismissButtonPress){
+            SharedPreferences.Editor editor = SP.getEditor();
+            editor.putString(getResources().getString(R.string.home_button_pressed), "yes");
+            editor.commit();
+            new ResumeActivity().execute();
+        }*/
 
         //Intent intent = new Intent(DismissAlarmActivity.this, Restart.class);
         //startActivity(intent);
-
-       // new ResumeActivity().execute();
 
         Log.i("stopper", "pause");
     }
@@ -583,15 +775,15 @@ public class DismissAlarmActivity extends AppCompatActivity {
             scheduler.scheduleAtFixedRate
                     (new Runnable() {
                         public void run() {
-                            if(isPaused&&repeat){
-                                Log.i("papapapapapa", "lalalalala");
+                            if(SP.getString(getResources().getString(R.string.home_button_pressed), "no").equals("yes")){
+                                Log.i("kishnnnuuuuuu", "lalalalala");
                                 Intent intent = new Intent(getApplicationContext(), Alarmservice.class);
                                 intent.putExtra("Data", "kio");
                                 startService(intent);
                             }
                             // call service
                         }
-                    }, 0, 2, TimeUnit.SECONDS);
+                    }, 0, 1, TimeUnit.SECONDS);
             return null;
         }
     }

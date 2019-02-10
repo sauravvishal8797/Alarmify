@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity{
        // ButterKnife.bind(this);
         SP = PreferenceUtil.getInstance(this);
         SharedPreferences.Editor editor = SP.getEditor();
+        //editor.putString(getResources().getString(R.string.home_button_pressed), "no");
         editor.putString("ringing", "not");
         editor.commit();
         setUpUI();
