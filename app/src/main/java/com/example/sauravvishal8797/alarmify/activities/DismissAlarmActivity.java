@@ -119,6 +119,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
     private TextView okButton;
     private EditText answerEditText;
     private TextView questionText;
+    private TextView snoozeButtonMathsPuzzle;
 
     private StringBuilder answerBuilder = new StringBuilder();
     private int mathsAnswer;
@@ -371,6 +372,26 @@ public class DismissAlarmActivity extends AppCompatActivity {
                 }
             }
         });
+        snoozeButtonMathsPuzzle = findViewById(R.id.snoozeButton);
+        if(snoozeTime>0){
+            snoozeButtonMathsPuzzle.setVisibility(View.VISIBLE);
+            snoozeButtonMathsPuzzle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(AlarmReceiver.mediaPlayer!=null && AlarmReceiver.mediaPlayer.isPlaying()){
+                        AlarmReceiver.mediaPlayer.stop();
+                        AlarmReceiver.mediaPlayer.release();
+                        SharedPreferences.Editor editor = SP.getEditor();
+                        editor.putString("ringing", "not");
+                        editor.commit();
+                        setAlarmAfterSnooze(snoozeTime);
+                    }
+                    finish();
+                }
+            });
+        } else {
+            snoozeButtonMathsPuzzle.setVisibility(View.GONE);
+        }
     }
 
     public String[] generateExpression(){
