@@ -205,12 +205,12 @@ public class SettingsActivity extends AppCompatActivity{
         dismissMissionLevelView = findViewById(R.id.dismiss_alarm_mission_level_view);
         dismissMissionLevelText = findViewById(R.id.dismiss_mission_level_text);
         dismissMissionLevelText.setText(SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level), "None"));
-        final int checkedItem2 = SP.getInt(getResources().getString(R.string.dismiss_level_pos), 0);
         dismissMissionLevelView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this, R.style.AlertDialog_Dark);
                 builder.setTitle("Choose Dismiss Mission Level");
+                final int checkedItem2 = SP.getInt(getResources().getString(R.string.dismiss_level_pos), 0);
                 builder.setSingleChoiceItems(getResources().getStringArray(R.array.dismiss_mission_level), checkedItem2, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -270,13 +270,13 @@ public class SettingsActivity extends AppCompatActivity{
         /** Dismiss Questions View */
         dismissQuestionsLayout = findViewById(R.id.dismiss_question_no_view);
         noOfDismissQuestions = findViewById(R.id.no_of_dismiss_questions);
-        final int checkPos = SP.getInt(getResources().getString(R.string.dismiss_maths_mission_quest_array_pos), 0);
         noOfDismissQuestions.setText(String.valueOf(SP.getInt(getResources().getString(R.string.dismiss_maths_mission_ques), 3)));
         dismissQuestionsLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this, R.style.AlertDialog_Dark);
                 builder.setTitle("Choose no of questions");
+                final int checkPos = SP.getInt(getResources().getString(R.string.dismiss_maths_mission_quest_array_pos), 0);
                 builder.setSingleChoiceItems(getResources().getStringArray(R.array.dismiss_mission_questions), checkPos, new
                         DialogInterface.OnClickListener() {
                     @Override
@@ -361,9 +361,23 @@ public class SettingsActivity extends AppCompatActivity{
                 if(dismiss_miss.equals(getResources().getString(R.string.default_dismiss_mission))){
                     setchecked = 0;
                     dismissMissionText.setText(getResources().getString(R.string.default_dismiss_mission));
+                    if(!SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level), "None").equals("None")){
+                        SharedPreferences.Editor editor = SP.getEditor();
+                        editor.putString(getResources().getString(R.string.dismiss_alarm_mission_level), "None");
+                        editor.putInt(getResources().getString(R.string.dismiss_level_pos), 0);
+                        editor.commit();
+                        dismissMissionLevelText.setText("None");
+                    }
                 } else {
                     setchecked = 1;
                     dismissMissionText.setText(getResources().getString(R.string.maths_mission_dismiss));
+                    if(SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level), "None").equals("None")) {
+                        SharedPreferences.Editor editor = SP.getEditor();
+                        editor.putString(getResources().getString(R.string.dismiss_alarm_mission_level), "Easy");
+                        editor.putInt(getResources().getString(R.string.dismiss_level_pos), 1);
+                        editor.commit();
+                        dismissMissionLevelText.setText("Easy");
+                    }
                 }
                 builder.setSingleChoiceItems(getResources().getStringArray(R.array.dismiss_mission_options), setchecked, new DialogInterface.OnClickListener() {
                     @Override
@@ -372,11 +386,19 @@ public class SettingsActivity extends AppCompatActivity{
                             SharedPreferences.Editor editor = SP.getEditor();
                             editor.putString(getResources().getString(R.string.dismiss_default_text), getResources().
                                     getString(R.string.default_dismiss_mission));
+                            editor.putString(getResources().getString(R.string.dismiss_alarm_mission_level), "None");
+                            editor.putInt(getResources().getString(R.string.dismiss_level_pos), 0);
                             editor.commit();
+                            dismissMissionLevelText.setText("None");
                         }else {
                             SharedPreferences.Editor editor2 = SP.getEditor();
                             editor2.putString(getResources().getString(R.string.dismiss_default_text), getResources().
                                     getString(R.string.maths_mission_dismiss));
+                            if(SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level), "None").equals("None")) {
+                                editor2.putString(getResources().getString(R.string.dismiss_alarm_mission_level), "Easy");
+                                editor2.putInt(getResources().getString(R.string.dismiss_level_pos), 1);
+                                dismissMissionLevelText.setText("Easy");
+                            }
                             editor2.commit();
                             //dismissMissionText.setText(getResources().getString(R.string.maths_mission_dismiss));
                         }

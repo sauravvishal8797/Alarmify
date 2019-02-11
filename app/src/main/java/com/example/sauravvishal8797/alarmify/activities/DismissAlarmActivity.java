@@ -457,17 +457,17 @@ public class DismissAlarmActivity extends AppCompatActivity {
         String[] exp = new String[2];
         Random random = new Random();
         if(SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level), "None").equals("Easy")){
-            x = random.nextInt(9) + 10;
-            y = random.nextInt(9)+ 10;
-            z = random.nextInt(9) + 1;
+            x = random.nextInt(9) + 17;
+            y = random.nextInt(9)+ 18;
+            z = random.nextInt(9) + 8;
         } else if (SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level), "None").equals("Medium")){
-            x = random.nextInt(99) + 100;
-            y = random.nextInt(999)+ 1;
-            z = random.nextInt(99) + 100;
+            x = random.nextInt(99) + 117;
+            y = random.nextInt(999)+ 79;
+            z = random.nextInt(99) + 139;
         } else if (SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level), "None").equals("Hard")){
-            x = random.nextInt(999) + 100;
-            y = random.nextInt(999)+ 1000;
-            z = random.nextInt(999) + 1000;
+            x = random.nextInt(999) + 198;
+            y = random.nextInt(999)+ 1027;
+            z = random.nextInt(999) + 1671;
         }
         int sum = x+y+z;
         exp[0]=String.valueOf(x) + "+" + String.valueOf(y) + "+" + String.valueOf(z) + "=" + "?";
