@@ -399,32 +399,38 @@ public class DismissAlarmActivity extends AppCompatActivity {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                answerBuilder.delete(0, answerBuilder.toString().length());
-                ansEdttxt.setText(answerBuilder.toString());
-                ansEdttxt.setSelection(ansEdttxt.getText().length());
+                if(!answerBuilder.toString().isEmpty()){
+                    answerBuilder.delete(0, answerBuilder.toString().length());
+                    ansEdttxt.setText(answerBuilder.toString());
+                    ansEdttxt.setSelection(ansEdttxt.getText().length());
+                }
             }
         });
         okButton = findViewById(R.id.ok_button);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mathsAnswer = Integer.parseInt(answerBuilder.toString());
-                ansEdttxt.setText("");
-                answerBuilder.delete(0, answerBuilder.toString().length());
-                if(mathsAnswer == mathsPuzz.get(count[0]).getExpAnswer()&& count[0]<nofOfQuestion-1){
-                    count[0]++;
-                    mathsExpression.setText(mathsPuzz.get(count[0]).getExpression());
-                    Log.i("nextexppppr", mathsPuzz.get(count[0]).getExpression());
-                } else if (mathsAnswer == mathsPuzz.get(count[0]).getExpAnswer()&& count[0]==nofOfQuestion-1){
-                    if(AlarmReceiver.mediaPlayer!=null && AlarmReceiver.mediaPlayer.isPlaying()){
-                        AlarmReceiver.mediaPlayer.stop();
-                        AlarmReceiver.mediaPlayer.release();
-                        SharedPreferences.Editor editor = SP.getEditor();
-                        editor.putString("ringing", "not");
-                        editor.commit();
+                if(answerBuilder.toString().isEmpty()){
+
+                } else {
+                    mathsAnswer = Integer.parseInt(answerBuilder.toString());
+                    ansEdttxt.setText("");
+                    answerBuilder.delete(0, answerBuilder.toString().length());
+                    if(mathsAnswer == mathsPuzz.get(count[0]).getExpAnswer()&& count[0]<nofOfQuestion-1){
+                        count[0]++;
+                        mathsExpression.setText(mathsPuzz.get(count[0]).getExpression());
+                        Log.i("nextexppppr", mathsPuzz.get(count[0]).getExpression());
+                    } else if (mathsAnswer == mathsPuzz.get(count[0]).getExpAnswer()&& count[0]==nofOfQuestion-1){
+                        if(AlarmReceiver.mediaPlayer!=null && AlarmReceiver.mediaPlayer.isPlaying()){
+                            AlarmReceiver.mediaPlayer.stop();
+                            AlarmReceiver.mediaPlayer.release();
+                            SharedPreferences.Editor editor = SP.getEditor();
+                            editor.putString("ringing", "not");
+                            editor.commit();
+                        }
+                        finish();
+                        Toast.makeText(view.getContext(), getResources().getString(R.string.dismiss_alarm_message), Toast.LENGTH_SHORT).show();
                     }
-                    finish();
-                    Toast.makeText(view.getContext(), getResources().getString(R.string.dismiss_alarm_message), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -600,7 +606,11 @@ public class DismissAlarmActivity extends AppCompatActivity {
         intent.putExtra("id", _id);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(DismissAlarmActivity.this, _id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         //Log.i("fafafafafa", String.valueOf(time_picker.getCurrentHour())+String.valueOf(time_picker.getCurrentMinute()));
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        } else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        }
         Log.i("ldldldld", String.valueOf(alarmTime));
         creatingNewAlarmObject(_id, alarmTime, 0);
         finish();
@@ -625,9 +635,6 @@ public class DismissAlarmActivity extends AppCompatActivity {
         newAlarm.setPeriod(period);
         realmController.addAlarm(newAlarm);
     }
-
-
-
 
     private void statusBarTransparent(){
         StatusBarUtil.setTransparent(this);
@@ -802,7 +809,6 @@ public class DismissAlarmActivity extends AppCompatActivity {
         repeat=true;
         //new ResumeActivity().execute();
         someHandler.removeCallbacks(runnable);
-
         /**if(!dismissButtonPress){
             SharedPreferences.Editor editor = SP.getEditor();
             editor.putString(getResources().getString(R.string.home_button_pressed), "yes");
@@ -900,13 +906,11 @@ public class DismissAlarmActivity extends AppCompatActivity {
     }
 
     class ResumeActivity extends AsyncTask<Void, Void, Void>{
-
         @Override
         protected Void doInBackground(Void... voids) {
 
             ScheduledExecutorService scheduler =
                     Executors.newSingleThreadScheduledExecutor();
-
             scheduler.scheduleAtFixedRate
                     (new Runnable() {
                         public void run() {

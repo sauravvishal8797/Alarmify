@@ -7,6 +7,8 @@ import android.util.Log;
 
 import com.example.sauravvishal8797.alarmify.models.Alarm;
 
+import java.util.ArrayList;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -90,6 +92,20 @@ public class RealmController {
      * */
     public RealmResults<Alarm> getAlarms(){
         return realm.where(Alarm.class).findAll();
+    }
+
+    /** Retrieves all the activated alarms from the database
+     * @return list of all the activated alarm objects
+     */
+    public ArrayList<Alarm> getActivatedAlarms(){
+        ArrayList<Alarm> activatedAlarms = new ArrayList<>();
+        RealmResults<Alarm> allAlarms = realm.where(Alarm.class).findAll();
+        for(Alarm a: allAlarms){
+            if(a.isActivated()){
+                activatedAlarms.add(a);
+            }
+        }
+        return activatedAlarms;
     }
 
     /** Adds new activated alarm details to the database */

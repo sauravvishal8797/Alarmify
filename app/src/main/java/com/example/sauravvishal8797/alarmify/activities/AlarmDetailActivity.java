@@ -100,8 +100,28 @@ public class AlarmDetailActivity extends AppCompatActivity {
         //final int time_picker.getCurrentHour() = time_picker.getCurrentHour();
         final int min = time_picker.getCurrentMinute();
         Log.i("hours", String.valueOf(time_picker.getCurrentHour()) + "   " + String.valueOf(min));
+        if(time_picker.getCurrentHour()>=12){
+            if(time_picker.getCurrentHour()-12>0)
+                hours[0] = "0"+String.valueOf(time_picker.getCurrentHour()-12);
+            else
+                hours[0] = time_picker.getCurrentHour().toString();
+            if(time_picker.getCurrentMinute()>=0 && time_picker.getCurrentMinute()<=9)
+                minutes[0] = "0"+time_picker.getCurrentMinute();
+            else
+                minutes[0] = time_picker.getCurrentMinute().toString();
 
-
+            alarmTime = hours[0]+":"+minutes[0];
+                   /* alarmTime = (time_picker.getCurrentHour()-12>0)?(String.valueOf(time_picker.getCurrentHour()-12)):
+                            time_picker.getCurrentHour()+":" +
+                            ((time_picker.getCurrentMinute()>=0 && time_picker.getCurrentMinute()<=9)?String.valueOf(0) +
+                                    time_picker.getCurrentMinute().toString():time_picker.getCurrentMinute().toString());*/
+            period = "PM";
+        } else {
+            alarmTime = time_picker.getCurrentHour().toString() +":" +
+                    ((time_picker.getCurrentMinute()>=0 && time_picker.getCurrentMinute()<=9)?String.valueOf(0) +
+                            time_picker.getCurrentMinute().toString():time_picker.getCurrentMinute().toString());
+            period = "AM";
+        }
         time_picker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker timePicker, int i, int i1) {
@@ -442,7 +462,11 @@ public class AlarmDetailActivity extends AppCompatActivity {
                 if(repeatAlarmAdapter.repeatDays.size()==7){
                     alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
                 } else {
-                    alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    } else {
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    }
                 }
                 creatingNewAlarmObject(_id);
             }
@@ -475,7 +499,11 @@ public class AlarmDetailActivity extends AppCompatActivity {
             if(repeatAlarmAdapter.repeatDays.size()==7){
                 alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
             } else {
-                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                } else {
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                }
             }
             creatingNewAlarmObject(_id);
         }
