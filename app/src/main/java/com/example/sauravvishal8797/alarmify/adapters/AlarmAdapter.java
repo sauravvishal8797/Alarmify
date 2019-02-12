@@ -194,7 +194,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
 
     private void reActivateAlarm(String alarmTime, int hour, int min){
         realmController = RealmController.with(activity);
-        int pendingIntentId = realmController.reActivateAlarm(alarmTime);
+        realmController.reActivateAlarm(alarmTime);
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Calendar now = Calendar.getInstance();
         Calendar calendar = Calendar.getInstance();
@@ -205,6 +205,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
         Intent intent = new Intent(context, AlarmReceiver.class);
+        final int pendingIntentId = (int) System.currentTimeMillis();
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, pendingIntentId, intent, 0);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
