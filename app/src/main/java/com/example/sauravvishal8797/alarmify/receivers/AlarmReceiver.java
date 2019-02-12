@@ -57,6 +57,9 @@ public class AlarmReceiver extends BroadcastReceiver{
                 intent.getIntExtra("repeat", 0)==0){
             realmController.deactivateAlarm(intent.getStringExtra("alarmtime"));
         } else {
+            for(int i=0; i<intent.getStringArrayListExtra("repeatList").size(); i++){
+                Log.i("REPEAT", intent.getStringArrayListExtra("repeatList").get(i));
+            }
             setNextAlarm(intent.getStringArrayListExtra("repeatList"), intent, context);
         }
         Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);

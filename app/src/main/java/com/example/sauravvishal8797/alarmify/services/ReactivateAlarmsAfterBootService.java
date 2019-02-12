@@ -16,6 +16,7 @@ import com.example.sauravvishal8797.alarmify.realm.RealmController;
 import com.example.sauravvishal8797.alarmify.receivers.AlarmReceiver;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class ReactivateAlarmsAfterBootService extends IntentService{
@@ -40,22 +41,28 @@ public class ReactivateAlarmsAfterBootService extends IntentService{
             calendar.set(Calendar.HOUR_OF_DAY, a.getHour());
             calendar.set(Calendar.MINUTE, a.getMinute());
             if(calendar.before(now)){
-                //calendar.add(Calendar.DAY_OF_MONTH, 1);
+                if(!a.getDays().equals("No Repeat")){
+                    calendar.add(Calendar.DAY_OF_MONTH, 1);
+                }
             } else {
                 Intent intent2 = new Intent(getApplicationContext(), AlarmReceiver.class);
-                intent.putExtra("alarmtime", a.getTime());
-                intent.putExtra("hour", a.getHour());
-                intent.putExtra("minutes", a.getMinute());
-                intent.putExtra("deleteAfterGoingOff", a.isDeleteAfterGoesOff());
-                intent.putExtra("period", a.getPeriod());
+                intent2.putExtra("alarmtime", a.getTime());
+                intent2.putExtra("hour", a.getHour());
+                intent2.putExtra("minutes", a.getMinute());
+                intent2.putExtra("deleteAfterGoingOff", a.isDeleteAfterGoesOff());
+                intent2.putExtra("period", a.getPeriod());
                 Log.i("monutery", String.valueOf(a.getSnoozeTime()));
-                intent.putExtra("snooze", a.getSnoozeTime());
+                intent2.putExtra("snooze", a.getSnoozeTime());
                // Log.i("angmas", String.valueOf(snoozetime));
-                intent.putExtra("label", a.getLabel());
-                intent.putExtra("repeat", (a.getDays()!=null || !a.getDays().isEmpty()));
+                intent2.putExtra("label", a.getLabel());
+                intent2.putExtra("repeat", (a.getDays().equals("No Repeat"))?0:1);
+                if(!a.getDays().equals("No Repeat")){
+                    ArrayList<String> repeatDays = (ArrayList<String>)Arrays.asList(a.getDays().split(" "));
+                    intent2.putStringArrayListExtra("repeatList", repeatDays);
+                }
                 final int _id = (int) System.currentTimeMillis();
-                intent.putExtra("id", _id);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), _id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                intent2.putExtra("id", _id);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), _id, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
                 //Log.i("fafafafafa", String.valueOf(time_picker.getCurrentHour())+String.valueOf(time_picker.getCurrentMinute()));
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
