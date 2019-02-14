@@ -40,8 +40,11 @@ import com.example.sauravvishal8797.alarmify.models.Alarm;
 import com.example.sauravvishal8797.alarmify.realm.RealmController;
 
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import io.realm.Realm;
 
@@ -150,7 +153,32 @@ public class AlarmDetailActivity extends AppCompatActivity {
                 //Calendar.getInstance().getTime().getHours();
                 int newhour = timePicker.getCurrentHour()-time_picker.getCurrentHour();
                 int newmin = timePicker.getCurrentMinute()-time_picker.getCurrentMinute();
-                if(newhour>0&&newmin<0){
+                /**if(newhour>0){
+                    if(newmin>0){
+                        alarmMessage.setText("Alarm set for "+ newhour +"hours "+newmin+"minutes from now");
+                    } else if (newmin == 0){
+                        alarmMessage.setText("Alarm set for "+ newhour +"hours "+"from now");
+                    } else if (newmin<0){
+                        alarmMessage.setText("Alarm set for "+ (newhour-1) +"hours "+(60 - newmin)+"minutes from now");
+                    }
+                } else if (newhour == 0){
+                    if (newmin>0){
+                        alarmMessage.setText("Alarm set for "+newmin+"minutes from now");
+                    } else if (newmin < 0){
+                        alarmMessage.setText("Alarm set for "+ (24-1) +"hours "+(60-newmin)+"minutes from now");
+                    } else if (newmin == 0){
+                        alarmMessage.setText(" ");
+                    }
+                } else if (newhour < 0){
+                    if(newmin > 0){
+                        alarmMessage.setText("Alarm set for "+ (24 - Math.abs(newhour)) +"hours "+newmin+"minutes from now");
+                    } else if (newmin < 0){
+                        alarmMessage.setText("Alarm set for "+ (24 - Math.abs(newhour) - 1) +"hours "+(60-newmin)+"minutes from now");
+                    } else if (newmin == 0){
+                        alarmMessage.setText("Alarm set for "+ (24-newhour) +"hours "+"from now");
+                    }
+                }*/
+              /**  if(newhour>0&&newmin<0){
                     alarmMessage.setText("Alarm set for "+ (24-Math.abs(newhour)) +"hours "+Math.abs(newmin)+"minutes from now");
                 }else if(newhour>0&&newmin>0){
                     alarmMessage.setText("Alarm set for "+ (24-Math.abs(newhour)-1) +"hours "+time_picker.getCurrentMinute()+
@@ -168,7 +196,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
                     alarmMessage.setText("Alarm set for "+ (Math.abs(newhour)-1) +"hours "+time_picker.getCurrentMinute()+
                             (60-timePicker.getCurrentMinute())+"minutes from now");
 
-                }
+                }*/
                 Log.i("hours", String.valueOf(timePicker.getCurrentHour()) + "   " + String.valueOf(timePicker.getCurrentMinute()));
             }
         });
@@ -507,6 +535,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
             }
             creatingNewAlarmObject(_id);
         }
+        Toast.makeText(getApplicationContext(), "New alarm set for "+ alarmTime+" "+period, Toast.LENGTH_SHORT).show();
         finish();
     }
 
