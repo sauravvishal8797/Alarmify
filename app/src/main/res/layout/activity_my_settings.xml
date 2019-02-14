@@ -370,6 +370,36 @@
                 android:layout_marginBottom="20dp"
                 android:background="#00344D"/>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/set_max_snoozes_layout"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="19dp"
+                    android:textColor="@color/grey_shade"
+                    android:text="@string/set_max_snoozes"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/max_nof_snoozes_text"
+                    android:textColor="@color/grey_shade"
+                    android:textSize="15dp"
+                    android:text="Unlimited"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="#00344D"/>
+
         </LinearLayout>
 
     </LinearLayout>

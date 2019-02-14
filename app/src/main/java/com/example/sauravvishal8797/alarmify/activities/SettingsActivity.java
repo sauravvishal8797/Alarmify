@@ -36,6 +36,8 @@ public class SettingsActivity extends AppCompatActivity{
     private CheckBox preventPowerOffCheckbox;
     private CheckBox setAlarmconfirmationCheckbox;
     private SwitchCompat editSavedAlarmsButton;
+    private LinearLayout setMaxSnoozesLayout;
+    private TextView setMaxSnoozeText;
 
     /** Obtaining an instance of PreferenceUtil for SharedPreferences cammunications */
     private PreferenceUtil SP;
@@ -51,6 +53,10 @@ public class SettingsActivity extends AppCompatActivity{
     //For keeping track of the question count selected by users
     private int noOfQuestions = 0;
     private int questionsArrayPos=0;
+
+    //for max no of snoozes
+    private int maxSnoozeArrayPos = 0;
+    private String maxSnoozeValue=" ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -480,10 +486,10 @@ public class SettingsActivity extends AppCompatActivity{
         if(SP.getInt(getResources().getString(R.string.auto_dismiss_time), 0)>0){
             autoDismissTimeText.setText(String.valueOf(SP.getInt(getResources().getString(R.string.auto_dismiss_time), 0)) + " minutes");
         }
-        final int checkedItem = SP.getInt(getResources().getString(R.string.auto_dismiss_timr_pos), 0);
         autoDismissView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final int checkedItem = SP.getInt(getResources().getString(R.string.auto_dismiss_timr_pos), 0);
                 AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this, R.style.AlertDialog_Dark);
                 builder.setTitle("Choose Auto-dismiss period");
                 // builder.s
@@ -568,6 +574,88 @@ public class SettingsActivity extends AppCompatActivity{
                     }
                 });
                 dialog.show();
+            }
+        });
+
+        /** Set max no of snoozes */
+        setMaxSnoozesLayout = findViewById(R.id.set_max_snoozes_layout);
+        setMaxSnoozeText = findViewById(R.id.max_nof_snoozes_text);
+        setMaxSnoozeText.setText(SP.getString(getResources().getString(R.string.set_max_snoozes), "Unlimited"));
+        setMaxSnoozesLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int checkeditempos = SP.getInt(getResources().getString(R.string.max_snoozes_array_pos), 0);
+                AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this, R.style.AlertDialog_Dark);
+                builder.setTitle("Choose Max no of snoozes");
+                builder.setSingleChoiceItems(getResources().getStringArray(R.array.max_snooze_options), checkeditempos,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                switch (i){
+                                    case 0:
+                                        maxSnoozeValue="Unlimited";
+                                        maxSnoozeArrayPos=0;
+                                        break;
+
+                                    case 1:
+                                        maxSnoozeValue="1";
+                                        maxSnoozeArrayPos=1;
+                                        break;
+
+                                    case 2:
+                                        maxSnoozeValue="2";
+                                        maxSnoozeArrayPos=2;
+                                        break;
+
+                                    case 3:
+                                        maxSnoozeValue="3";
+                                        maxSnoozeArrayPos=3;
+                                        break;
+
+                                    case 4:
+                                        maxSnoozeValue="4";
+                                        maxSnoozeArrayPos=4;
+                                        break;
+
+                                    case 5:
+                                        maxSnoozeValue="5";
+                                        maxSnoozeArrayPos=5;
+                                        break;
+
+                                    case 6:
+                                        maxSnoozeValue="6";
+                                        maxSnoozeArrayPos=6;
+                                        break;
+
+                                        default:
+                                            maxSnoozeValue="Unlimited";
+                                            maxSnoozeArrayPos=0;
+                                            break;
+
+                                }
+                            }
+                        });
+                final AlertDialog dialog = builder.create();
+                dialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK".toUpperCase(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialog.dismiss();
+                        SharedPreferences.Editor editor = SP.getEditor();
+                        editor.putString(getResources().getString(R.string.set_max_snoozes), maxSnoozeValue);
+                        editor.putInt(getResources().getString(R.string.max_snoozes_array_pos), maxSnoozeArrayPos);
+                        editor.commit();
+                        setMaxSnoozeText.setText(maxSnoozeValue);
+                        Log.i("cunttttttttttttt", maxSnoozeValue);
+                    }
+                });
+                dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL".toUpperCase(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+
             }
         });
     }

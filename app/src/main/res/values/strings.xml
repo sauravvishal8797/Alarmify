@@ -33,9 +33,11 @@
     <string name="prevent_phone_power_off">Prevent phone power-off</string>
     <string name="edit_saved_alarm_action_mssg">Edit alarms before ringing</string>
     <string name="auto_dismiss_pref">Auto-Dismiss</string>
+    <string name="set_max_snoozes">Set maximum no of snoozes</string>
     <string name="dismiss_default_text">Dismiss Mission</string>
     <string name="auto_dismiss_time">Auto-Dismiss time</string>
     <string name="auto_dismiss_timr_pos">Auto-Dismiss time position</string>
+    <string name="max_snoozes_array_pos">Max snoozes checked postion</string>
     <string name="dismiss_level_pos">Dismiss level array pos</string>
     <string name="set_alarm_confirmation">Set-Alarm confirmation</string>
     <string name="set_alarm_confirmation_mssg">Asks for confirmation while setting alarm</string>

@@ -502,8 +502,22 @@ public class DismissAlarmActivity extends AppCompatActivity {
         currentTimeView.setTextSize(40);
         dismissButton = findViewById(R.id.dismiss_button);
         snoozeButton = findViewById(R.id.snooze_button);
+        String snoozeValue = SP.getString(getResources().getString(R.string.set_max_snoozes),
+                "Unlimited");
+        int snoozecount = SP.getInt("set snooze count", 0);
         if(snoozeTime>0){
             snoozeButton.setVisibility(View.VISIBLE);
+            if (!snoozeValue.equals("Unlimited")){
+                if(snoozecount >Integer.valueOf(snoozeValue)){
+                    snoozeButton.setVisibility(View.GONE);
+                } else {
+                    snoozecount++;
+                    SharedPreferences.Editor editor = SP.getEditor();
+                    editor.putInt("set snooze count", snoozecount);
+                    editor.commit();
+                }
+
+            }
         } else {
             snoozeButton.setVisibility(View.GONE);
         }
@@ -809,6 +823,8 @@ public class DismissAlarmActivity extends AppCompatActivity {
         repeat=true;
         //new ResumeActivity().execute();
         someHandler.removeCallbacks(runnable);
+        Intent intent = new Intent("lalaland");
+        sendBroadcast(intent);
         /**if(!dismissButtonPress){
             SharedPreferences.Editor editor = SP.getEditor();
             editor.putString(getResources().getString(R.string.home_button_pressed), "yes");

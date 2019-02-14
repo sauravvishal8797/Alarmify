@@ -13,6 +13,16 @@
         <item>30 minutes</item>
     </array>
 
+    <array name="max_snooze_options">
+        <item>Unlimited</item>
+        <item>1 time</item>
+        <item>2 times</item>
+        <item>3 times</item>
+        <item>4 times</item>
+        <item>5 times</item>
+        <item>6 times</item>
+    </array>
+
     <array name="dismiss_alarm_missions">
         <item>default</item>
         <item>Maths Puzzle</item>

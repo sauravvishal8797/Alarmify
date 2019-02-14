@@ -38,6 +38,8 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".receivers.RestartDismissActivityReceiver"/>
+
         <activity
             android:name=".activities.DismissAlarmActivity"
             android:screenOrientation="portrait"
