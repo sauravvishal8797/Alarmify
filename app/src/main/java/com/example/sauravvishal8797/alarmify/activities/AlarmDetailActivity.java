@@ -478,6 +478,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
                 intent.putExtra("period", period);
                 Log.i("monutery", String.valueOf(snoozetime));
                 intent.putExtra("snooze", snoozetime);
+                intent.putExtra("nooftimesSnoozed", 0);
                 Log.i("angmas", String.valueOf(snoozetime));
                 intent.putExtra("label", labelText);
                 intent.putStringArrayListExtra("repeatList", repeatAlarmDays);
@@ -516,6 +517,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
             intent.putExtra("deleteAfterGoingOff", deleteAfterGoesOff);
             intent.putExtra("period", period);
             intent.putExtra("snooze", snoozetime);
+            intent.putExtra("nooftimesSnoozed", 0);
             intent.putExtra("label", labelText);
             intent.putStringArrayListExtra("repeatList", repeatAlarmDays);
             int size = (repeatAlarmDays!=null)?repeatAlarmDays.size():0;
@@ -570,6 +572,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
         }
         newAlarm.setActivated(true);
         newAlarm.setSnoozeTime(snoozetime);
+        newAlarm.setNoOfTimesSnoozed(0);
         newAlarm.setDeleteAfterGoesOff(deleteAfterGoesOff);
         if(edit_mode && labelText==null){
             newAlarm.setLabel(intent.getStringExtra("label"));

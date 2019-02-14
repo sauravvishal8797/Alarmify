@@ -71,6 +71,7 @@ public class RealmController {
         if(alarm!=null){
             realm.beginTransaction();
             alarm.setActivated(false);
+            alarm.setNoOfTimesSnoozed(0);
             realm.commitTransaction();
         } else {
             Log.i("nullmessage", "alarm is null");
@@ -83,6 +84,7 @@ public class RealmController {
         int pendingIntentId = alarm.getPendingIntentId();
         realm.beginTransaction();
         alarm.setActivated(true);
+        alarm.setNoOfTimesSnoozed(0);
         realm.commitTransaction();
     }
 

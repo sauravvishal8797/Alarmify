@@ -15,6 +15,7 @@ public class Alarm extends RealmObject{
     private String period;
     private String repeatDays;
     private int snoozeTime;
+    private int noOfTimesSnoozed;
     private String label;
     private boolean deleteAfterGoesOff;
     private boolean isActivated;
@@ -66,6 +67,14 @@ public class Alarm extends RealmObject{
 
     public int getSnoozeTime() {
         return snoozeTime;
+    }
+
+    public void setNoOfTimesSnoozed(int noOfTimesSnoozed) {
+        this.noOfTimesSnoozed = noOfTimesSnoozed;
+    }
+
+    public int getNoOfTimesSnoozed() {
+        return noOfTimesSnoozed;
     }
 
     public void setLabel(String label) {

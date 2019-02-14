@@ -99,6 +99,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
     private String alarmLabel;
     private int snoozeTime=0;
     private boolean deleteAfterGpingoff;
+    private int noOfTimesSnoozed=0;
 
     private PreferenceUtil SP;
     private AudioManager audioManager;
@@ -143,6 +144,18 @@ public class DismissAlarmActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActivityManager am =(ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+        if(am != null) {
+            List<ActivityManager.AppTask> tasks = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                tasks = am.getAppTasks();
+            }
+            if (tasks != null && tasks.size() > 0) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    tasks.get(0).setExcludeFromRecents(true);
+                }
+            }
+        }
         SP = PreferenceUtil.getInstance(this);
         if(SP.getString(getResources().getString(R.string.dismiss_default_text), getResources().getString(R.string.default_dismiss_mission))
                 .equals(getResources().getString(R.string.maths_mission_dismiss))){
@@ -181,6 +194,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
         id = intent.getIntExtra("id", 0);
         deleteAfterGpingoff = intent.getBooleanExtra("deleteAfterGoingOff", false);
         snoozeTime = intent.getIntExtra("snooze", 0);
+        noOfTimesSnoozed = intent.getIntExtra("noftimesSnoozed", 0);
         Log.i("angmassssssssss", String.valueOf(snoozeTime));
         alarmLabel = intent.getStringExtra("label");
         statusBarTransparent();
@@ -437,8 +451,17 @@ public class DismissAlarmActivity extends AppCompatActivity {
         alarmLabelTextMathsPuzz = findViewById(R.id.alarmlabeltextMathsPuzzle);
         alarmLabelTextMathsPuzz.setText(alarmLabel);
         snoozeButtonMathsPuzzle = findViewById(R.id.snoozeButton);
+        String snoozeValue = SP.getString(getResources().getString(R.string.set_max_snoozes),
+                "Unlimited");
         if(snoozeTime>0){
             snoozeButtonMathsPuzzle.setVisibility(View.VISIBLE);
+            if (!snoozeValue.equals("Unlimited")){
+                if(noOfTimesSnoozed >Integer.valueOf(snoozeValue)){
+                    snoozeButton.setVisibility(View.GONE);
+                } else {
+                    snoozeButton.setVisibility(View.VISIBLE);
+                }
+            }
             snoozeButtonMathsPuzzle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -504,19 +527,14 @@ public class DismissAlarmActivity extends AppCompatActivity {
         snoozeButton = findViewById(R.id.snooze_button);
         String snoozeValue = SP.getString(getResources().getString(R.string.set_max_snoozes),
                 "Unlimited");
-        int snoozecount = SP.getInt("set snooze count", 0);
         if(snoozeTime>0){
             snoozeButton.setVisibility(View.VISIBLE);
             if (!snoozeValue.equals("Unlimited")){
-                if(snoozecount >Integer.valueOf(snoozeValue)){
+                if(noOfTimesSnoozed >Integer.valueOf(snoozeValue)){
                     snoozeButton.setVisibility(View.GONE);
                 } else {
-                    snoozecount++;
-                    SharedPreferences.Editor editor = SP.getEditor();
-                    editor.putInt("set snooze count", snoozecount);
-                    editor.commit();
+                    snoozeButton.setVisibility(View.VISIBLE);
                 }
-
             }
         } else {
             snoozeButton.setVisibility(View.GONE);
@@ -574,7 +592,9 @@ public class DismissAlarmActivity extends AppCompatActivity {
         Log.i("latinnnnn", String.valueOf(snoozeTime));
         Calendar calendar = Calendar.getInstance();
         Log.i("minutesssssssssss", String.valueOf(minutes));
-        minutes = minutes+snoozeTime;
+
+        //minutes = minutes+snoozeTime;
+        minutes = now.getTime().getMinutes()+snoozeTime;
         Log.i("minutesssss",String.valueOf(minutes));
         if(minutes>59){
             minutes = minutes - 60;
@@ -614,6 +634,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
         intent.putExtra("deleteAfterGoingOff", true);
         intent.putExtra("period", period);
         intent.putExtra("snooze", snoozeTime);
+        intent.putExtra("nooftimesSnoozed", noOfTimesSnoozed+1);
         intent.putExtra("label", alarmLabel);
         intent.putExtra("repeat", 0);
         final int _id = (int) System.currentTimeMillis();
@@ -644,6 +665,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
             newAlarm.setDays("No Repeat");
         newAlarm.setActivated(true);
         newAlarm.setSnoozeTime(snoozeTime);
+        newAlarm.setNoOfTimesSnoozed(noOfTimesSnoozed+1);
         newAlarm.setDeleteAfterGoesOff(deleteAfterGpingoff);
         newAlarm.setLabel(alarmLabel);
         newAlarm.setPeriod(period);
