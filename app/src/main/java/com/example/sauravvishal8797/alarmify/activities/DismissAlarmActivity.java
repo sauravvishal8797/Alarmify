@@ -145,9 +145,9 @@ public class DismissAlarmActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        if((AlarmReceiver.mediaPlayer==null)&&!intent.getBooleanExtra("preview", false)){
+       /** if((AlarmReceiver.mediaPlayer==null)&&!intent.getBooleanExtra("preview", false)){
             finish();
-        }
+        }*/
         ActivityManager am =(ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
         if(am != null) {
             List<ActivityManager.AppTask> tasks = null;
@@ -319,6 +319,23 @@ public class DismissAlarmActivity extends AppCompatActivity {
             mathsPuzz.add(mathsExpression);
         }
         mathsExpression.setText(mathsPuzz.get(count[0]).getExpression());
+        previewModeLayout = findViewById(R.id.preview_mode_textView);
+        previewAbortButton = findViewById(R.id.preview_abort_button);
+        if(previewScreen){
+            previewModeLayout.setVisibility(View.VISIBLE);
+            previewAbortButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(previewMediaPlayer.isPlaying()){
+                        previewMediaPlayer.stop();
+                        previewMediaPlayer.release();
+                        finish();
+                    }
+                }
+            });
+        } else {
+            previewModeLayout.setVisibility(View.GONE);
+        }
         ansEdttxt = findViewById(R.id.exp_edittext);
         onebutton = findViewById(R.id.one);
         onebutton.setOnClickListener(new View.OnClickListener() {
@@ -446,7 +463,9 @@ public class DismissAlarmActivity extends AppCompatActivity {
                             editor.commit();
                         }
                         finish();
-                        Toast.makeText(view.getContext(), getResources().getString(R.string.dismiss_alarm_message), Toast.LENGTH_SHORT).show();
+                        if(!previewScreen){
+                            Toast.makeText(view.getContext(), getResources().getString(R.string.dismiss_alarm_message), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             }
@@ -678,29 +697,6 @@ public class DismissAlarmActivity extends AppCompatActivity {
     private void statusBarTransparent(){
         StatusBarUtil.setTransparent(this);
         StatusBarUtil.hideFakeStatusBarView(this);
-    }
-
-    private void setUpUi(){
-        linearLayout = findViewById(R.id.calculator_layout);
-        if(typeDismiss.equals("normal")){
-            //dismiss_layout = findViewById(R.id.layout_dismiss);
-            linearLayout.setVisibility(View.GONE);
-            dismiss_layout.setVisibility(View.VISIBLE);
-            //dismiss_button = findViewById(R.id.dismiss_button);
-            dismiss_button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });
-            dismiss_time = findViewById(R.id.time_current);
-            dismiss_message = findViewById(R.id.alarm_label_message);
-        } else {
-            expText = (TextView) findViewById(R.id.math_exp);
-            final String[] result = generateExpression();
-            expText.setText(result[0]);
-            ansEdttxt = (EditText) findViewById(R.id.ans_edittext);
-        }
     }
 
     public int checkAnswer(int a){
