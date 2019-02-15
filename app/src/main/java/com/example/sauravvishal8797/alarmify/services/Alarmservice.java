@@ -34,7 +34,7 @@ public class Alarmservice extends IntentService {
 
         Intent intent1 = new Intent(getApplicationContext(), DismissAlarmActivity.class);
         //intent1.putExtra("putPauseFalse", "false");
-        intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent1);
 
     }

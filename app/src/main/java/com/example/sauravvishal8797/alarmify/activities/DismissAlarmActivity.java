@@ -144,6 +144,10 @@ public class DismissAlarmActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        if((AlarmReceiver.mediaPlayer==null)&&!intent.getBooleanExtra("preview", false)){
+            finish();
+        }
         ActivityManager am =(ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
         if(am != null) {
             List<ActivityManager.AppTask> tasks = null;
@@ -169,7 +173,6 @@ public class DismissAlarmActivity extends AppCompatActivity {
                 + WindowManager.LayoutParams.FLAG_FULLSCREEN|
                 + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
-        Intent intent = getIntent();
         if(intent.hasExtra("preview")){
            previewScreen = intent.getBooleanExtra("preview", false);
            Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
@@ -845,14 +848,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
         repeat=true;
         //new ResumeActivity().execute();
         someHandler.removeCallbacks(runnable);
-        Intent intent = new Intent("lalaland");
-        sendBroadcast(intent);
-        /**if(!dismissButtonPress){
-            SharedPreferences.Editor editor = SP.getEditor();
-            editor.putString(getResources().getString(R.string.home_button_pressed), "yes");
-            editor.commit();
-            new ResumeActivity().execute();
-        }*/
+        //new ResumeActivity().execute();
 
         //Intent intent = new Intent(DismissAlarmActivity.this, Restart.class);
         //startActivity(intent);
@@ -881,6 +877,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
         Log.i("stopping", "onDestroy");
         someHandler.removeCallbacks(runnable);
         //new ResumeActivity().execute();
+        finish();
     }
 
 
