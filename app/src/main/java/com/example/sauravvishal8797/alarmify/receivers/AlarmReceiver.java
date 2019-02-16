@@ -37,13 +37,28 @@ public class AlarmReceiver extends BroadcastReceiver{
     public void onReceive(Context context, Intent intent) {
         SP = PreferenceUtil.getInstance(context);
         SharedPreferences.Editor editor = SP.getEditor();
+        AudioManager manager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
         realmController = RealmController.with(context);
-        if(realmController.checkAlarmState(intent.getStringExtra("alarmtime"))){
+        if(realmController.checkAlarmState(intent.getStringExtra("alarmtime"))&&manager.getMode()!=AudioManager.MODE_IN_CALL){
             if(!SP.getBoolean("alarm_ringing", false)){
                 editor.putBoolean("alarm_ringing", true);
                 editor.commit();
             }
             activeAlarmTasks(realmController, intent, context);
+        } else if (realmController.checkAlarmState(intent.getStringExtra("alarmtime"))&&
+                manager.getMode()==AudioManager.MODE_IN_CALL){
+            if(intent.getBooleanExtra("deleteAfterGoingOff", false) &&
+                    intent.getIntExtra("repeat", 0)==0){
+                realmController.deleteAlarm(intent.getStringExtra("alarmtime"), intent.getStringExtra("period"));
+            } else if(!intent.getBooleanExtra("deleteAfterGoingOff", false) &&
+                    intent.getIntExtra("repeat", 0)==0){
+                realmController.deactivateAlarm(intent.getStringExtra("alarmtime"));
+            } else {
+                for(int i=0; i<intent.getStringArrayListExtra("repeatList").size(); i++){
+                    Log.i("REPEAT", intent.getStringArrayListExtra("repeatList").get(i));
+                }
+                setNextAlarm(intent.getStringArrayListExtra("repeatList"), intent, context);
+            }
         }
         //mediaPlayer.
     }

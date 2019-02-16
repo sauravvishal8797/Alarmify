@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
         android:name=".MyApplication"
@@ -38,20 +39,15 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".receivers.RestartDismissActivityReceiver"/>
-
         <activity
             android:name=".activities.DismissAlarmActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
-        <service
-            android:name=".services.Alarmservice"
-            android:exported="false" />
-
         <service android:name=".services.ReactivateAlarmsAfterBootService"/>
 
         <activity android:name=".activities.SettingsActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".activities.MainActivity"></activity>
     </application>
 

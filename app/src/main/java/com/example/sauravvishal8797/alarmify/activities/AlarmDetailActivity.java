@@ -90,7 +90,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
         realmController = RealmController.with(this);
         time_picker = (TimePicker) findViewById(R.id.timepicker22);
         time_picker.setIs24HourView(false);
-        //setButton = (SwitchCompat) findViewById(R.id.set)
         setUI();
         statusBarTransparent();
         setTimePickerTextColor();
@@ -100,7 +99,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
         final String am_pm;
         final String[] hours = new String[1];
         final String[] minutes = new String[1];
-        //final int time_picker.getCurrentHour() = time_picker.getCurrentHour();
         final int min = time_picker.getCurrentMinute();
         Log.i("hours", String.valueOf(time_picker.getCurrentHour()) + "   " + String.valueOf(min));
         if(time_picker.getCurrentHour()>=12){
@@ -114,10 +112,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
                 minutes[0] = time_picker.getCurrentMinute().toString();
 
             alarmTime = hours[0]+":"+minutes[0];
-                   /* alarmTime = (time_picker.getCurrentHour()-12>0)?(String.valueOf(time_picker.getCurrentHour()-12)):
-                            time_picker.getCurrentHour()+":" +
-                            ((time_picker.getCurrentMinute()>=0 && time_picker.getCurrentMinute()<=9)?String.valueOf(0) +
-                                    time_picker.getCurrentMinute().toString():time_picker.getCurrentMinute().toString());*/
             period = "PM";
         } else {
             alarmTime = time_picker.getCurrentHour().toString() +":" +
@@ -139,10 +133,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
                         minutes[0] = time_picker.getCurrentMinute().toString();
 
                     alarmTime = hours[0]+":"+minutes[0];
-                   /* alarmTime = (time_picker.getCurrentHour()-12>0)?(String.valueOf(time_picker.getCurrentHour()-12)):
-                            time_picker.getCurrentHour()+":" +
-                            ((time_picker.getCurrentMinute()>=0 && time_picker.getCurrentMinute()<=9)?String.valueOf(0) +
-                                    time_picker.getCurrentMinute().toString():time_picker.getCurrentMinute().toString());*/
                     period = "PM";
                 } else {
                     alarmTime = time_picker.getCurrentHour().toString() +":" +
@@ -150,53 +140,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
                                     time_picker.getCurrentMinute().toString():time_picker.getCurrentMinute().toString());
                     period = "AM";
                 }
-                //Calendar.getInstance().getTime().getHours();
-                int newhour = timePicker.getCurrentHour()-time_picker.getCurrentHour();
-                int newmin = timePicker.getCurrentMinute()-time_picker.getCurrentMinute();
-                /**if(newhour>0){
-                    if(newmin>0){
-                        alarmMessage.setText("Alarm set for "+ newhour +"hours "+newmin+"minutes from now");
-                    } else if (newmin == 0){
-                        alarmMessage.setText("Alarm set for "+ newhour +"hours "+"from now");
-                    } else if (newmin<0){
-                        alarmMessage.setText("Alarm set for "+ (newhour-1) +"hours "+(60 - newmin)+"minutes from now");
-                    }
-                } else if (newhour == 0){
-                    if (newmin>0){
-                        alarmMessage.setText("Alarm set for "+newmin+"minutes from now");
-                    } else if (newmin < 0){
-                        alarmMessage.setText("Alarm set for "+ (24-1) +"hours "+(60-newmin)+"minutes from now");
-                    } else if (newmin == 0){
-                        alarmMessage.setText(" ");
-                    }
-                } else if (newhour < 0){
-                    if(newmin > 0){
-                        alarmMessage.setText("Alarm set for "+ (24 - Math.abs(newhour)) +"hours "+newmin+"minutes from now");
-                    } else if (newmin < 0){
-                        alarmMessage.setText("Alarm set for "+ (24 - Math.abs(newhour) - 1) +"hours "+(60-newmin)+"minutes from now");
-                    } else if (newmin == 0){
-                        alarmMessage.setText("Alarm set for "+ (24-newhour) +"hours "+"from now");
-                    }
-                }*/
-              /**  if(newhour>0&&newmin<0){
-                    alarmMessage.setText("Alarm set for "+ (24-Math.abs(newhour)) +"hours "+Math.abs(newmin)+"minutes from now");
-                }else if(newhour>0&&newmin>0){
-                    alarmMessage.setText("Alarm set for "+ (24-Math.abs(newhour)-1) +"hours "+time_picker.getCurrentMinute()+
-                            (60-timePicker.getCurrentMinute())+"minutes from now");
-
-                }else if(newhour>0&&newmin==0){
-                    alarmMessage.setText("Alarm set for "+ (24-Math.abs(newhour)) +"hours from now");
-
-                }else if(newhour<0&&newmin<0){
-                    alarmMessage.setText("Alarm set for "+ Math.abs(newhour) +"hours "+Math.abs(newmin)+"minutes from now");
-
-                }else if(newhour<0&&newmin==0){
-                    alarmMessage.setText("Alarm set for "+ Math.abs(newhour) +"hours from now");
-                }else if(newhour<0 && newmin>0){
-                    alarmMessage.setText("Alarm set for "+ (Math.abs(newhour)-1) +"hours "+time_picker.getCurrentMinute()+
-                            (60-timePicker.getCurrentMinute())+"minutes from now");
-
-                }*/
                 Log.i("hours", String.valueOf(timePicker.getCurrentHour()) + "   " + String.valueOf(timePicker.getCurrentMinute()));
             }
         });

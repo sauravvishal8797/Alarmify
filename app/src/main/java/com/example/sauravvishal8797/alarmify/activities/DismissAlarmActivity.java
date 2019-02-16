@@ -3,12 +3,9 @@ package com.example.sauravvishal8797.alarmify.activities;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.Shape;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
@@ -30,13 +27,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.sauravvishal8797.alarmify.adapters.repeatAlarmAdapter;
 import com.example.sauravvishal8797.alarmify.helpers.PreferenceUtil;
 import com.example.sauravvishal8797.alarmify.models.Alarm;
 import com.example.sauravvishal8797.alarmify.models.MathsExpression;
 import com.example.sauravvishal8797.alarmify.realm.RealmController;
 import com.example.sauravvishal8797.alarmify.receivers.AlarmReceiver;
-import com.example.sauravvishal8797.alarmify.services.Alarmservice;
 import com.example.sauravvishal8797.alarmify.R;
 import com.jaeger.library.StatusBarUtil;
 
@@ -50,7 +45,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
-import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -60,17 +54,17 @@ import io.realm.Realm;
 public class DismissAlarmActivity extends AppCompatActivity {
 
     private boolean isFocus;
-    private static boolean isPaused=false;
-   // private boolean
+    private static boolean isPaused = false;
+    // private boolean
     private Handler collapseNotificationHandler;
-    private boolean isShutting=false;
+    private boolean isShutting = false;
     private ActivityManager mActivityManager;
     private Handler mHandler;
     //private interface lifecycledelegate;
 
     private TextView expText;
     private Button submitButton;
-    public static boolean repeat=false;
+    public static boolean repeat = false;
     private EditText ansEdttxt;
     private String typeDismiss;
 
@@ -91,15 +85,15 @@ public class DismissAlarmActivity extends AppCompatActivity {
     private TextView alarmLabelMessage;
     private TextView alarmPeriod;
 
-    private int hour=0;
-    private int minutes=0;
+    private int hour = 0;
+    private int minutes = 0;
     private String period;
     private String alamtime;
     private int id;
     private String alarmLabel;
-    private int snoozeTime=0;
+    private int snoozeTime = 0;
     private boolean deleteAfterGpingoff;
-    private int noOfTimesSnoozed=0;
+    private int noOfTimesSnoozed = 0;
 
     private PreferenceUtil SP;
     private AudioManager audioManager;
@@ -107,7 +101,9 @@ public class DismissAlarmActivity extends AppCompatActivity {
     private RelativeLayout previewModeLayout;
     private ImageView previewAbortButton;
 
-    /**Maths Puzzle dismiss view UI elements */
+    /**
+     * Maths Puzzle dismiss view UI elements
+     */
     private TextView mathsExpression;
     private TextView onebutton;
     private TextView twoButton;
@@ -138,18 +134,18 @@ public class DismissAlarmActivity extends AppCompatActivity {
 
     private boolean dismissButtonPress = false;
 
-    private int auto_dismiss=0;
+    private int auto_dismiss = 0;
     int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        if((AlarmReceiver.mediaPlayer==null)&&!intent.getBooleanExtra("preview", false)){
+        if ((AlarmReceiver.mediaPlayer == null) && !intent.getBooleanExtra("preview", false)) {
             finish();
         }
-        ActivityManager am =(ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
-        if(am != null) {
+        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        if (am != null) {
             List<ActivityManager.AppTask> tasks = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 tasks = am.getAppTasks();
@@ -161,33 +157,33 @@ public class DismissAlarmActivity extends AppCompatActivity {
             }
         }
         SP = PreferenceUtil.getInstance(this);
-        if(SP.getString(getResources().getString(R.string.dismiss_default_text), getResources().getString(R.string.default_dismiss_mission))
-                .equals(getResources().getString(R.string.maths_mission_dismiss))){
+        if (SP.getString(getResources().getString(R.string.dismiss_default_text), getResources().getString(R.string.default_dismiss_mission))
+                .equals(getResources().getString(R.string.maths_mission_dismiss))) {
             setContentView(R.layout.maths_exp_view);
         } else {
             setContentView(R.layout.dismiss_alarm_view);
         }
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
-                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
-                + WindowManager.LayoutParams.FLAG_FULLSCREEN|
-                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                +WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                +WindowManager.LayoutParams.FLAG_FULLSCREEN |
+                +WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
-        if(intent.hasExtra("preview")){
-           previewScreen = intent.getBooleanExtra("preview", false);
-           Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-           if (alarmUri == null) {
-               alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-           }
-           previewMediaPlayer = MediaPlayer.create(this, alarmUri);
-           previewMediaPlayer.setLooping(true);
-           if(SP.getBoolean(getResources().getString(R.string.set_ringer_value_max_mssg), false)){
-               audioManager.setStreamVolume(
-                       AudioManager.STREAM_MUSIC,
-                       audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),
-                       0);
-           }
-           previewMediaPlayer.start();
+        if (intent.hasExtra("preview")) {
+            previewScreen = intent.getBooleanExtra("preview", false);
+            Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            if (alarmUri == null) {
+                alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            }
+            previewMediaPlayer = MediaPlayer.create(this, alarmUri);
+            previewMediaPlayer.setLooping(true);
+            if (SP.getBoolean(getResources().getString(R.string.set_ringer_value_max_mssg), false)) {
+                audioManager.setStreamVolume(
+                        AudioManager.STREAM_MUSIC,
+                        audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),
+                        0);
+            }
+            previewMediaPlayer.start();
         }
         hour = intent.getIntExtra("hour", 0);
         minutes = intent.getIntExtra("minutes", 0);
@@ -202,29 +198,8 @@ public class DismissAlarmActivity extends AppCompatActivity {
         alarmLabel = intent.getStringExtra("label");
         statusBarTransparent();
         mActivityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
-        if(SP.getInt(getResources().getString(R.string.auto_dismiss_time), 0) > 0){
+        if (SP.getInt(getResources().getString(R.string.auto_dismiss_time), 0) > 0) {
             auto_dismiss = SP.getInt(getResources().getString(R.string.auto_dismiss_time), 0);
-           /** Handler handler = new Handler();
-            Runnable runnable = new Runnable() {
-               @Override
-               public void run() {
-                   if (count < auto_dismiss){
-                       count++;
-                       Log.i("cunttttt", String.valueOf(count));
-                   } else {
-                       Log.i("cuntt", "kaka");
-                       if(AlarmReceiver.mediaPlayer!=null && AlarmReceiver.mediaPlayer.isPlaying()){
-                           AlarmReceiver.mediaPlayer.stop();
-                           AlarmReceiver.mediaPlayer.release();
-                           SharedPreferences.Editor editor = SP.getEditor();
-                           editor.putString("ringing", "not");
-                           editor.commit();
-                           finish();
-                       }
-                   }
-               }
-           };
-           handler.postDelayed(runnable, 60000);*/
             ScheduledExecutorService scheduler =
                     Executors.newSingleThreadScheduledExecutor();
 
@@ -249,23 +224,23 @@ public class DismissAlarmActivity extends AppCompatActivity {
                         }
                     }, 0, 60, TimeUnit.SECONDS);
         }
-       // setUpUi();
+        // setUpUi();
         //setUpUiDefaultDismissView();
-        if(SP.getString(getResources().getString(R.string.dismiss_default_text), getResources().getString(R.string.default_dismiss_mission))
-                .equals(getResources().getString(R.string.maths_mission_dismiss))){
+        if (SP.getString(getResources().getString(R.string.dismiss_default_text), getResources().getString(R.string.default_dismiss_mission))
+                .equals(getResources().getString(R.string.maths_mission_dismiss))) {
             setUpMathsPuzzleView();
             someHandler = new Handler(getMainLooper());
             runnable = new Runnable() {
                 @Override
                 public void run() {
-                    String timenow=" ", periodnow = " ";
-                    int hours=0;
+                    String timenow = " ", periodnow = " ";
+                    int hours = 0;
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
                     String datetime = simpleDateFormat.format(new Date());
-                    if (Integer.valueOf(datetime.substring(0, 2))>12){
+                    if (Integer.valueOf(datetime.substring(0, 2)) > 12) {
                         hours = Integer.valueOf(datetime.substring(0, 2)) - 12;
-                        timenow = (hours>=10)?String.valueOf(hours)+":"+datetime.substring(3,
-                                datetime.length()):"0"+String.valueOf(hours)+":"+datetime.substring(3, datetime.length());
+                        timenow = (hours >= 10) ? String.valueOf(hours) + ":" + datetime.substring(3,
+                                datetime.length()) : "0" + String.valueOf(hours) + ":" + datetime.substring(3, datetime.length());
                         periodnow = "PM";
 
                     } else {
@@ -284,16 +259,16 @@ public class DismissAlarmActivity extends AppCompatActivity {
             runnable = new Runnable() {
                 @Override
                 public void run() {
-                    String timenow=" ";
-                    int hours=0;
+                    String timenow = " ";
+                    int hours = 0;
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
                     String datetime = simpleDateFormat.format(new Date());
-                    if (Integer.valueOf(datetime.substring(0, 2))>12){
+                    if (Integer.valueOf(datetime.substring(0, 2)) > 12) {
                         hours = Integer.valueOf(datetime.substring(0, 2)) - 12;
-                        timenow = (hours>=10)?String.valueOf(hours)+":"+datetime.substring(3,
-                                datetime.length())+" PM":"0"+String.valueOf(hours)+":"+datetime.substring(3, datetime.length())+" PM";
+                        timenow = (hours >= 10) ? String.valueOf(hours) + ":" + datetime.substring(3,
+                                datetime.length()) + " PM" : "0" + String.valueOf(hours) + ":" + datetime.substring(3, datetime.length()) + " PM";
                     } else {
-                        timenow = datetime+" AM";
+                        timenow = datetime + " AM";
                     }
                     currentTimeView.setText(timenow);
                     someHandler.postDelayed(this, 1000);
@@ -301,17 +276,17 @@ public class DismissAlarmActivity extends AppCompatActivity {
             };
             someHandler.postDelayed(runnable, 10);
         }
-        isPaused=false;
+        isPaused = false;
         Toast.makeText(getApplicationContext(), "Hey there buddy", Toast.LENGTH_SHORT).show();
         Log.i("papapa", "lalalopappaa");
     }
 
-    private void setUpMathsPuzzleView(){
+    private void setUpMathsPuzzleView() {
         mathsPuzz = new ArrayList<>();
         final int[] count = {0};
         mathsExpression = findViewById(R.id.expression_view);
         final int nofOfQuestion = SP.getInt(getResources().getString(R.string.dismiss_maths_mission_ques), 3);
-        for(int i = 0; i<nofOfQuestion; i++){
+        for (int i = 0; i < nofOfQuestion; i++) {
             String[] exp = generateExpression();
             MathsExpression mathsExpression = new MathsExpression();
             mathsExpression.setExpression(exp[0]);
@@ -321,12 +296,12 @@ public class DismissAlarmActivity extends AppCompatActivity {
         mathsExpression.setText(mathsPuzz.get(count[0]).getExpression());
         previewModeLayout = findViewById(R.id.preview_mode_textView);
         previewAbortButton = findViewById(R.id.preview_abort_button);
-        if(previewScreen){
+        if (previewScreen) {
             previewModeLayout.setVisibility(View.VISIBLE);
             previewAbortButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(previewMediaPlayer.isPlaying()){
+                    if (previewMediaPlayer.isPlaying()) {
                         previewMediaPlayer.stop();
                         previewMediaPlayer.release();
                         finish();
@@ -347,7 +322,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
             }
         });
         currentTime = findViewById(R.id.dialog_title);
-        currentPeriod =  findViewById(R.id.am_pm);
+        currentPeriod = findViewById(R.id.am_pm);
         twoButton = findViewById(R.id.two);
         twoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -433,7 +408,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!answerBuilder.toString().isEmpty()){
+                if (!answerBuilder.toString().isEmpty()) {
                     answerBuilder.delete(0, answerBuilder.toString().length());
                     ansEdttxt.setText(answerBuilder.toString());
                     ansEdttxt.setSelection(ansEdttxt.getText().length());
@@ -444,18 +419,18 @@ public class DismissAlarmActivity extends AppCompatActivity {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(answerBuilder.toString().isEmpty()){
+                if (answerBuilder.toString().isEmpty()) {
 
                 } else {
                     mathsAnswer = Integer.parseInt(answerBuilder.toString());
                     ansEdttxt.setText("");
                     answerBuilder.delete(0, answerBuilder.toString().length());
-                    if(mathsAnswer == mathsPuzz.get(count[0]).getExpAnswer()&& count[0]<nofOfQuestion-1){
+                    if (mathsAnswer == mathsPuzz.get(count[0]).getExpAnswer() && count[0] < nofOfQuestion - 1) {
                         count[0]++;
                         mathsExpression.setText(mathsPuzz.get(count[0]).getExpression());
                         Log.i("nextexppppr", mathsPuzz.get(count[0]).getExpression());
-                    } else if (mathsAnswer == mathsPuzz.get(count[0]).getExpAnswer()&& count[0]==nofOfQuestion-1){
-                        if(AlarmReceiver.mediaPlayer!=null && AlarmReceiver.mediaPlayer.isPlaying()){
+                    } else if (mathsAnswer == mathsPuzz.get(count[0]).getExpAnswer() && count[0] == nofOfQuestion - 1) {
+                        if (AlarmReceiver.mediaPlayer != null && AlarmReceiver.mediaPlayer.isPlaying()) {
                             AlarmReceiver.mediaPlayer.stop();
                             AlarmReceiver.mediaPlayer.release();
                             SharedPreferences.Editor editor = SP.getEditor();
@@ -463,7 +438,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
                             editor.commit();
                         }
                         finish();
-                        if(!previewScreen){
+                        if (!previewScreen) {
                             Toast.makeText(view.getContext(), getResources().getString(R.string.dismiss_alarm_message), Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -475,10 +450,10 @@ public class DismissAlarmActivity extends AppCompatActivity {
         snoozeButtonMathsPuzzle = findViewById(R.id.snoozeButton);
         String snoozeValue = SP.getString(getResources().getString(R.string.set_max_snoozes),
                 "Unlimited");
-        if(snoozeTime>0){
+        if (snoozeTime > 0) {
             snoozeButtonMathsPuzzle.setVisibility(View.VISIBLE);
-            if (!snoozeValue.equals("Unlimited")){
-                if(noOfTimesSnoozed >Integer.valueOf(snoozeValue)){
+            if (!snoozeValue.equals("Unlimited")) {
+                if (noOfTimesSnoozed > Integer.valueOf(snoozeValue)) {
                     snoozeButton.setVisibility(View.GONE);
                 } else {
                     snoozeButton.setVisibility(View.VISIBLE);
@@ -487,7 +462,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
             snoozeButtonMathsPuzzle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(AlarmReceiver.mediaPlayer!=null && AlarmReceiver.mediaPlayer.isPlaying()){
+                    if (AlarmReceiver.mediaPlayer != null && AlarmReceiver.mediaPlayer.isPlaying()) {
                         AlarmReceiver.mediaPlayer.stop();
                         AlarmReceiver.mediaPlayer.release();
                         SharedPreferences.Editor editor = SP.getEditor();
@@ -503,38 +478,38 @@ public class DismissAlarmActivity extends AppCompatActivity {
         }
     }
 
-    public String[] generateExpression(){
-        int x=0, y=0, z=0;
+    public String[] generateExpression() {
+        int x = 0, y = 0, z = 0;
         String[] exp = new String[2];
         Random random = new Random();
-        if(SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level), "None").equals("Easy")){
+        if (SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level), "None").equals("Easy")) {
             x = random.nextInt(9) + 17;
-            y = random.nextInt(9)+ 18;
+            y = random.nextInt(9) + 18;
             z = random.nextInt(9) + 8;
-        } else if (SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level), "None").equals("Medium")){
+        } else if (SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level), "None").equals("Medium")) {
             x = random.nextInt(99) + 117;
-            y = random.nextInt(999)+ 79;
+            y = random.nextInt(999) + 79;
             z = random.nextInt(99) + 139;
-        } else if (SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level), "None").equals("Hard")){
+        } else if (SP.getString(getResources().getString(R.string.dismiss_alarm_mission_level), "None").equals("Hard")) {
             x = random.nextInt(999) + 198;
-            y = random.nextInt(999)+ 1027;
+            y = random.nextInt(999) + 1027;
             z = random.nextInt(999) + 1671;
         }
-        int sum = x+y+z;
-        exp[0]=String.valueOf(x) + "+" + String.valueOf(y) + "+" + String.valueOf(z) + "=" + "?";
-        exp[1]=String.valueOf(sum);
+        int sum = x + y + z;
+        exp[0] = String.valueOf(x) + "+" + String.valueOf(y) + "+" + String.valueOf(z) + "=" + "?";
+        exp[1] = String.valueOf(sum);
         return exp;
     }
 
-    private void setUpUiDefaultDismissView(){
+    private void setUpUiDefaultDismissView() {
         previewModeLayout = findViewById(R.id.preview_mode_textView);
         previewAbortButton = findViewById(R.id.preview_abort_button);
-        if(previewScreen){
+        if (previewScreen) {
             previewModeLayout.setVisibility(View.VISIBLE);
             previewAbortButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(previewMediaPlayer.isPlaying()){
+                    if (previewMediaPlayer.isPlaying()) {
                         previewMediaPlayer.stop();
                         previewMediaPlayer.release();
                         finish();
@@ -543,16 +518,16 @@ public class DismissAlarmActivity extends AppCompatActivity {
             });
         }
         currentTimeView = findViewById(R.id.time_current);
-        currentTimeView.setText("It's " +Calendar.getInstance().getTime().getHours()+":"+Calendar.getInstance().getTime().getMinutes());
+        currentTimeView.setText("It's " + Calendar.getInstance().getTime().getHours() + ":" + Calendar.getInstance().getTime().getMinutes());
         currentTimeView.setTextSize(40);
         dismissButton = findViewById(R.id.dismiss_button);
         snoozeButton = findViewById(R.id.snooze_button);
         String snoozeValue = SP.getString(getResources().getString(R.string.set_max_snoozes),
                 "Unlimited");
-        if(snoozeTime>0){
+        if (snoozeTime > 0) {
             snoozeButton.setVisibility(View.VISIBLE);
-            if (!snoozeValue.equals("Unlimited")){
-                if(noOfTimesSnoozed >Integer.valueOf(snoozeValue)){
+            if (!snoozeValue.equals("Unlimited")) {
+                if (noOfTimesSnoozed > Integer.valueOf(snoozeValue)) {
                     snoozeButton.setVisibility(View.GONE);
                 } else {
                     snoozeButton.setVisibility(View.VISIBLE);
@@ -564,7 +539,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
         snoozeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(AlarmReceiver.mediaPlayer!=null && AlarmReceiver.mediaPlayer.isPlaying()){
+                if (AlarmReceiver.mediaPlayer != null && AlarmReceiver.mediaPlayer.isPlaying()) {
                     AlarmReceiver.mediaPlayer.stop();
                     AlarmReceiver.mediaPlayer.release();
                     SharedPreferences.Editor editor = SP.getEditor();
@@ -582,15 +557,15 @@ public class DismissAlarmActivity extends AppCompatActivity {
         dismissButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(previewScreen){
-                    if(previewMediaPlayer.isPlaying()){
+                if (previewScreen) {
+                    if (previewMediaPlayer.isPlaying()) {
                         previewMediaPlayer.stop();
                         previewMediaPlayer.release();
-                        dismissButtonPress=true;
+                        dismissButtonPress = true;
                         finish();
                     }
                 } else {
-                    if(AlarmReceiver.mediaPlayer!=null && AlarmReceiver.mediaPlayer.isPlaying()){
+                    if (AlarmReceiver.mediaPlayer != null && AlarmReceiver.mediaPlayer.isPlaying()) {
                         AlarmReceiver.mediaPlayer.stop();
                         AlarmReceiver.mediaPlayer.release();
                         SharedPreferences.Editor editor = SP.getEditor();
@@ -605,48 +580,48 @@ public class DismissAlarmActivity extends AppCompatActivity {
 
     }
 
-    private void setAlarmAfterSnooze(int snoozeTime){
+    private void setAlarmAfterSnooze(int snoozeTime) {
         String alarmTime = " ";
         final String[] hours = new String[1];
         final String[] minutesf = new String[1];
-       AlarmManager alarmManager = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
         Calendar now = Calendar.getInstance();
         Log.i("latinnnnn", String.valueOf(snoozeTime));
         Calendar calendar = Calendar.getInstance();
         Log.i("minutesssssssssss", String.valueOf(minutes));
 
         //minutes = minutes+snoozeTime;
-        minutes = now.getTime().getMinutes()+snoozeTime;
-        Log.i("minutesssss",String.valueOf(minutes));
-        if(minutes>59){
+        minutes = now.getTime().getMinutes() + snoozeTime;
+        Log.i("minutesssss", String.valueOf(minutes));
+        if (minutes > 59) {
             minutes = minutes - 60;
             hour = hour + 1;
         }
-        if(hour>=12){
-            if(hour-12>0)
-                hours[0] = "0"+String.valueOf(hour-12);
+        if (hour >= 12) {
+            if (hour - 12 > 0)
+                hours[0] = "0" + String.valueOf(hour - 12);
             else
                 hours[0] = String.valueOf(hour);
-            if(hour>=0 && minutes<=9)
-                minutesf[0] = "0"+minutes;
+            if (hour >= 0 && minutes <= 9)
+                minutesf[0] = "0" + minutes;
             else
                 minutesf[0] = String.valueOf(minutes);
 
-            alarmTime = hours[0]+":"+minutesf[0];
+            alarmTime = hours[0] + ":" + minutesf[0];
                    /* alarmTime = (time_picker.getCurrentHour()-12>0)?(String.valueOf(time_picker.getCurrentHour()-12)):
                             time_picker.getCurrentHour()+":" +
                             ((time_picker.getCurrentMinute()>=0 && time_picker.getCurrentMinute()<=9)?String.valueOf(0) +
                                     time_picker.getCurrentMinute().toString():time_picker.getCurrentMinute().toString());*/
             period = "PM";
         } else {
-            alarmTime = String.valueOf(hour) +":" +
-                    ((minutes>=0 && minutes<=9)?String.valueOf(0) +
-                            String.valueOf(minutes):String.valueOf(minutes));
+            alarmTime = String.valueOf(hour) + ":" +
+                    ((minutes >= 0 && minutes <= 9) ? String.valueOf(0) +
+                            String.valueOf(minutes) : String.valueOf(minutes));
             period = "AM";
         }
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, minutes);
-        if(calendar.before(now)){
+        if (calendar.before(now)) {
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
         Intent intent = new Intent(DismissAlarmActivity.this, AlarmReceiver.class);
@@ -657,7 +632,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
         intent.putExtra("deleteAfterGoingOff", true);
         intent.putExtra("period", period);
         intent.putExtra("snooze", snoozeTime);
-        intent.putExtra("nooftimesSnoozed", noOfTimesSnoozed+1);
+        intent.putExtra("nooftimesSnoozed", noOfTimesSnoozed + 1);
         intent.putExtra("label", alarmLabel);
         intent.putExtra("repeat", 0);
         final int _id = (int) System.currentTimeMillis();
@@ -674,7 +649,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
         finish();
     }
 
-    private void creatingNewAlarmObject(int pendingIntentId, String alamtime, int rep){
+    private void creatingNewAlarmObject(int pendingIntentId, String alamtime, int rep) {
         StringBuilder builder = new StringBuilder();
         RealmController realmController = RealmController.with(this);
         Realm realm = realmController.getRealm();
@@ -684,25 +659,20 @@ public class DismissAlarmActivity extends AppCompatActivity {
         //Log.i("mmmmmmm", String.valueOf(time_picker.getCurrentHour()));
         newAlarm.setPendingIntentId(pendingIntentId);
         newAlarm.setMinute(minutes);
-        if(rep == 0)
+        if (rep == 0)
             newAlarm.setDays("No Repeat");
         newAlarm.setActivated(true);
         newAlarm.setSnoozeTime(snoozeTime);
-        newAlarm.setNoOfTimesSnoozed(noOfTimesSnoozed+1);
+        newAlarm.setNoOfTimesSnoozed(noOfTimesSnoozed + 1);
         newAlarm.setDeleteAfterGoesOff(deleteAfterGpingoff);
         newAlarm.setLabel(alarmLabel);
         newAlarm.setPeriod(period);
         realmController.addAlarm(newAlarm);
     }
 
-    private void statusBarTransparent(){
+    private void statusBarTransparent() {
         StatusBarUtil.setTransparent(this);
         StatusBarUtil.hideFakeStatusBarView(this);
-    }
-
-    public int checkAnswer(int a){
-
-        return a;
     }
 
     @Override
@@ -713,7 +683,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
     @Override
     protected void onUserLeaveHint() {
         //super.onUserLeaveHint();
-        isShutting=true;
+        isShutting = true;
         //onWindowFocusChanged(false);
 
 
@@ -722,26 +692,26 @@ public class DismissAlarmActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         boolean ringerMax = false;
-        if(SP.getBoolean(getResources().getString(R.string.set_ringer_value_max_mssg), false)){
+        if (SP.getBoolean(getResources().getString(R.string.set_ringer_value_max_mssg), false)) {
             ringerMax = true;
         }
         if (keyCode == KeyEvent.KEYCODE_HOME) {
             //  new ResumeActivity().execute();
             return true;
 
-        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP && ringerMax){
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP && ringerMax) {
             audioManager.setStreamVolume(
                     AudioManager.STREAM_MUSIC,
                     audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),
                     0);
             return true;
-        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN && ringerMax){
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN && ringerMax) {
             audioManager.setStreamVolume(
                     AudioManager.STREAM_MUSIC,
                     audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),
                     0);
             return true;
-        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_MUTE && ringerMax){
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_MUTE && ringerMax) {
             audioManager.setStreamVolume(
                     AudioManager.STREAM_MUSIC,
                     audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),
@@ -749,27 +719,27 @@ public class DismissAlarmActivity extends AppCompatActivity {
             return true;
         } else if (keyCode == KeyEvent.KEYCODE_POWER) {
             return false;
-        } else{
+        } else {
             return super.onKeyDown(keyCode, event);
         }
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        isFocus=hasFocus;
-        if(!hasFocus && SP.getBoolean(getResources().getString(R.string.prevent_phone_power_off), false)){
+        isFocus = hasFocus;
+        if (!hasFocus && SP.getBoolean(getResources().getString(R.string.prevent_phone_power_off), false)) {
             Intent closeDialog = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
             sendBroadcast(closeDialog);
         }
-        if(!hasFocus && !isShutting){
+        if (!hasFocus && !isShutting) {
             collapseNow();
-        }else if(!hasFocus && isPaused){
+        } else if (!hasFocus && isPaused) {
             //onResume();
             Log.i("llaallaa", "focu");
         }
     }
 
-    private void collapseNow(){
+    private void collapseNow() {
         if (collapseNotificationHandler == null) {
             collapseNotificationHandler = new Handler();
         }
@@ -804,9 +774,9 @@ public class DismissAlarmActivity extends AppCompatActivity {
                         // API 17 onwards, the method to call is `collapsePanels()`
 
                         if (Build.VERSION.SDK_INT > 16) {
-                            collapseStatusBar = statusBarManager .getMethod("collapsePanels");
+                            collapseStatusBar = statusBarManager.getMethod("collapsePanels");
                         } else {
-                            collapseStatusBar = statusBarManager .getMethod("collapse");
+                            collapseStatusBar = statusBarManager.getMethod("collapse");
                         }
                     } catch (NoSuchMethodException e) {
                         e.printStackTrace();
@@ -840,9 +810,9 @@ public class DismissAlarmActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         onResume();
-        isPaused=true;
-        isShutting=true;
-        repeat=true;
+        isPaused = true;
+        isShutting = true;
+        repeat = true;
         //new ResumeActivity().execute();
         someHandler.removeCallbacks(runnable);
         //new ResumeActivity().execute();
@@ -850,7 +820,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
         //Intent intent = new Intent(DismissAlarmActivity.this, Restart.class);
         //startActivity(intent);
 
-       // Log.i("stopper", "pause");
+        // Log.i("stopper", "pause");
     }
 
 
@@ -858,13 +828,13 @@ public class DismissAlarmActivity extends AppCompatActivity {
     protected void onStop() {
         //
         super.onStop();
-       // new ResumeActivity().execute();
-       // new ResumeActivity().execute();
-       // onPostResume();
+        // new ResumeActivity().execute();
+        // new ResumeActivity().execute();
+        // onPostResume();
         //onRestart();
         //isPaused=false;
-       // new ResumeActivity().execute();
-       // repeat=true;
+        // new ResumeActivity().execute();
+        // repeat=true;
     }
 
 
@@ -881,23 +851,23 @@ public class DismissAlarmActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        isPaused=false;
-        repeat=false;
-        if(SP.getString(getResources().getString(R.string.dismiss_default_text), getResources().getString(R.string.default_dismiss_mission))
-                .equals(getResources().getString(R.string.maths_mission_dismiss))){
-           // setUpMathsPuzzleView();
+        isPaused = false;
+        repeat = false;
+        if (SP.getString(getResources().getString(R.string.dismiss_default_text), getResources().getString(R.string.default_dismiss_mission))
+                .equals(getResources().getString(R.string.maths_mission_dismiss))) {
+            // setUpMathsPuzzleView();
             someHandler = new Handler(getMainLooper());
             runnable = new Runnable() {
                 @Override
                 public void run() {
-                    String timenow=" ", periodnow = " ";
-                    int hours=0;
+                    String timenow = " ", periodnow = " ";
+                    int hours = 0;
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
                     String datetime = simpleDateFormat.format(new Date());
-                    if (Integer.valueOf(datetime.substring(0, 2))>12){
+                    if (Integer.valueOf(datetime.substring(0, 2)) > 12) {
                         hours = Integer.valueOf(datetime.substring(0, 2)) - 12;
-                        timenow = (hours>10)?String.valueOf(hours)+":"+datetime.substring(3,
-                                datetime.length()):"0"+String.valueOf(hours)+":"+datetime.substring(3, datetime.length());
+                        timenow = (hours > 10) ? String.valueOf(hours) + ":" + datetime.substring(3,
+                                datetime.length()) : "0" + String.valueOf(hours) + ":" + datetime.substring(3, datetime.length());
                         periodnow = "PM";
 
                     } else {
@@ -916,16 +886,16 @@ public class DismissAlarmActivity extends AppCompatActivity {
             runnable = new Runnable() {
                 @Override
                 public void run() {
-                    String timenow=" ";
-                    int hours=0;
+                    String timenow = " ";
+                    int hours = 0;
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
                     String datetime = simpleDateFormat.format(new Date());
-                    if (Integer.valueOf(datetime.substring(0, 2))>12){
+                    if (Integer.valueOf(datetime.substring(0, 2)) > 12) {
                         hours = Integer.valueOf(datetime.substring(0, 2)) - 12;
-                        timenow = (hours>10)?String.valueOf(hours)+":"+datetime.substring(3,
-                                datetime.length())+" PM":"0"+String.valueOf(hours)+":"+datetime.substring(3, datetime.length())+" PM";
+                        timenow = (hours > 10) ? String.valueOf(hours) + ":" + datetime.substring(3,
+                                datetime.length()) + " PM" : "0" + String.valueOf(hours) + ":" + datetime.substring(3, datetime.length()) + " PM";
                     } else {
-                        timenow = datetime+" AM";
+                        timenow = datetime + " AM";
                     }
                     currentTimeView.setText(timenow);
                     someHandler.postDelayed(this, 1000);
@@ -935,27 +905,5 @@ public class DismissAlarmActivity extends AppCompatActivity {
         }
         Log.i("lalalalal", "lolo");
         Log.i("papapapap", "lalalalallll");
-    }
-
-    class ResumeActivity extends AsyncTask<Void, Void, Void>{
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            ScheduledExecutorService scheduler =
-                    Executors.newSingleThreadScheduledExecutor();
-            scheduler.scheduleAtFixedRate
-                    (new Runnable() {
-                        public void run() {
-                            if(SP.getString(getResources().getString(R.string.home_button_pressed), "no").equals("yes")){
-                                Log.i("kishnnnuuuuuu", "lalalalala");
-                                Intent intent = new Intent(getApplicationContext(), Alarmservice.class);
-                                intent.putExtra("Data", "kio");
-                                startService(intent);
-                            }
-                            // call service
-                        }
-                    }, 0, 1, TimeUnit.SECONDS);
-            return null;
-        }
     }
 }
