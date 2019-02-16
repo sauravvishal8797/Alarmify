@@ -142,7 +142,7 @@ public class SettingsActivity extends AppCompatActivity{
         /** Edit saved alarms */
         editSavedAlarmsButton = findViewById(R.id.enable_alarm_edit_switch);
         editSavedAlarmsButton.setOnCheckedChangeListener(null);
-        if(SP.getBoolean(getResources().getString(R.string.edit_saved_alarm_action_mssg), false)){
+        if(SP.getBoolean(getResources().getString(R.string.edit_saved_alarm_action_mssg), true)){
             editSavedAlarmsButton.setChecked(true);
         } else {
             editSavedAlarmsButton.setChecked(false);

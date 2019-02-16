@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
+import android.print.PrinterId;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import com.example.sauravvishal8797.alarmify.activities.AlarmDetailActivity;
 import com.example.sauravvishal8797.alarmify.activities.DismissAlarmActivity;
 import com.example.sauravvishal8797.alarmify.helpers.BasicCallback;
+import com.example.sauravvishal8797.alarmify.helpers.PreferenceUtil;
 import com.example.sauravvishal8797.alarmify.receivers.AlarmReceiver;
 import com.example.sauravvishal8797.alarmify.helpers.AlertDialogHelper;
 import com.example.sauravvishal8797.alarmify.R;
@@ -43,12 +45,15 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
     private RealmController realmController;
     private Activity activity;
     private BasicCallback basicCallback;
+    private PreferenceUtil SP;
 
     public AlarmAdapter(ArrayList<Alarm> list, Context context, Activity activity, BasicCallback basicCallback) {
         this.list=list;
         this.context=context;
         this.activity = activity;
         this.basicCallback = basicCallback;
+        SP = PreferenceUtil.getInstance(context);
+
     }
 
     @NonNull
@@ -182,6 +187,11 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
                     }
                 });
                 inflater.inflate(R.menu.alarm_item_view_popup, popupMenu.getMenu());
+                if(!SP.getBoolean(context.getResources().getString(R.string.edit_saved_alarm_action_mssg), true)){
+                    popupMenu.getMenu().findItem(R.id.edit_alarm).setVisible(false);
+                } else {
+                    popupMenu.getMenu().findItem(R.id.edit_alarm).setVisible(true);
+                }
                 popupMenu.show();
             }
         });
