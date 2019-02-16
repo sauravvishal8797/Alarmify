@@ -302,6 +302,9 @@ public class DismissAlarmActivity extends AppCompatActivity {
                     if (previewMediaPlayer.isPlaying()) {
                         previewMediaPlayer.stop();
                         previewMediaPlayer.release();
+                        SharedPreferences.Editor editor = SP.getEditor();
+                        editor.putString("previewMode", "off");
+                        editor.commit();
                         finish();
                     }
                 }
@@ -438,6 +441,10 @@ public class DismissAlarmActivity extends AppCompatActivity {
                         finish();
                         if (!previewScreen) {
                             Toast.makeText(view.getContext(), getResources().getString(R.string.dismiss_alarm_message), Toast.LENGTH_SHORT).show();
+                        } else {
+                            SharedPreferences.Editor editor = SP.getEditor();
+                            editor.putString("previewMode", "off");
+                            editor.commit();
                         }
                     }
                 }
@@ -510,6 +517,9 @@ public class DismissAlarmActivity extends AppCompatActivity {
                     if (previewMediaPlayer.isPlaying()) {
                         previewMediaPlayer.stop();
                         previewMediaPlayer.release();
+                        SharedPreferences.Editor editor = SP.getEditor();
+                        editor.putString("previewMode", "off");
+                        editor.commit();
                         finish();
                     }
                 }
@@ -560,6 +570,9 @@ public class DismissAlarmActivity extends AppCompatActivity {
                         previewMediaPlayer.stop();
                         previewMediaPlayer.release();
                         dismissButtonPress = true;
+                        SharedPreferences.Editor editor = SP.getEditor();
+                        editor.putString("previewMode", "off");
+                        editor.commit();
                         finish();
                     }
                 } else {

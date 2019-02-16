@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.print.PrinterId;
 import android.support.annotation.NonNull;
@@ -164,6 +165,11 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
                             case R.id.preview_alarm:
                                 Intent intent = new Intent(view.getContext(), DismissAlarmActivity.class);
                                 intent.putExtra("preview", true);
+                                SharedPreferences.Editor editor = SP.getEditor();
+                                if(SP.getString("previewMode", "off").equals("off")){
+                                    editor.putString("previewMode", "on");
+                                    editor.commit();
+                                }
                                 view.getContext().startActivity(intent);
                                 return true;
 
