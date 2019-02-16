@@ -43,7 +43,6 @@
         <activity
             android:name=".activities.DismissAlarmActivity"
             android:screenOrientation="portrait"
-            android:clearTaskOnLaunch="true"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
         <service

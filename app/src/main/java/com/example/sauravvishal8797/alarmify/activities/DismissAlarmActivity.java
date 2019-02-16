@@ -145,9 +145,9 @@ public class DismissAlarmActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-       /** if((AlarmReceiver.mediaPlayer==null)&&!intent.getBooleanExtra("preview", false)){
+        if((AlarmReceiver.mediaPlayer==null)&&!intent.getBooleanExtra("preview", false)){
             finish();
-        }*/
+        }
         ActivityManager am =(ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
         if(am != null) {
             List<ActivityManager.AppTask> tasks = null;
@@ -264,7 +264,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
                     String datetime = simpleDateFormat.format(new Date());
                     if (Integer.valueOf(datetime.substring(0, 2))>12){
                         hours = Integer.valueOf(datetime.substring(0, 2)) - 12;
-                        timenow = (hours>10)?String.valueOf(hours)+":"+datetime.substring(3,
+                        timenow = (hours>=10)?String.valueOf(hours)+":"+datetime.substring(3,
                                 datetime.length()):"0"+String.valueOf(hours)+":"+datetime.substring(3, datetime.length());
                         periodnow = "PM";
 
@@ -290,7 +290,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
                     String datetime = simpleDateFormat.format(new Date());
                     if (Integer.valueOf(datetime.substring(0, 2))>12){
                         hours = Integer.valueOf(datetime.substring(0, 2)) - 12;
-                        timenow = (hours>10)?String.valueOf(hours)+":"+datetime.substring(3,
+                        timenow = (hours>=10)?String.valueOf(hours)+":"+datetime.substring(3,
                                 datetime.length())+" PM":"0"+String.valueOf(hours)+":"+datetime.substring(3, datetime.length())+" PM";
                     } else {
                         timenow = datetime+" AM";
@@ -620,6 +620,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
         Log.i("minutesssss",String.valueOf(minutes));
         if(minutes>59){
             minutes = minutes - 60;
+            hour = hour + 1;
         }
         if(hour>=12){
             if(hour-12>0)
