@@ -277,8 +277,6 @@ public class DismissAlarmActivity extends AppCompatActivity {
             someHandler.postDelayed(runnable, 10);
         }
         isPaused = false;
-        Toast.makeText(getApplicationContext(), "Hey there buddy", Toast.LENGTH_SHORT).show();
-        Log.i("papapa", "lalalopappaa");
     }
 
     private void setUpMathsPuzzleView() {
