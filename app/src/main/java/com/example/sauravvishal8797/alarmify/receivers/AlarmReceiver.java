@@ -52,9 +52,6 @@ public class AlarmReceiver extends BroadcastReceiver{
                     intent.getIntExtra("repeat", 0)==0){
                 realmController.deactivateAlarm(intent.getStringExtra("alarmtime"));
             } else {
-                for(int i=0; i<intent.getStringArrayListExtra("repeatList").size(); i++){
-                    Log.i("REPEAT", intent.getStringArrayListExtra("repeatList").get(i));
-                }
                 setNextAlarm(intent.getStringArrayListExtra("repeatList"), intent, context);
             }
         }
@@ -70,9 +67,6 @@ public class AlarmReceiver extends BroadcastReceiver{
                 intent.getIntExtra("repeat", 0)==0){
             realmController.deactivateAlarm(intent.getStringExtra("alarmtime"));
         } else {
-            for(int i=0; i<intent.getStringArrayListExtra("repeatList").size(); i++){
-                Log.i("REPEAT", intent.getStringArrayListExtra("repeatList").get(i));
-            }
             setNextAlarm(intent.getStringArrayListExtra("repeatList"), intent, context);
         }
         Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
@@ -100,7 +94,6 @@ public class AlarmReceiver extends BroadcastReceiver{
             intent1.putExtra("label", intent.getStringExtra("label"));
             intent1.putExtra("snooze", intent.getIntExtra("snooze", 0));
             intent1.putExtra("noftimesSnoozed", intent.getIntExtra("nooftimesSnoozed", 0));
-            Log.i("angmassssssss", String.valueOf(intent.getIntExtra("snooze", 0)));
             intent1.putExtra("deleteAfterGoingOff", intent.getBooleanExtra("deleteAfterGoingOff", false));
             // intent1.putExtra("time", intent.getStringExtra("alarmtime"));
             intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -160,7 +153,6 @@ public class AlarmReceiver extends BroadcastReceiver{
         Intent intent1 = new Intent(context, AlarmReceiver.class);
         intent.putExtra("alarmtime", intent.getStringExtra("alarmtime"));
         intent.putExtra("hour", intent.getStringExtra("hour"));
-       // Log.i("lalammmmmmmm", String.valueOf(hour));
         intent.putExtra("minutes", intent.getStringExtra("minutes"));
         intent.putExtra("deleteAfterGoingOff", false);
         intent.putExtra("period", intent.getStringExtra("period"));
@@ -170,9 +162,7 @@ public class AlarmReceiver extends BroadcastReceiver{
         final int _id = (int) System.currentTimeMillis();
         intent.putExtra("id", _id);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, _id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        //Log.i("fafafafafa", String.valueOf(time_picker.getCurrentHour())+String.valueOf(time_picker.getCurrentMinute()));
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-        //Log.i("llllllll", );
     }
 
     private int daysMap(String day){

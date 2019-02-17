@@ -194,7 +194,6 @@ public class DismissAlarmActivity extends AppCompatActivity {
         deleteAfterGpingoff = intent.getBooleanExtra("deleteAfterGoingOff", false);
         snoozeTime = intent.getIntExtra("snooze", 0);
         noOfTimesSnoozed = intent.getIntExtra("noftimesSnoozed", 0);
-        Log.i("angmassssssssss", String.valueOf(snoozeTime));
         alarmLabel = intent.getStringExtra("label");
         statusBarTransparent();
         mActivityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
@@ -208,9 +207,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
                         public void run() {
                             if (count < auto_dismiss) {
                                 count++;
-                                Log.i("cunttttt", String.valueOf(count));
                             } else {
-                                Log.i("cuntt", "kaka");
                                 if (AlarmReceiver.mediaPlayer != null && AlarmReceiver.mediaPlayer.isPlaying()) {
                                     AlarmReceiver.mediaPlayer.stop();
                                     AlarmReceiver.mediaPlayer.release();
@@ -429,7 +426,6 @@ public class DismissAlarmActivity extends AppCompatActivity {
                     if (mathsAnswer == mathsPuzz.get(count[0]).getExpAnswer() && count[0] < nofOfQuestion - 1) {
                         count[0]++;
                         mathsExpression.setText(mathsPuzz.get(count[0]).getExpression());
-                        Log.i("nextexppppr", mathsPuzz.get(count[0]).getExpression());
                     } else if (mathsAnswer == mathsPuzz.get(count[0]).getExpAnswer() && count[0] == nofOfQuestion - 1) {
                         if (AlarmReceiver.mediaPlayer != null && AlarmReceiver.mediaPlayer.isPlaying()) {
                             AlarmReceiver.mediaPlayer.stop();
@@ -597,13 +593,9 @@ public class DismissAlarmActivity extends AppCompatActivity {
         final String[] minutesf = new String[1];
         AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
         Calendar now = Calendar.getInstance();
-        Log.i("latinnnnn", String.valueOf(snoozeTime));
         Calendar calendar = Calendar.getInstance();
-        Log.i("minutesssssssssss", String.valueOf(minutes));
-
         //minutes = minutes+snoozeTime;
         minutes = now.getTime().getMinutes() + snoozeTime;
-        Log.i("minutesssss", String.valueOf(minutes));
         if (minutes > 59) {
             minutes = minutes - 60;
             hour = hour + 1;
@@ -638,7 +630,6 @@ public class DismissAlarmActivity extends AppCompatActivity {
         Intent intent = new Intent(DismissAlarmActivity.this, AlarmReceiver.class);
         intent.putExtra("alarmtime", alarmTime);
         intent.putExtra("hour", hour);
-        Log.i("lalammmmmmmm", String.valueOf(hour));
         intent.putExtra("minutes", minutes);
         intent.putExtra("deleteAfterGoingOff", true);
         intent.putExtra("period", period);
@@ -649,13 +640,11 @@ public class DismissAlarmActivity extends AppCompatActivity {
         final int _id = (int) System.currentTimeMillis();
         intent.putExtra("id", _id);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(DismissAlarmActivity.this, _id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        //Log.i("fafafafafa", String.valueOf(time_picker.getCurrentHour())+String.valueOf(time_picker.getCurrentMinute()));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         } else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }
-        Log.i("ldldldld", String.valueOf(alarmTime));
         creatingNewAlarmObject(_id, alarmTime, 0);
         finish();
     }
@@ -667,7 +656,6 @@ public class DismissAlarmActivity extends AppCompatActivity {
         Alarm newAlarm = new Alarm();
         newAlarm.setTime(alamtime);
         newAlarm.setHour(hour);
-        //Log.i("mmmmmmm", String.valueOf(time_picker.getCurrentHour()));
         newAlarm.setPendingIntentId(pendingIntentId);
         newAlarm.setMinute(minutes);
         if (rep == 0)
@@ -746,7 +734,6 @@ public class DismissAlarmActivity extends AppCompatActivity {
             collapseNow();
         } else if (!hasFocus && isPaused) {
             //onResume();
-            Log.i("llaallaa", "focu");
         }
     }
 
@@ -852,7 +839,6 @@ public class DismissAlarmActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i("stopping", "onDestroy");
         someHandler.removeCallbacks(runnable);
         //new ResumeActivity().execute();
         finish();
@@ -914,7 +900,5 @@ public class DismissAlarmActivity extends AppCompatActivity {
             };
             someHandler.postDelayed(runnable, 10);
         }
-        Log.i("lalalalal", "lolo");
-        Log.i("papapapap", "lalalalallll");
     }
 }

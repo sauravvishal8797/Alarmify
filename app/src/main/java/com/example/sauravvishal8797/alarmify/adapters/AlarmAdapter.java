@@ -68,7 +68,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
         final boolean[] deactivateAlert = {true};
         final Alarm alarm = list.get(i);
-        Log.i("papapapapapa", String.valueOf(alarm.getTime()));
         if(alarm.getTime().startsWith("0")&&alarm.getTime().substring(0, alarm.getTime().indexOf(":")).length()==3){
             viewHolder.timeText.setText(alarm.getTime().substring(1));
         } else {
@@ -184,7 +183,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
                                 intent1.putExtra("label", alarm.getLabel());
                                 intent1.putExtra("snooze", alarm.getSnoozeTime());
                                 intent1.putExtra("repeatDays", alarm.getDays());
-                                Log.i("oaoaoaoaoaoajuioo", String.valueOf(alarm.getHour()));
                                 view.getContext().startActivity(intent1);
                                 return true;
 

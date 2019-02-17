@@ -101,7 +101,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
         final String[] minutes = new String[1];
         final int min = time_picker.getCurrentMinute();
         final Calendar now = Calendar.getInstance();
-        Log.i("hours", String.valueOf(time_picker.getCurrentHour()) + "   " + String.valueOf(min));
         if(time_picker.getCurrentHour()>=12){
             if(time_picker.getCurrentHour()-12>0)
                 hours[0] = "0"+String.valueOf(time_picker.getCurrentHour()-12);
@@ -172,7 +171,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
                         alarmMessage.setText("Set alarm for now");
                     }
                 }
-                Log.i("hours", String.valueOf(timePicker.getCurrentHour()) + "   " + String.valueOf(timePicker.getCurrentMinute()));
             }
         });
 
@@ -194,7 +192,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
         timePickerChange();
         if(edit_mode){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Log.i("oaoaoaoaoa", String.valueOf(intent.getIntExtra("hour", 0)));
                 time_picker.setHour(intent.getIntExtra("hour", 0));
                 time_picker.setMinute(intent.getIntExtra("minute", 0));
             }
@@ -434,10 +431,8 @@ public class AlarmDetailActivity extends AppCompatActivity {
             if (exists[0]&&exists[1]) {
                 Toast.makeText(this, "This Alarm already exists", Toast.LENGTH_SHORT).show();
             } else if (exists[0]&&!exists[1]) {
-                Log.i("tititititit", "op");
                 alarmManager = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
                 Calendar now = Calendar.getInstance();
-                Log.i("lalalala", String.valueOf(now.get(Calendar.HOUR_OF_DAY)) +" "+String.valueOf(now.get(Calendar.MINUTE)));
                 Calendar calendar = Calendar.getInstance();
                 if((now.get(Calendar.HOUR_OF_DAY) == time_picker.getCurrentHour())&&
                         (now.get(Calendar.MINUTE) == time_picker.getCurrentMinute())){
@@ -458,10 +453,8 @@ public class AlarmDetailActivity extends AppCompatActivity {
                 intent.putExtra("minutes", time_picker.getCurrentMinute());
                 intent.putExtra("deleteAfterGoingOff", deleteAfterGoesOff);
                 intent.putExtra("period", period);
-                Log.i("monutery", String.valueOf(snoozetime));
                 intent.putExtra("snooze", snoozetime);
                 intent.putExtra("nooftimesSnoozed", 0);
-                Log.i("angmas", String.valueOf(snoozetime));
                 intent.putExtra("label", labelText);
                 intent.putStringArrayListExtra("repeatList", repeatAlarmDays);
                 int size = (repeatAlarmDays!=null)?repeatAlarmDays.size():0;
@@ -469,7 +462,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
                 final int _id = (int) System.currentTimeMillis();
                 intent.putExtra("id", _id);
                 pendingIntent = PendingIntent.getBroadcast(AlarmDetailActivity.this, _id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                Log.i("fafafafafa", String.valueOf(time_picker.getCurrentHour())+String.valueOf(time_picker.getCurrentMinute()));
                 if(repeatAlarmAdapter.repeatDays.size()==7){
                     alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
                 } else {
@@ -479,12 +471,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
                         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                     }
                 }
-                Log.i("TIMENOW", String.valueOf(now.get(Calendar.HOUR_OF_DAY))+"    "+String.valueOf(now.get(Calendar.MINUTE)));
-                Log.i("TIMESNOW12", String.valueOf(time_picker.getCurrentHour())+"    "+String.valueOf(time_picker.getCurrentMinute())+"  "+period);
-                Log.i("TIMESNOW2345", String.valueOf(time_picker.getCurrentHour() - now.get(Calendar.HOUR_OF_DAY)+"   "+
-                        String.valueOf(time_picker.getCurrentMinute() - now.get(Calendar.MINUTE))));
-
-                //creatingNewAlarmObject(_id);
                 realmController.reActivateAlarm(alarmTime);
                 int setmin = time_picker.getCurrentMinute() - now.get(Calendar.MINUTE);
                 int hourset = time_picker.getCurrentHour() - now.get(Calendar.HOUR_OF_DAY);
@@ -529,7 +515,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
             } else if (!exists[0]) {
                 alarmManager = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
                 Calendar now = Calendar.getInstance();
-                Log.i("lalalala", String.valueOf(now.get(Calendar.HOUR_OF_DAY)) +" "+String.valueOf(now.get(Calendar.MINUTE)));
                 Calendar calendar = Calendar.getInstance();
                 if((now.get(Calendar.HOUR_OF_DAY) == time_picker.getCurrentHour())&&
                         (now.get(Calendar.MINUTE) == time_picker.getCurrentMinute())){
@@ -550,10 +535,8 @@ public class AlarmDetailActivity extends AppCompatActivity {
                 intent.putExtra("minutes", time_picker.getCurrentMinute());
                 intent.putExtra("deleteAfterGoingOff", deleteAfterGoesOff);
                 intent.putExtra("period", period);
-                Log.i("monutery", String.valueOf(snoozetime));
                 intent.putExtra("snooze", snoozetime);
                 intent.putExtra("nooftimesSnoozed", 0);
-                Log.i("angmas", String.valueOf(snoozetime));
                 intent.putExtra("label", labelText);
                 intent.putStringArrayListExtra("repeatList", repeatAlarmDays);
                 int size = (repeatAlarmDays!=null)?repeatAlarmDays.size():0;
@@ -561,7 +544,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
                 final int _id = (int) System.currentTimeMillis();
                 intent.putExtra("id", _id);
                 pendingIntent = PendingIntent.getBroadcast(AlarmDetailActivity.this, _id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                Log.i("fafafafafa", String.valueOf(time_picker.getCurrentHour())+String.valueOf(time_picker.getCurrentMinute()));
                 if(repeatAlarmAdapter.repeatDays.size()==7){
                     alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
                 } else {
@@ -571,11 +553,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
                         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                     }
                 }
-                Log.i("TIMENOW", String.valueOf(now.get(Calendar.HOUR_OF_DAY))+"    "+String.valueOf(now.get(Calendar.MINUTE)));
-                Log.i("TIMESNOW12", String.valueOf(time_picker.getCurrentHour())+"    "+String.valueOf(time_picker.getCurrentMinute())+"  "+period);
-                Log.i("TIMESNOW2345", String.valueOf(time_picker.getCurrentHour() - now.get(Calendar.HOUR_OF_DAY)+"   "+
-                                String.valueOf(time_picker.getCurrentMinute() - now.get(Calendar.MINUTE))));
-
                 creatingNewAlarmObject(_id);
                 int setmin = time_picker.getCurrentMinute() - now.get(Calendar.MINUTE);
                 int hourset = time_picker.getCurrentHour() - now.get(Calendar.HOUR_OF_DAY);
@@ -622,7 +599,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
             realmController.deleteAlarm(intent.getStringExtra("time"), intent.getStringExtra("period"));
             alarmManager = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
             Calendar now = Calendar.getInstance();
-            Log.i("lalalala", String.valueOf(now.get(Calendar.HOUR_OF_DAY)) +" "+String.valueOf(now.get(Calendar.MINUTE)));
             Calendar calendar = Calendar.getInstance();
             //calendar.set(Calendar.HOUR_OF_DAY, time_picker.getCurrentHour());
             if((now.get(Calendar.HOUR_OF_DAY) == time_picker.getCurrentHour())&&
@@ -653,7 +629,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
             final int _id = (int) System.currentTimeMillis();
             intent.putExtra("id", _id);
             pendingIntent = PendingIntent.getBroadcast(AlarmDetailActivity.this, _id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            Log.i("fafafafafa", String.valueOf(time_picker.getCurrentHour())+String.valueOf(time_picker.getCurrentMinute()));
             if(repeatAlarmAdapter.repeatDays.size()==7){
                 alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
             } else {
@@ -713,7 +688,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
      * @return returns a boolean array, first element determines whether or not the alarm object exists in the database
      * second boolean element gives the state of the alarm object if it exists i.e active or inactive */
     private boolean[] checkIfAlreadyExists(){
-        Log.i("mmmmmmmmmmmaaaaa", alarmTime+period);
         return realmController.checkIfAlarmExists(alarmTime, period);
     }
 
@@ -724,7 +698,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
         Alarm newAlarm = new Alarm();
         newAlarm.setTime(alarmTime);
         newAlarm.setHour(time_picker.getCurrentHour());
-        Log.i("mmmmmmm", alarmTime+" "+period);
         newAlarm.setPendingIntentId(pendingIntentId);
         newAlarm.setMinute(time_picker.getCurrentMinute());
         if(repeatAlarmDays==null)
@@ -735,9 +708,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
             }
             newAlarm.setDays(builder.toString());
             String[] str = builder.toString().split(" ");
-            for(int i=0; i<str.length; i++){
-                Log.i("daysR", str[i]);
-            }
         }
         newAlarm.setActivated(true);
         newAlarm.setSnoozeTime(snoozetime);

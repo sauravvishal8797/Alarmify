@@ -35,7 +35,6 @@ public class ReactivateAlarmsAfterBootService extends IntentService{
 
       //  RealmController realmController = RealmController.with(getApplicationContext());
         Realm realm = Realm.getDefaultInstance();
-        Log.i("laatttteeeee", "Nesacfe latte");
         ArrayList<Alarm> activatedAlarms = new ArrayList<>();
         RealmResults<Alarm> allAlarms = realm.where(Alarm.class).findAll();
         for(Alarm a: allAlarms){
@@ -50,7 +49,6 @@ public class ReactivateAlarmsAfterBootService extends IntentService{
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.HOUR_OF_DAY, a.getHour());
             calendar.set(Calendar.MINUTE, a.getMinute());
-            Log.i("reactivatealarmafter", String.valueOf(a.getHour())+ "   "+String.valueOf(a.getMinute()));
             if(calendar.before(now)){
                 if(!a.getDays().equals("No Repeat")){
                     calendar.add(Calendar.DAY_OF_MONTH, 1);
@@ -60,9 +58,7 @@ public class ReactivateAlarmsAfterBootService extends IntentService{
                     intent2.putExtra("minutes", a.getMinute());
                     intent2.putExtra("deleteAfterGoingOff", a.isDeleteAfterGoesOff());
                     intent2.putExtra("period", a.getPeriod());
-                    Log.i("monutery", String.valueOf(a.getSnoozeTime()));
                     intent2.putExtra("snooze", a.getSnoozeTime());
-                    // Log.i("angmas", String.valueOf(snoozetime));
                     intent2.putExtra("label", a.getLabel());
                     intent2.putExtra("repeat", (a.getDays().equals("No Repeat"))?0:1);
                     if(!a.getDays().equals("No Repeat")){
@@ -72,7 +68,6 @@ public class ReactivateAlarmsAfterBootService extends IntentService{
                     final int _id = (int) System.currentTimeMillis();
                     intent2.putExtra("id", _id);
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), _id, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
-                    //Log.i("fafafafafa", String.valueOf(time_picker.getCurrentHour())+String.valueOf(time_picker.getCurrentMinute()));
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                     } else {
@@ -86,9 +81,7 @@ public class ReactivateAlarmsAfterBootService extends IntentService{
                 intent2.putExtra("minutes", a.getMinute());
                 intent2.putExtra("deleteAfterGoingOff", a.isDeleteAfterGoesOff());
                 intent2.putExtra("period", a.getPeriod());
-                Log.i("monutery", String.valueOf(a.getSnoozeTime()));
                 intent2.putExtra("snooze", a.getSnoozeTime());
-                // Log.i("angmas", String.valueOf(snoozetime));
                 intent2.putExtra("label", a.getLabel());
                 intent2.putExtra("repeat", (a.getDays().equals("No Repeat"))?0:1);
                 if(!a.getDays().equals("No Repeat")){
@@ -98,7 +91,6 @@ public class ReactivateAlarmsAfterBootService extends IntentService{
                 final int _id = (int) System.currentTimeMillis();
                 intent2.putExtra("id", _id);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), _id, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
-                //Log.i("fafafafafa", String.valueOf(time_picker.getCurrentHour())+String.valueOf(time_picker.getCurrentMinute()));
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                 } else {

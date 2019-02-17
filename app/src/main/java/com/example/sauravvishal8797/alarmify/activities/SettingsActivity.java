@@ -351,7 +351,6 @@ public class SettingsActivity extends AppCompatActivity{
                             editor.putInt(getResources().getString(R.string.dismiss_maths_mission_quest_array_pos), questionsArrayPos);
                             editor.commit();
                             noOfDismissQuestions.setText(String.valueOf(noOfQuestions));
-                            Log.i("cunttttttttttttt", String.valueOf(autoDismissTime));
                         }
                     });
                     dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL".toUpperCase(), new DialogInterface.OnClickListener() {
@@ -564,7 +563,6 @@ public class SettingsActivity extends AppCompatActivity{
                         } else {
                             autoDismissTimeText.setText(String.valueOf(autoDismissTime) + " minutes");
                         }
-                        Log.i("cunttttttttttttt", String.valueOf(autoDismissTime));
                     }
                 });
                 dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL".toUpperCase(), new DialogInterface.OnClickListener() {
@@ -645,7 +643,6 @@ public class SettingsActivity extends AppCompatActivity{
                         editor.putInt(getResources().getString(R.string.max_snoozes_array_pos), maxSnoozeArrayPos);
                         editor.commit();
                         setMaxSnoozeText.setText(maxSnoozeValue);
-                        Log.i("cunttttttttttttt", maxSnoozeValue);
                     }
                 });
                 dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL".toUpperCase(), new DialogInterface.OnClickListener() {

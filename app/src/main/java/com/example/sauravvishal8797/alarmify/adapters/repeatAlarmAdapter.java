@@ -47,7 +47,6 @@ public class repeatAlarmAdapter extends RecyclerView.Adapter<repeatAlarmAdapter.
                 }else {
                     repeatDays.remove(day);
                 }
-
             }
         });
     }
