@@ -10,15 +10,10 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import com.example.sauravvishal8797.alarmify.R;
 import com.example.sauravvishal8797.alarmify.activities.DismissAlarmActivity;
-import com.example.sauravvishal8797.alarmify.helpers.BasicCallback;
-import com.example.sauravvishal8797.alarmify.helpers.Constants;
 import com.example.sauravvishal8797.alarmify.helpers.PreferenceUtil;
 import com.example.sauravvishal8797.alarmify.realm.RealmController;
 

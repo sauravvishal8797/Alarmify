@@ -158,11 +158,13 @@ public class RealmController {
                 RealmResults<Alarm> results = realm.where(Alarm.class).equalTo("time", time).findAll();
                 if(results.size() > 0){
                     if(results.get(0).getPeriod().equals(period)&&results.get(0).isActivated()){
+                        Log.i("mmmmmmmmmm123", results.get(0).getTime());
                         exists[0] =true;
                         exists[1] = true;
                     } else if(results.get(0).getPeriod().equals(period)&&!results.get(0).isActivated()) {
+                        Log.i("mmmmmmmmmm12345678", results.get(0).getTime());
                         exists[0] = true;
-                        exists[0] = false;
+                        exists[1] = false;
                     }
                 }
             }
