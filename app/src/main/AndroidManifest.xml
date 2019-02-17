@@ -18,23 +18,28 @@
         <activity
             android:name=".activities.MainActivity"
             android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".activities.SplashScreen"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.AlarmDetailActivity"
             android:parentActivityName=".activities.MainActivity"
             android:screenOrientation="portrait" />
 
-        <receiver android:name=".receivers.AlarmReceiver"
-            android:exported="false"/>
-
+        <receiver
+            android:name=".receivers.AlarmReceiver"
+            android:exported="false" />
         <receiver android:name=".receivers.BootCompletedIntentReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
@@ -43,11 +48,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
-        <service android:name=".services.ReactivateAlarmsAfterBootService"/>
+        <service android:name=".services.ReactivateAlarmsAfterBootService" />
 
-        <activity android:name=".activities.SettingsActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".activities.MainActivity"></activity>
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:parentActivityName=".activities.MainActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

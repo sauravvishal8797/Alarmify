@@ -100,7 +100,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
         final String[] hours = new String[1];
         final String[] minutes = new String[1];
         final int min = time_picker.getCurrentMinute();
-        final Calendar now = Calendar.getInstance();
         if(time_picker.getCurrentHour()>=12){
             if(time_picker.getCurrentHour()-12>0)
                 hours[0] = "0"+String.valueOf(time_picker.getCurrentHour()-12);
@@ -122,6 +121,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
         time_picker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker timePicker, int i, int i1) {
+                Calendar now = Calendar.getInstance();
                 if(time_picker.getCurrentHour()>=12){
                     if(time_picker.getCurrentHour()-12>0)
                         hours[0] = "0"+String.valueOf(time_picker.getCurrentHour()-12);
