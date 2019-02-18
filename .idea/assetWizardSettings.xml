@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="124" />
+                                                <entry key="scalingPercent" value="61" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -33,7 +33,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="foregroundImage" value="$PROJECT_DIR$/../kisspng-alarm-clocks-iberian-peninsula-computer-icons-despertador-5b1859a1cdb527.6490078615283224658426.jpg" />
+                                      <entry key="backgroundAssetType" value="COLOR" />
+                                      <entry key="backgroundColor" value="ffffff" />
+                                      <entry key="foregroundImage" value="$PROJECT_DIR$/../ic_launcher-web.png" />
                                     </map>
                                   </option>
                                 </PersistentState>
