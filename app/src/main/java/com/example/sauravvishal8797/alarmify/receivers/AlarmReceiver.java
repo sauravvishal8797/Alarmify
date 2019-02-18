@@ -11,6 +11,7 @@ import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.PowerManager;
 import android.util.Log;
 
 import com.example.sauravvishal8797.alarmify.R;
@@ -28,9 +29,16 @@ public class AlarmReceiver extends BroadcastReceiver{
     private PreferenceUtil SP;
     public static MediaPlayer mediaPlayer;
     public RealmController realmController;
+    private PowerManager.WakeLock screenWakeLock;
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (screenWakeLock == null){
+            PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            screenWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP,
+                    "ScreenLock Tag from AlarmListener");
+            screenWakeLock.acquire();
+        }
         SP = PreferenceUtil.getInstance(context);
         SharedPreferences.Editor editor = SP.getEditor();
         AudioManager manager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
@@ -55,6 +63,10 @@ public class AlarmReceiver extends BroadcastReceiver{
             } else {
                 setNextAlarm(intent.getStringArrayListExtra("repeatList"), intent, context);
             }
+        }
+
+        if (screenWakeLock != null){
+            screenWakeLock.release();
         }
         //mediaPlayer.
     }
@@ -164,7 +176,7 @@ public class AlarmReceiver extends BroadcastReceiver{
         intent.putExtra("id", _id);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, _id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(calendar.getTimeInMillis(), pendingIntent), pendingIntent);
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
             //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
