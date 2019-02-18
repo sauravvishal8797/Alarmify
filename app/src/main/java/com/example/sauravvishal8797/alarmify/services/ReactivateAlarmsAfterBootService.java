@@ -69,7 +69,10 @@ public class ReactivateAlarmsAfterBootService extends IntentService{
                     intent2.putExtra("id", _id);
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), _id, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                        alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(calendar.getTimeInMillis(), pendingIntent), pendingIntent);
+                        //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                     } else {
                         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                     }
@@ -92,7 +95,10 @@ public class ReactivateAlarmsAfterBootService extends IntentService{
                 intent2.putExtra("id", _id);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), _id, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(calendar.getTimeInMillis(), pendingIntent), pendingIntent);
+                    //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                 } else {
                     alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                 }
