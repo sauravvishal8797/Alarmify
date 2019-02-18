@@ -5,7 +5,7 @@ apply plugin: 'realm-android'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.example.sauravvishal8797.alarmify"
+        applicationId "com.my.sauravvishal8797.alarmify"
         minSdkVersion 15
         targetSdkVersion 28
         versionCode 1
