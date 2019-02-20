@@ -1,5 +1,6 @@
 package com.my.sauravvishal8797.alarmify.activities;
 
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -33,6 +35,7 @@ import com.my.sauravvishal8797.alarmify.receivers.AlarmReceiver;
 import com.jaeger.library.StatusBarUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -69,6 +72,18 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        if (am != null) {
+            List<ActivityManager.AppTask> tasks = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                tasks = am.getAppTasks();
+            }
+            if (tasks != null && tasks.size() > 0) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    tasks.get(0).setExcludeFromRecents(true);
+                }
+            }
+        }
        // mediaPlayer = MediaPlayer.create()
        // ButterKnife.bind(this);
         SP = PreferenceUtil.getInstance(this);

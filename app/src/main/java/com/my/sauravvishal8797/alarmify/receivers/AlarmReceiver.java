@@ -109,7 +109,7 @@ public class AlarmReceiver extends BroadcastReceiver{
             intent1.putExtra("noftimesSnoozed", intent.getIntExtra("nooftimesSnoozed", 0));
             intent1.putExtra("deleteAfterGoingOff", intent.getBooleanExtra("deleteAfterGoingOff", false));
             // intent1.putExtra("time", intent.getStringExtra("alarmtime"));
-            intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK + Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
             context.startActivity(intent1);
             SharedPreferences.Editor editor = SP.getEditor();
             editor.putString("ringing", "yes");
