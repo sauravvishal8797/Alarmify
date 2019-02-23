@@ -532,6 +532,8 @@ public class AlarmDetailActivity extends AppCompatActivity {
                 if(calendar.before(now)){
                     calendar.add(Calendar.DAY_OF_MONTH, 1);
                 }
+                long time = calendar.getTime().getTime();
+                Log.i("lioo", String.valueOf(time)+"    "+String.valueOf(calendar.getTimeInMillis()));
                 Intent intent = new Intent(AlarmDetailActivity.this, AlarmReceiver.class);
                 intent.putExtra("alarmtime", alarmTime);
                 intent.putExtra("hour", time_picker.getCurrentHour());
@@ -622,6 +624,8 @@ public class AlarmDetailActivity extends AppCompatActivity {
             if(calendar.before(now)){
                 calendar.add(Calendar.DAY_OF_MONTH, 1);
             }
+            long time = calendar.getTime().getTime();
+            Log.i("lioo", String.valueOf(time)+"    "+String.valueOf(calendar.getTimeInMillis()));
             Intent intent = new Intent(AlarmDetailActivity.this, AlarmReceiver.class);
             intent.putExtra("alarmtime", alarmTime);
             intent.putExtra("hour", time_picker.getCurrentHour());
