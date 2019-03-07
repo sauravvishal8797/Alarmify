@@ -31,6 +31,7 @@ import com.my.sauravvishal8797.alarmify.helpers.BasicCallback;
 import com.my.sauravvishal8797.alarmify.helpers.PreferenceUtil;
 import com.my.sauravvishal8797.alarmify.models.Alarm;
 import com.my.sauravvishal8797.alarmify.realm.RealmController;
+import com.my.sauravvishal8797.alarmify.receivers.AlarmBroadCastReceiver;
 import com.my.sauravvishal8797.alarmify.receivers.AlarmReceiver;
 import com.jaeger.library.StatusBarUtil;
 
@@ -87,6 +88,27 @@ public class MainActivity extends AppCompatActivity{
        // mediaPlayer = MediaPlayer.create()
        // ButterKnife.bind(this);
         SP = PreferenceUtil.getInstance(this);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlarmBroadCastReceiver.class);
+        final int _id = (int) System.currentTimeMillis();
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
+                _id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        if (Build.VERSION.SDK_INT >= 23)
+        {
+            alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(30000, pendingIntent), pendingIntent);
+        }
+        else if (Build.VERSION.SDK_INT >= 19)
+        {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, 30000, pendingIntent);
+        }
+        else
+        {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, 30000, pendingIntent);
+        }
+        if(SP.getString("background_service_to_stop_from_doze", "no").equals("no")){
+
+        }
         SharedPreferences.Editor editor = SP.getEditor();
         //editor.putString(getResources().getString(R.string.home_button_pressed), "no");
         editor.putString("ringing", "not");

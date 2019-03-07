@@ -9,6 +9,7 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.my.sauravvishal8797.alarmify.activities.DismissAlarmActivity;
 import com.my.sauravvishal8797.alarmify.models.Alarm;
 import com.my.sauravvishal8797.alarmify.realm.RealmController;
 import com.my.sauravvishal8797.alarmify.receivers.AlarmReceiver;
@@ -37,6 +38,7 @@ public class ReactivateAlarmsAfterBootService extends IntentService{
         Realm realm = Realm.getDefaultInstance();
         ArrayList<Alarm> activatedAlarms = new ArrayList<>();
         RealmResults<Alarm> allAlarms = realm.where(Alarm.class).findAll();
+        if(DismissAlarmActivity.)
         for(Alarm a: allAlarms){
             if(a.isActivated()){
                 activatedAlarms.add(a);

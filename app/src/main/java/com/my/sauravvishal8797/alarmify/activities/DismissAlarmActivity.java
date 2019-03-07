@@ -276,7 +276,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
         isPaused = false;
     }
 
-    private void setUpMathsPuzzleView() {
+    private static void setUpMathsPuzzleView() {
         mathsPuzz = new ArrayList<>();
         final int[] count = {0};
         mathsExpression = findViewById(R.id.expression_view);
