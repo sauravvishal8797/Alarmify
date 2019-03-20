@@ -3,9 +3,11 @@ package com.my.sauravvishal8797.alarmify.activities;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Paint;
 import android.media.MediaPlayer;
@@ -426,6 +428,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
 
     /** Sets an alarm using the AlarmManager class in Android */
     private void setAlarm(){
+        String manufacturer = "xiaomi";
         if(!edit_mode){
             boolean[] exists = checkIfAlreadyExists();
             if (exists[0]&&exists[1]) {
@@ -466,7 +469,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
                     alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                        alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(calendar.getTimeInMillis(), pendingIntent), pendingIntent);
                         //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
                         alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
@@ -695,7 +698,6 @@ public class AlarmDetailActivity extends AppCompatActivity {
                 }
             }
         }
-       // Toast.makeText(getApplicationContext(), "New alarm set for "+ alarmTime+" "+period, Toast.LENGTH_SHORT).show();
         finish();
     }
 

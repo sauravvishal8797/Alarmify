@@ -115,12 +115,6 @@ public class AlarmReceiver extends BroadcastReceiver{
             editor.putString("ringing", "yes");
             editor.commit();
         }
-        /**if(SP.getBoolean("alarm_ringing", false)){
-        } else {
-            mediaPlayer = MediaPlayer.create(context, alarmUri);
-            mediaPlayer.setLooping(true);
-            mediaPlayer.start();
-        }*/
     }
 
     private void setNextAlarm(ArrayList<String> daysRepeat, Intent intent, Context context){

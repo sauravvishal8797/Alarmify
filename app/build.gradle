@@ -8,8 +8,8 @@ android {
         applicationId "com.my.sauravvishal8797.alarmify"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 4
-        versionName "1.3"
+        versionCode 6
+        versionName "1.4"
         resConfigs "en"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

@@ -38,7 +38,6 @@ public class ReactivateAlarmsAfterBootService extends IntentService{
         Realm realm = Realm.getDefaultInstance();
         ArrayList<Alarm> activatedAlarms = new ArrayList<>();
         RealmResults<Alarm> allAlarms = realm.where(Alarm.class).findAll();
-        if(DismissAlarmActivity.)
         for(Alarm a: allAlarms){
             if(a.isActivated()){
                 activatedAlarms.add(a);

@@ -2,6 +2,7 @@ package com.my.sauravvishal8797.alarmify.adapters;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -38,7 +39,9 @@ public class repeatAlarmAdapter extends RecyclerView.Adapter<repeatAlarmAdapter.
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         final String day = daysList.get(i).substring(0, 3);
         viewHolder.day.setText(day);
-        viewHolder.checkBox.setButtonTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.grey_shade)));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            viewHolder.checkBox.setButtonTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.grey_shade)));
+        }
         viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

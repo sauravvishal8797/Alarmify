@@ -276,7 +276,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
         isPaused = false;
     }
 
-    private static void setUpMathsPuzzleView() {
+    private void setUpMathsPuzzleView() {
         mathsPuzz = new ArrayList<>();
         final int[] count = {0};
         mathsExpression = findViewById(R.id.expression_view);
@@ -881,7 +881,6 @@ public class DismissAlarmActivity extends AppCompatActivity {
             };
             someHandler.postDelayed(runnable, 10);
         } else {
-            //setUpUiDefaultDismissView();
             someHandler = new Handler(getMainLooper());
             runnable = new Runnable() {
                 @Override

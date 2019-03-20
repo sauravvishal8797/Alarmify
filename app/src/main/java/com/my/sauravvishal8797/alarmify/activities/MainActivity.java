@@ -1,22 +1,18 @@
 package com.my.sauravvishal8797.alarmify.activities;
 
-import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,16 +23,15 @@ import android.widget.TextView;
 
 import com.my.sauravvishal8797.alarmify.R;
 import com.my.sauravvishal8797.alarmify.adapters.AlarmAdapter;
+import com.my.sauravvishal8797.alarmify.helpers.AlertDialogHelper;
 import com.my.sauravvishal8797.alarmify.helpers.BasicCallback;
 import com.my.sauravvishal8797.alarmify.helpers.PreferenceUtil;
 import com.my.sauravvishal8797.alarmify.models.Alarm;
 import com.my.sauravvishal8797.alarmify.realm.RealmController;
-import com.my.sauravvishal8797.alarmify.receivers.AlarmBroadCastReceiver;
 import com.my.sauravvishal8797.alarmify.receivers.AlarmReceiver;
 import com.jaeger.library.StatusBarUtil;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -73,48 +68,13 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        if (am != null) {
-            List<ActivityManager.AppTask> tasks = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                tasks = am.getAppTasks();
-            }
-            if (tasks != null && tasks.size() > 0) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    tasks.get(0).setExcludeFromRecents(true);
-                }
-            }
-        }
-       // mediaPlayer = MediaPlayer.create()
-       // ButterKnife.bind(this);
         SP = PreferenceUtil.getInstance(this);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, AlarmBroadCastReceiver.class);
-        final int _id = (int) System.currentTimeMillis();
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
-                _id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        if (Build.VERSION.SDK_INT >= 23)
-        {
-            alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(30000, pendingIntent), pendingIntent);
-        }
-        else if (Build.VERSION.SDK_INT >= 19)
-        {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, 30000, pendingIntent);
-        }
-        else
-        {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, 30000, pendingIntent);
-        }
-        if(SP.getString("background_service_to_stop_from_doze", "no").equals("no")){
-
-        }
         SharedPreferences.Editor editor = SP.getEditor();
-        //editor.putString(getResources().getString(R.string.home_button_pressed), "no");
         editor.putString("ringing", "not");
         editor.commit();
         setUpUI();
         statusBarTransparent();
+        askAutoStartPermission();
     }
 
     /** Manages UI elements */
@@ -158,13 +118,10 @@ public class MainActivity extends AppCompatActivity{
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()){
                     case R.id.delete_all_alarms:
-                        Log.i("stephanie", "poi");
                         if(deleteAllAlarms()[0]){
                             disableAllActiveAlarms();
                             setAdapter();
-                            Log.i("chuitya", "semantic");
                         }else {
-                            Log.i("joshmourinho", "issue");
                         }
                         return true;
                 }
@@ -189,9 +146,6 @@ public class MainActivity extends AppCompatActivity{
      */
     private boolean[] deleteAllAlarms(){
         final boolean[] deleted = {false};
-        /*realmController = RealmController.with(this);
-        realm = realmController.getRealm();
-        realmController.clearAll();*/
         Realm realm = Realm.getDefaultInstance();
         realm.executeTransaction(new Realm.Transaction() {
             @Override
@@ -201,7 +155,6 @@ public class MainActivity extends AppCompatActivity{
             }
         });
         return deleted;
-        //setAdapter();
     }
 
     /**
@@ -254,6 +207,36 @@ public class MainActivity extends AppCompatActivity{
             return false;
         }
     };
+
+    /**Managing Auto-Start permission for Xioami MI phone users*/
+    private void askAutoStartPermission(){
+        String manufacturer = "xiaomi";
+        if (manufacturer.equalsIgnoreCase(android.os.Build.MANUFACTURER) && SP.
+                getString("firstLaunch", "yes").equals("yes")) {
+            //this will open auto start screen where user can enable permission for your app
+            android.app.AlertDialog alertDialog = AlertDialogHelper.getTextDialog(MainActivity.this, "Auto-Start permission",
+                    "You need to give the app auto-start permisison to make sure that the alarm rings at the right time.");
+            alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    SharedPreferences.Editor editor = SP.getEditor();
+                    editor.putString("firstLaunch", "no");
+                    editor.commit();
+                    Intent intent1 = new Intent();
+                    intent1.setComponent(new ComponentName("com.miui.securitycenter",
+                            "com.miui.permcenter.autostart.AutoStartManagementActivity"));
+                    startActivity(intent1);
+                }
+            });
+            alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+            alertDialog.show();
+        }
+    }
 
     @Override
     protected void onResume() {
