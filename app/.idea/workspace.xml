@@ -6,7 +6,10 @@
     </shared>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ae4ea5b8-6091-4ef9-97cc-f9fcbd4d46f3" name="Default" comment="" />
+    <list default="true" id="ae4ea5b8-6091-4ef9-97cc-f9fcbd4d46f3" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/sauravvishal8797/alarmify/activities/MainActivity.java" afterPath="$PROJECT_DIR$/src/main/java/com/my/sauravvishal8797/alarmify/activities/MainActivity.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/my/sauravvishal8797/alarmify/adapters/AlarmAdapter.java" afterPath="$PROJECT_DIR$/src/main/java/com/my/sauravvishal8797/alarmify/adapters/AlarmAdapter.java" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -74,8 +77,23 @@
       <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/my/sauravvishal8797/alarmify/activities/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="211">
-              <caret line="67" column="56" lean-forward="true" selection-start-line="67" selection-start-column="56" selection-end-line="67" selection-end-column="56" />
+            <state relative-caret-position="12">
+              <caret line="52" column="44" lean-forward="true" selection-start-line="52" selection-start-column="44" selection-end-line="52" selection-end-column="44" />
+              <folding>
+                <element signature="e#2255#3103#0" expanded="true" />
+                <element signature="e#3102#3103#0" expanded="true" />
+                <element signature="e#8118#8876#0" expanded="true" />
+                <element signature="e#8875#8876#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AlarmAdapter.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/my/sauravvishal8797/alarmify/adapters/AlarmAdapter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="403">
+              <caret line="236" column="0" lean-forward="false" selection-start-line="236" selection-start-column="0" selection-end-line="236" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -2145,6 +2163,14 @@
       </map>
     </option>
   </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/main/java/com/my/sauravvishal8797/alarmify/activities/MainActivity.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/my/sauravvishal8797/alarmify/adapters/AlarmAdapter.java" />
+      </list>
+    </option>
+  </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="y" value="23" />
     <option name="width" value="1440" />
@@ -2483,11 +2509,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/my/sauravvishal8797/alarmify/adapters/AlarmAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="403">
+          <caret line="236" column="0" lean-forward="false" selection-start-line="236" selection-start-column="0" selection-end-line="236" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/my/sauravvishal8797/alarmify/activities/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="211">
-          <caret line="67" column="56" lean-forward="true" selection-start-line="67" selection-start-column="56" selection-end-line="67" selection-end-column="56" />
-          <folding />
+        <state relative-caret-position="12">
+          <caret line="52" column="44" lean-forward="true" selection-start-line="52" selection-start-column="44" selection-end-line="52" selection-end-column="44" />
+          <folding>
+            <element signature="e#2255#3103#0" expanded="true" />
+            <element signature="e#3102#3103#0" expanded="true" />
+            <element signature="e#8118#8876#0" expanded="true" />
+            <element signature="e#8875#8876#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

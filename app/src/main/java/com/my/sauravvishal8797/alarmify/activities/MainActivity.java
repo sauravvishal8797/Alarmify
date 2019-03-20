@@ -64,6 +64,24 @@ public class MainActivity extends AppCompatActivity{
         }
     };
 
+    private View.OnClickListener alarmItemClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Alarm alarm = (Alarm) view.findViewById(R.id.timetextalarm).getTag();
+            Intent intent1 = new Intent(view.getContext(), AlarmDetailActivity.class);
+            intent1.putExtra("alarm_edit", true);
+            intent1.putExtra("hour", alarm.getHour());
+            intent1.putExtra("time", alarm.getTime());
+            intent1.putExtra("minute", alarm.getMinute());
+            intent1.putExtra("period", alarm.getPeriod());
+            intent1.putExtra("delete_after_going_off", alarm.isDeleteAfterGoesOff());
+            intent1.putExtra("label", alarm.getLabel());
+            intent1.putExtra("snooze", alarm.getSnoozeTime());
+            intent1.putExtra("repeatDays", alarm.getDays());
+            startActivity(intent1);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -173,6 +191,7 @@ public class MainActivity extends AppCompatActivity{
                 optionsMenuTextView.setVisibility(View.VISIBLE);
             }
             AlarmAdapter alarmAdapter = new AlarmAdapter(getData(), this, this, basicCallback);
+            alarmAdapter.setOnClickListener(alarmItemClickListener);
             alarmRecyclerView.setAdapter(alarmAdapter);
         }
     }

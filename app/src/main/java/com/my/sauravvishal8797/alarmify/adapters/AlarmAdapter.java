@@ -47,6 +47,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
     private Activity activity;
     private BasicCallback basicCallback;
     private PreferenceUtil SP;
+    private View.OnClickListener onClickListener;
 
     public AlarmAdapter(ArrayList<Alarm> list, Context context, Activity activity, BasicCallback basicCallback) {
         this.list=list;
@@ -54,13 +55,13 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
         this.activity = activity;
         this.basicCallback = basicCallback;
         SP = PreferenceUtil.getInstance(context);
-
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.alarm_item_view, viewGroup, false);
+        view.setOnClickListener(onClickListener);
         return new ViewHolder(view);
     }
 
@@ -73,6 +74,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
         } else {
             viewHolder.timeText.setText(alarm.getTime());
         }
+        viewHolder.timeText.setTag(alarm);
         viewHolder.periodText.setText(alarm.getPeriod());
         viewHolder.daysText.setText(alarm.getDays());
         viewHolder.button.setOnCheckedChangeListener(null);
@@ -185,7 +187,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
                                 intent1.putExtra("repeatDays", alarm.getDays());
                                 view.getContext().startActivity(intent1);
                                 return true;
-
                         }
                         return false;
                     }
@@ -229,6 +230,10 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
         } else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }
+    }
+
+    public void setOnClickListener(View.OnClickListener onClickListener){
+        this.onClickListener = onClickListener;
     }
 
     @Override
