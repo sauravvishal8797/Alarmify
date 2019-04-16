@@ -32,6 +32,7 @@ import com.my.sauravvishal8797.alarmify.receivers.AlarmReceiver;
 import com.jaeger.library.StatusBarUtil;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity{
     private RealmController realmController;
     private Realm realm;
     private PreferenceUtil SP;
+    private SharedPreferences.Editor editor;
 
     private BasicCallback basicCallback = new BasicCallback() {
         @Override
@@ -87,13 +89,35 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         SP = PreferenceUtil.getInstance(this);
-        SharedPreferences.Editor editor = SP.getEditor();
+        editor = SP.getEditor();
         editor.putString("ringing", "not");
         editor.commit();
+        if (SP.getString("setRepeatAlarmcheck", "no").equals("no"))
+            setForRepeatingAlarms();
         setUpUI();
         statusBarTransparent();
         askAutoStartPermission();
     }
+
+    /** Sets up a 1 am check for repeat alarms for the particular day
+     * and activates if any
+     */
+    private void setForRepeatingAlarms(){
+        AlarmManager alarmManager = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 1);
+        calendar.set(Calendar.MINUTE, 7);
+        calendar.set(Calendar.SECOND, 39);
+        Intent repeatIntent = new Intent(MainActivity.this, RepeatAlarmReceiver.class);
+        repeatIntent.putExtra("repeatdaysAlarm", "yes");
+        final int _id = (int) System.currentTimeMillis();
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, _id, repeatIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        editor.putString("setRepeatAlarmcheck", "yes");
+        editor.commit();
+    }
+
 
     /** Manages UI elements */
     private void setUpUI(){
