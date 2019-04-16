@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity{
     };
 
     /**Managing Auto-Start permission for Xioami MI phone users*/
-    private void askAutoStartPermission(){
+    private void  askAutoStartPermission(){
         String manufacturer = "xiaomi";
         if (manufacturer.equalsIgnoreCase(android.os.Build.MANUFACTURER) && SP.
                 getString("firstLaunch", "yes").equals("yes")) {

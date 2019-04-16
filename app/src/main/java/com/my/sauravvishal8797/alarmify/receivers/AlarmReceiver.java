@@ -43,7 +43,7 @@ public class AlarmReceiver extends BroadcastReceiver{
         SharedPreferences.Editor editor = SP.getEditor();
         AudioManager manager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
         realmController = RealmController.with(context);
-        if(realmController.checkAlarmState(intent.getStringExtra("alarmtime"))&&manager.getMode()!=AudioManager.MODE_IN_CALL&&
+        if(realmController.checkAlarmState(intent.getStringExtra("alarmtime"))&&(manager.getMode()!=AudioManager.MODE_IN_CALL && !manager.isMusicActive())&&
                 SP.getString("previewMode", "off").equals("off")){
             if(!SP.getBoolean("alarm_ringing", false)){
                 editor.putBoolean("alarm_ringing", true);
@@ -51,9 +51,9 @@ public class AlarmReceiver extends BroadcastReceiver{
             }
             activeAlarmTasks(realmController, intent, context);
         } else if ((realmController.checkAlarmState(intent.getStringExtra("alarmtime"))&&
-                manager.getMode()==AudioManager.MODE_IN_CALL&&SP.getString("previewMode", "off").equals("off"))
+                (manager.getMode()==AudioManager.MODE_IN_CALL || manager.isMusicActive())&&SP.getString("previewMode", "off").equals("off"))
                 ||(realmController.checkAlarmState(intent.getStringExtra("alarmtime"))&&
-                SP.getString("previewMode", "off").equals("on")&&manager.getMode()!=AudioManager.MODE_IN_CALL)){
+                SP.getString("previewMode", "off").equals("on")&&(manager.getMode()!=AudioManager.MODE_IN_CALL && !manager.isMusicActive()))){
             if(intent.getBooleanExtra("deleteAfterGoingOff", false) &&
                     intent.getIntExtra("repeat", 0)==0){
                 realmController.deleteAlarm(intent.getStringExtra("alarmtime"), intent.getStringExtra("period"));

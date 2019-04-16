@@ -169,6 +169,8 @@ public class DismissAlarmActivity extends AppCompatActivity {
                 +WindowManager.LayoutParams.FLAG_FULLSCREEN |
                 +WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         audioManager = (AudioManager) this.getSystemService(this.AUDIO_SERVICE);
+        if (audioManager.isMusicActive())
+            Log.i("theaudioplayerison", "lop");
         if (intent.hasExtra("preview")) {
             previewScreen = intent.getBooleanExtra("preview", false);
             Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
@@ -555,7 +557,10 @@ public class DismissAlarmActivity extends AppCompatActivity {
             }
         });
         alarmLabelMessage = findViewById(R.id.alarm_label_message);
-        alarmLabelMessage.setText(alarmLabel);
+        if (alarmLabel == null || alarmLabel.equals("No Label"))
+            alarmLabelMessage.setText("");
+        else
+            alarmLabelMessage.setText(alarmLabel);
         alarmPeriod = findViewById(R.id.period);
         alarmPeriod.setText(period);
         dismissButton.setOnClickListener(new View.OnClickListener() {
