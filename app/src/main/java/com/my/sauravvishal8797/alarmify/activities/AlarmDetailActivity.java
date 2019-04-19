@@ -45,8 +45,10 @@ import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import io.realm.Realm;
 
@@ -358,7 +360,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialog.dismiss();
-                repeatAlarmDays = repeatAlarmAdapter.repeatDays;
+                repeatAlarmDays = arrangeRepeatDays(repeatAlarmAdapter.repeatDays);
                // repeatAlarmAdapter.repeatDays.clear();
                 for(int k=0; k<repeatAlarmDays.size(); k++){
                     builder2.append(repeatAlarmDays.get(k)+",");
@@ -375,6 +377,49 @@ public class AlarmDetailActivity extends AppCompatActivity {
         });
         dialog.show();
        // dialog.getWindow().
+    }
+
+    private ArrayList<String> arrangeRepeatDays(ArrayList<String> list){
+        ArrayList<String> list1 = new ArrayList<>();
+        int daysNum[] = new int[list.size()];
+        for (int i = 0; i < list.size(); i++){
+            daysNum[i] = mapDaysToNumber(list.get(i));
+        }
+        Arrays.sort(daysNum);
+        for (int i = 0; i < daysNum.length; i++)
+            list1.add(mapDaysToNum(daysNum[i]));
+        return list1;
+    }
+
+    private int mapDaysToNumber(String day){
+        int value = 0;
+        HashMap<String, Integer> days = new HashMap<>();
+        days.put("Sun", 1);
+        days.put("Mon", 2);
+        days.put("Tue", 3);
+        days.put("Wed", 4);
+        days.put("Thr", 5);
+        days.put("Fri", 6);
+        days.put("Sat", 7);
+        if(days.containsKey(day)){
+            value = days.get(day);
+        }
+        return value;
+    }
+
+    private String mapDaysToNum(int day){
+        String daysStr = "";
+        HashMap<Integer, String> map = new HashMap<>();
+        map.put(1, "Sun");
+        map.put(2, "Mon");
+        map.put(3, "Tue");
+        map.put(4, "Wed");
+        map.put(5, "Thr");
+        map.put(6, "Fri");
+        map.put(7, "Sat");
+        if (map.containsKey(day))
+            daysStr = map.get(day);
+        return daysStr;
     }
 
     private void showSnoozeDialog(){
