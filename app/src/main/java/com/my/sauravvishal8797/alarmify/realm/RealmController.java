@@ -25,15 +25,23 @@ public class RealmController {
         realm = Realm.getDefaultInstance();
     }
 
+    /**
+     * Retrives realm controller instance for particular activity scope
+     * @param activity activity requesting for the RealmController instance
+     * @return RealmController instance to the calling activity
+     */
     public static RealmController with(Activity activity){
-
         if(instance == null){
             instance = new RealmController(activity.getApplication());
         }
         return instance;
     }
 
-    /** Returns realmController object */
+    /**
+     * Retrieves RealmController instance
+     * @param context context of the calling method
+     * @return RealmController instance to the calling functionality
+     */
     public static RealmController with(Context context){
         if (instance == null) {
             instance = new RealmController(context);
@@ -41,12 +49,18 @@ public class RealmController {
         return instance;
     }
 
-    /** Instantiates a realmController instance */
+    /**
+     * Retrieves a realm-controller instance
+     * @return RealmController instance to be used by the calling method for realm operations
+     */
     public static RealmController getInstance(){
         return instance;
     }
 
-    /** Retrieves the realm database instance */
+    /**
+     * Retrieves the realm database instance
+     * @return Realm instance to be used for cammunicating with the realm database
+     */
     public Realm getRealm() {
         return realm;
     }
@@ -64,7 +78,10 @@ public class RealmController {
         realm.commitTransaction();
     }
 
-    /** Deactivates an alarm by setting the setActivated boolean variable to true */
+    /**
+     * Deactivates an alarm by setting the setActivated boolean variable to true
+     * @param time time of the alarm to deactivate
+     */
     public void deactivateAlarm(String time){
         Alarm alarm = realm.where(Alarm.class).equalTo("time", time).findFirst();
         if(alarm!=null){
@@ -77,7 +94,10 @@ public class RealmController {
         }
     }
 
-    /** Reactivates a deactivated alarm */
+    /**
+     * Reactivates a deactivated alarm
+     * @param time time of the alarm to reactivate
+     */
     public void reActivateAlarm(String time){
         Alarm alarm = realm.where(Alarm.class).equalTo("time", time).findFirst();
         int pendingIntentId = alarm.getPendingIntentId();
@@ -108,11 +128,13 @@ public class RealmController {
         return activatedAlarms;
     }
 
-    /** Adds new activated alarm details to the database */
+    /**
+     * Adds new alarm object to the database
+     * @param alarm The alarm object containing all the info about the alarm
+     */
     public void addAlarm(Alarm alarm){
         realm.beginTransaction();
         Alarm alarm1 = realm.createObject(Alarm.class, alarm.getTime());
-       // alarm1.setTime(alarm.getTime());
         alarm1.setHour(alarm.getHour());
         alarm1.setMinute(alarm.getMinute());
         alarm1.setDays(alarm.getDays());
@@ -124,7 +146,11 @@ public class RealmController {
         realm.commitTransaction();
     }
 
-    /** Deletes particular alarm data from the database */
+    /**
+     * Deletes specific alarm data from the database
+     * @param time The time of the alarm
+     * @param period The time-period(AM/PM)
+     */
     public void deleteAlarm(final String time, final String period){
         realm.executeTransaction(new Realm.Transaction() {
             @Override
@@ -136,6 +162,11 @@ public class RealmController {
         });
     }
 
+    /**
+     * Checks the state of a particular alarm i.e whether active or not
+     * @param time The time for which the state is to be checked
+     * @return A boolean variable indicating active or inactive state of the alarm
+     */
     public boolean checkAlarmState(String time){
         boolean activeState = false;
         Alarm alarm = realm.where(Alarm.class).equalTo("time", time).findFirst();
@@ -148,6 +179,9 @@ public class RealmController {
     /** Checks if an alarm is already activated for a particular time
      * @return boolean array with first element determining whether the alarm already exists in the database
      * and second element determines if the alarm is in activated state
+     *
+     * @param time The time to check for
+     * @param period The time-period (AM/PM)
      * */
     public boolean[] checkIfAlarmExists(final String time, final String period){
         final boolean[] exists = {false, false};

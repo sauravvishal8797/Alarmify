@@ -22,7 +22,7 @@
                 android:id="@+id/timetextalarm"
                 android:text="7:30"
                 android:textColor="@color/grey_shade"
-                android:textSize="32dp"/>
+                android:textSize="42dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -30,6 +30,7 @@
                 android:id="@+id/period"
                 android:text="AM"
                 android:layout_marginLeft="3dp"
+                android:textSize="20dp"
                 android:textColor="@color/grey_shade"/>
 
         </LinearLayout>
@@ -40,6 +41,7 @@
             android:id="@+id/days"
             android:textStyle="bold"
             android:text="Mo  Thu  Fri"
+            android:textSize="17dp"
             android:textColor="@color/grey_shade"/>
 
     </LinearLayout>

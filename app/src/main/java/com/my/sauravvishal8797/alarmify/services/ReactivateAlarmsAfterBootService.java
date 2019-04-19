@@ -17,6 +17,7 @@ import com.my.sauravvishal8797.alarmify.receivers.AlarmReceiver;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -63,8 +64,8 @@ public class ReactivateAlarmsAfterBootService extends IntentService{
                     intent2.putExtra("label", a.getLabel());
                     intent2.putExtra("repeat", (a.getDays().equals("No Repeat"))?0:1);
                     if(!a.getDays().equals("No Repeat")){
-                        ArrayList<String> repeatDays = (ArrayList<String>)Arrays.asList(a.getDays().split(" "));
-                        intent2.putStringArrayListExtra("repeatList", repeatDays);
+                        List<String> repeatDays = Arrays.asList(a.getDays().split(" "));
+                        intent2.putStringArrayListExtra("repeatList", new ArrayList<>(repeatDays));
                     }
                     final int _id = (int) System.currentTimeMillis();
                     intent2.putExtra("id", _id);
