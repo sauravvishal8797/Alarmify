@@ -27,6 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.my.sauravvishal8797.alarmify.helpers.NotificationHelper;
 import com.my.sauravvishal8797.alarmify.helpers.PreferenceUtil;
 import com.my.sauravvishal8797.alarmify.models.Alarm;
 import com.my.sauravvishal8797.alarmify.models.MathsExpression;
@@ -129,6 +130,8 @@ public class DismissAlarmActivity extends AppCompatActivity {
     private HashMap<String, Integer> mathsPuzzle = new HashMap<>();
     private ArrayList<MathsExpression> mathsPuzz;
 
+    private RealmController realmController;
+
     private Handler someHandler;
     private Runnable runnable;
 
@@ -141,6 +144,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
+        realmController = RealmController.with(this);
         if ((AlarmReceiver.mediaPlayer == null) && !intent.getBooleanExtra("preview", false)) {
             finish();
         }
@@ -216,6 +220,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
                                     SharedPreferences.Editor editor = SP.getEditor();
                                     editor.putString("ringing", "not");
                                     editor.commit();
+                                    createNotificationForNextAlarm();
                                     finish();
                                 }
                                 // call service
@@ -304,6 +309,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = SP.getEditor();
                         editor.putString("previewMode", "off");
                         editor.commit();
+                        createNotificationForNextAlarm();
                         finish();
                     }
                 }
@@ -436,6 +442,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
                             editor.putString("ringing", "not");
                             editor.commit();
                         }
+                        createNotificationForNextAlarm();
                         finish();
                         if (!previewScreen) {
                             Toast.makeText(view.getContext(), getResources().getString(R.string.dismiss_alarm_message), Toast.LENGTH_SHORT).show();
@@ -473,6 +480,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
                         editor.commit();
                         setAlarmAfterSnooze(snoozeTime);
                     }
+                    createNotificationForNextAlarm();
                     finish();
                 }
             });
@@ -553,6 +561,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
                     editor.commit();
                     setAlarmAfterSnooze(snoozeTime);
                 }
+                createNotificationForNextAlarm();
                 finish();
             }
         });
@@ -574,6 +583,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = SP.getEditor();
                         editor.putString("previewMode", "off");
                         editor.commit();
+                        createNotificationForNextAlarm();
                         finish();
                     }
                 } else {
@@ -584,6 +594,7 @@ public class DismissAlarmActivity extends AppCompatActivity {
                         editor.putString("ringing", "not");
                         editor.commit();
                     }
+                    createNotificationForNextAlarm();
                     finish();
                     Toast.makeText(view.getContext(), getResources().getString(R.string.dismiss_alarm_message), Toast.LENGTH_SHORT).show();
                 }
@@ -654,12 +665,12 @@ public class DismissAlarmActivity extends AppCompatActivity {
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }
         creatingNewAlarmObject(_id, alarmTime, 0);
+        createNotificationForNextAlarm();
         finish();
     }
 
     private void creatingNewAlarmObject(int pendingIntentId, String alamtime, int rep) {
         StringBuilder builder = new StringBuilder();
-        RealmController realmController = RealmController.with(this);
         Realm realm = realmController.getRealm();
         Alarm newAlarm = new Alarm();
         newAlarm.setTime(alamtime);
@@ -680,6 +691,13 @@ public class DismissAlarmActivity extends AppCompatActivity {
     private void statusBarTransparent() {
         StatusBarUtil.setTransparent(this);
         StatusBarUtil.hideFakeStatusBarView(this);
+    }
+
+    private void createNotificationForNextAlarm(){
+        NotificationHelper notificationHelper = new NotificationHelper(getApplicationContext());
+        notificationHelper.createNotificationChannel();
+        Alarm nextAlarm = realmController.getNextAlarm();
+        notificationHelper.sendNotification("Next Alarm", nextAlarm.getTime()+" " + nextAlarm.getPeriod());
     }
 
     @Override

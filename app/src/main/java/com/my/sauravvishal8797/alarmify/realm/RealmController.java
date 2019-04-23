@@ -8,6 +8,8 @@ import android.util.Log;
 import com.my.sauravvishal8797.alarmify.models.Alarm;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -138,6 +140,7 @@ public class RealmController {
         alarm1.setHour(alarm.getHour());
         alarm1.setMinute(alarm.getMinute());
         alarm1.setDays(alarm.getDays());
+        alarm1.setTimeInMillis(alarm.getTimeInMillis());
         alarm1.setPeriod(alarm.getPeriod());
         alarm1.setActivated(alarm.isActivated());
         alarm1.setLabel(alarm.getLabel());
@@ -202,4 +205,56 @@ public class RealmController {
         });
         return exists;
     }
+
+    /**
+     * Retrieves activated alarms in order
+     * @return List of alarm objects with all the activated alarms first and then the deactivated alarms
+     */
+    public ArrayList<Alarm> getActivatedAlarmsInOrder(){
+        ArrayList<Alarm> alarms = new ArrayList<>();
+        ArrayList<Alarm> alarmsNotActivated = new ArrayList<>();
+        RealmResults<Alarm> realmResults = realm.where(Alarm.class).findAll();
+        for (Alarm s: realmResults){
+            if (s.isActivated())
+                alarms.add(s);
+            else
+                alarmsNotActivated.add(s);
+        }
+        Collections.sort(alarms);
+        alarms.addAll(alarmsNotActivated);
+        return alarms;
+    }
+
+    /**
+     * Retrieves next active alarm in the list
+     * @return Alarm object
+     */
+    public Alarm getNextAlarm(){
+        ArrayList<Alarm> activatedAlarms = new ArrayList<>();
+        RealmResults<Alarm> allAlarms = realm.where(Alarm.class).findAll();
+        for(Alarm a: allAlarms){
+            if(a.isActivated()){
+                activatedAlarms.add(a);
+            }
+        }
+        Collections.sort(activatedAlarms);
+        Calendar calendar = Calendar.getInstance();
+        Calendar alarmTime = Calendar.getInstance();
+        int count = 0, i = 0;
+        boolean breakout = false;
+        while (i < activatedAlarms.size() && (activatedAlarms.get(i).getDays() != null ||
+                !activatedAlarms.get(i).getDays().isEmpty())){
+            alarmTime.setTimeInMillis(activatedAlarms.get(i).getTimeInMillis());
+            if (!alarmTime.before(calendar)){
+                count = i;
+                breakout = true;
+            }
+            if (breakout)
+                break;
+            else
+                i++;
+        }
+        return activatedAlarms.get(count);
+    }
 }
+

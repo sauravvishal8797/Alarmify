@@ -294,7 +294,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     /**
-     *Retrieves all the alarm data from the database making use of
+     * Retrieves all the alarm data from the database making use of
      * getAlarms() from the RealmController class
      * @return ArrayList of Alarm objects
      */
@@ -321,6 +321,6 @@ public class MainActivity extends AppCompatActivity{
                 allAlarms.add(realmResults.get(i));
             }
         }
-       return allAlarms;
+        return allAlarms;
     }
 }

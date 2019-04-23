@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import com.my.sauravvishal8797.alarmify.adapters.AlarmAdapter;
 import com.my.sauravvishal8797.alarmify.helpers.AlertDialogHelper;
+import com.my.sauravvishal8797.alarmify.helpers.NotificationHelper;
 import com.my.sauravvishal8797.alarmify.helpers.PreferenceUtil;
 import com.my.sauravvishal8797.alarmify.receivers.AlarmReceiver;
 import com.my.sauravvishal8797.alarmify.R;
@@ -611,7 +612,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
                         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                     }
                 }
-                creatingNewAlarmObject(_id);
+                creatingNewAlarmObject(_id, calendar.getTimeInMillis());
                 int setmin = time_picker.getCurrentMinute() - now.get(Calendar.MINUTE);
                 int hourset = time_picker.getCurrentHour() - now.get(Calendar.HOUR_OF_DAY);
                 if (hourset>0){
@@ -701,7 +702,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
                     alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                 }
             }
-            creatingNewAlarmObject(_id);
+            creatingNewAlarmObject(_id, calendar.getTimeInMillis());
             int setmin = time_picker.getCurrentMinute() - now.get(Calendar.MINUTE);
             int hourset = time_picker.getCurrentHour() - now.get(Calendar.HOUR_OF_DAY);
             if (hourset>0){
@@ -743,7 +744,19 @@ public class AlarmDetailActivity extends AppCompatActivity {
                 }
             }
         }
+        createNotificationForNextAlarm();
         finish();
+    }
+
+    /**
+     * Pushes a notification displaying info about the next alarm
+     */
+    private void createNotificationForNextAlarm(){
+        NotificationHelper notificationHelper = new NotificationHelper(getApplicationContext());
+        notificationHelper.createNotificationChannel();
+        Alarm nextAlarm = realmController.getNextAlarm();
+        notificationHelper.sendNotification("[Next Alarm] " + "Tue " + nextAlarm.getTime() + nextAlarm.getPeriod(),
+                "Tap to disable the alarm");
     }
 
     /** Checks if an alarm already exists, can be in either state active or inactive
@@ -754,7 +767,8 @@ public class AlarmDetailActivity extends AppCompatActivity {
     }
 
     /** Creates a new alarm object for storing in the local database */
-    private void creatingNewAlarmObject(int pendingIntentId){
+    private void creatingNewAlarmObject(int pendingIntentId, long timeInMillis){
+        Log.i("llppppppp", String.valueOf(timeInMillis));
         StringBuilder builder = new StringBuilder();
         realm = realmController.getRealm();
         Alarm newAlarm = new Alarm();
@@ -762,6 +776,7 @@ public class AlarmDetailActivity extends AppCompatActivity {
         newAlarm.setHour(time_picker.getCurrentHour());
         newAlarm.setPendingIntentId(pendingIntentId);
         newAlarm.setMinute(time_picker.getCurrentMinute());
+        newAlarm.setTimeInMillis(timeInMillis);
         if(repeatAlarmDays==null)
             newAlarm.setDays("No Repeat");
         else {

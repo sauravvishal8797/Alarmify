@@ -1,17 +1,25 @@
 package com.my.sauravvishal8797.alarmify.models;
 
+import android.support.annotation.NonNull;
+import android.util.Log;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class Alarm extends RealmObject{
+public class Alarm extends RealmObject implements Comparable<Alarm>{
 
     @PrimaryKey
     private String time;
     private int hour;
     private int minute;
+    private long timeInMillis;
     private String period;
     private String repeatDays;
     private int snoozeTime;
@@ -43,6 +51,14 @@ public class Alarm extends RealmObject{
 
     public int getMinute() {
         return minute;
+    }
+
+    public void setTimeInMillis(long timeInMillis) {
+        this.timeInMillis = timeInMillis;
+    }
+
+    public long getTimeInMillis() {
+        return timeInMillis;
     }
 
     public void setPeriod(String period) {
@@ -107,5 +123,28 @@ public class Alarm extends RealmObject{
 
     public int getPendingIntentId() {
         return pendingIntentId;
+    }
+
+    @Override
+    public int compareTo(@NonNull Alarm alarm) {
+        Date alarmObject = null;
+        Date date1 = null;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(this.getTimeInMillis());
+        Calendar alarmadata = Calendar.getInstance();
+        alarmadata.setTimeInMillis(alarm.getTimeInMillis());
+        Log.i("momokhanahai", String.valueOf(this.getTimeInMillis()) + ":" + String.valueOf(alarm.getTimeInMillis()) + "  " +
+        String.valueOf(calendar.getTimeInMillis()) + ":" + String.valueOf(alarmadata.getTimeInMillis()));
+        SimpleDateFormat format = new SimpleDateFormat("dd/M/yyyy h:mm");
+        String currentDate = format.format(calendar.getTime());
+        String alarmObjectDate = format.format(alarmadata.getTime());
+        try {
+            alarmObject = format.parse(alarmObjectDate);
+            date1 = format.parse(currentDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+       // Log.i("datetimw", date1.toString() + "  " + alarmObject.toString());
+        return date1.compareTo(alarmObject);
     }
 }
