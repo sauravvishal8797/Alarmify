@@ -85,6 +85,7 @@ public class RealmController {
      * @param time time of the alarm to deactivate
      */
     public void deactivateAlarm(String time){
+        Log.i("denabhai22", time);
         Alarm alarm = realm.where(Alarm.class).equalTo("time", time).findFirst();
         if(alarm!=null){
             realm.beginTransaction();

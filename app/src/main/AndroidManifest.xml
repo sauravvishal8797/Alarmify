@@ -46,6 +46,8 @@
 
         <service android:name=".services.ReactivateAlarmsAfterBootService" />
 
+        <service android:name=".services.DisableAlarmFromNotificationService"/>
+
         <activity
             android:name=".activities.SettingsActivity"
             android:parentActivityName=".activities.MainActivity"

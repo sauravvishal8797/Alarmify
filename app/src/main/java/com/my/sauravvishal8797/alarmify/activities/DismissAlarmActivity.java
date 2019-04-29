@@ -697,7 +697,8 @@ public class DismissAlarmActivity extends AppCompatActivity {
         NotificationHelper notificationHelper = new NotificationHelper(getApplicationContext());
         notificationHelper.createNotificationChannel();
         Alarm nextAlarm = realmController.getNextAlarm();
-        notificationHelper.sendNotification("Next Alarm", nextAlarm.getTime()+" " + nextAlarm.getPeriod());
+        notificationHelper.sendNotification("[Next Alarm] " + "Tue " + nextAlarm.getTime() + nextAlarm.getPeriod(),
+                "Tap to disable the alarm", nextAlarm.getTime(), nextAlarm.getPeriod());
     }
 
     @Override

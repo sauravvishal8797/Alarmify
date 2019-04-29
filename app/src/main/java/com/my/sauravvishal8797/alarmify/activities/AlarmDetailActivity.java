@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import com.my.sauravvishal8797.alarmify.adapters.AlarmAdapter;
 import com.my.sauravvishal8797.alarmify.helpers.AlertDialogHelper;
+import com.my.sauravvishal8797.alarmify.helpers.DaysHelper;
 import com.my.sauravvishal8797.alarmify.helpers.NotificationHelper;
 import com.my.sauravvishal8797.alarmify.helpers.PreferenceUtil;
 import com.my.sauravvishal8797.alarmify.receivers.AlarmReceiver;
@@ -755,8 +756,15 @@ public class AlarmDetailActivity extends AppCompatActivity {
         NotificationHelper notificationHelper = new NotificationHelper(getApplicationContext());
         notificationHelper.createNotificationChannel();
         Alarm nextAlarm = realmController.getNextAlarm();
-        notificationHelper.sendNotification("[Next Alarm] " + "Tue " + nextAlarm.getTime() + nextAlarm.getPeriod(),
-                "Tap to disable the alarm");
+        Calendar now = Calendar.getInstance();
+        Calendar time = Calendar.getInstance();
+        time.setTimeInMillis(nextAlarm.getTimeInMillis());
+        String day = "";
+        if (now.get(Calendar.DAY_OF_WEEK) == time.get(Calendar.DAY_OF_WEEK))
+            day = "Today";
+        else day = DaysHelper.mapValueToDay(time.get(Calendar.DAY_OF_WEEK));
+        notificationHelper.sendNotification("[Next Alarm] " + day + nextAlarm.getTime() + nextAlarm.getPeriod(),
+                "Tap to disable the alarm", nextAlarm.getTime()+ " ", nextAlarm.getPeriod().toLowerCase());
     }
 
     /** Checks if an alarm already exists, can be in either state active or inactive
