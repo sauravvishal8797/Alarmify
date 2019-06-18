@@ -313,6 +313,8 @@ public class MainActivity extends AppCompatActivity{
                 } else {
                     inActiveAlarms.add(realmResults.get(i));
                 }
+
+
             }
             allAlarms.addAll(activeAlarms);
             allAlarms.addAll(inActiveAlarms);

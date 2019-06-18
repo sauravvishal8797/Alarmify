@@ -21,7 +21,6 @@ import com.my.sauravvishal8797.alarmify.models.RepeatData;
 import com.my.sauravvishal8797.alarmify.realm.RealmController;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -230,7 +229,6 @@ public class AlarmReceiver extends BroadcastReceiver{
      * @return An integer representing the string value of week day
      */
     private int daysMap(String day){
-        Log.i("foriiniii", day);
         int value = 0;
         HashMap<String, Integer> days = new HashMap<>();
         days.put("Sun", 1);
