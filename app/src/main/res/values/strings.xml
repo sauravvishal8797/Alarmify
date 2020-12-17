@@ -5,9 +5,50 @@
     <string name="alarm_activate_mssg">Go Ahead and activate an alarm!</string>
     <string name="deactivate_alarm_dialog_title">Deactivate Alarm</string>
     <string name="reactivate_alarm_dialog_title">Reactivate Alarm</string>
+    <string name="confirm_alarm_dialog_title">Confirm Alarm</string>
+    <string name="edit_alarm_dialog_title">Edit Alarm</string>
+    <string name="confirm_alarm_dislog_mssg">Are you sure you want to set this alarm?</string>
+    <string name="edit_alarm_dialog_mssg">Are you sure you want to edit this alarm?</string>
     <string name="deactivate_alarm_dialog_mssg">Are you sure you want to turn-off this alarm?</string>
     <string name="reactive_alarm_dialog_mssg">Are you sure you want to reactivate this alarm?</string>
     <string name="dialog_postive_button">OK</string>
     <string name="dialog_negative_mssg">CANCEL</string>
     <string name="alarm_label_text_message">Its time to get reeady for office!</string>
+    <string name="dismiss_alarm_message">Alarm Dismissed..</string>
+    <string name="ringer_preference">Ringer Preference</string>
+    <string name="max_volume_preference">Set ringer volume to max</string>
+    <string name="using_built_in_speaker">Use the built-in speaker</string>
+    <string name="built_in_speaker_pref_summary">Always ring on phone speakers</string>
+    <string name="general_alarm_preferences">General</string>
+    <string name="active_alarms_to_top_preference">Move active alarms to the top</string>
+
+    <!-- SharedPreferences key strings -->
+    <string name="move_active_alarms_mssg">Move active alarms to the top</string>
+    <string name="set_ringer_value_max_mssg">Set Ringer value to the max</string>
+    <string name="use_built_in_speaker_mssg">Use built in speaker</string>
+    <string name="dismiss_alarm_mission">Dismiss alarm mission</string>
+    <string name="dismiss_alarm_mission_level">Dismiss mission level</string>
+    <string name="dismiss_maths_mission_ques">Set the no of questions</string>
+    <string name="dismiss_maths_mission_quest_array_pos">Dismiss no of questions array pos</string>
+    <string name="prevent_phone_power_off">Prevent phone power-off</string>
+    <string name="edit_saved_alarm_action_mssg">Edit alarms before ringing</string>
+    <string name="auto_dismiss_pref">Auto-Dismiss</string>
+    <string name="set_max_snoozes">Set maximum no of snoozes</string>
+    <string name="dismiss_default_text">Dismiss Mission</string>
+    <string name="auto_dismiss_time">Auto-Dismiss time</string>
+    <string name="auto_dismiss_timr_pos">Auto-Dismiss time position</string>
+    <string name="max_snoozes_array_pos">Max snoozes checked postion</string>
+    <string name="dismiss_level_pos">Dismiss level array pos</string>
+    <string name="set_alarm_confirmation">Set-Alarm confirmation</string>
+    <string name="set_alarm_confirmation_mssg">Asks for confirmation while setting alarm</string>
+
+    <!-- Dismiss Mission strings -->
+    <string name="default_dismiss_mission">Default</string>
+    <string name="maths_mission_dismiss">Maths Puzzle</string>
+    <string name="home_button_pressed">Home Button Press</string>
+    <string name="dismiss_mission_level_easy">Easy</string>
+    <string name="dismiss_mission_level_medium">Medium</string>
+    <string name="dismiss_mission_level_hard">Hard</string>
+    <string name="dismiss_mission_level_default">None</string>
+
 </resources>

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.sauravvishal8797.alarmify">
+    package="com.my.sauravvishal8797.alarmify">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".MyApplication"
@@ -14,26 +15,41 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/NoActionBar">
-        <activity android:name=".activities.MainActivity"
-                  android:screenOrientation="portrait">
+
+        <activity
+            android:name=".activities.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.AlarmDetailActivity"
+            android:parentActivityName=".activities.MainActivity"
+            android:screenOrientation="portrait" />
+
+        <receiver
+            android:name=".receivers.AlarmReceiver"
+            android:exported="false" />
+        <receiver android:name=".receivers.BootCompletedIntentReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".activities.DismissAlarmActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".activities.MainActivity" />
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
-        <receiver android:name=".receivers.AlarmReceiver" />
+        <service android:name=".services.ReactivateAlarmsAfterBootService" />
 
-        <activity android:name=".activities.MathspuzzleActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-
-        <service android:name=".services.Alarmservice"
-            android:exported="false"/>
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:parentActivityName=".activities.MainActivity"
+            android:screenOrientation="portrait" />
     </application>
+
 </manifest>

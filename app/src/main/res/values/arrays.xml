@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="auto_dismiss_options">
+        <item>Off</item>
+        <item>1 minute</item>
+        <item>5 minutes</item>
+        <item>7 minutes</item>
+        <item>10 minutes</item>
+        <item>15 minutes</item>
+        <item>20 minutes</item>
+        <item>25 minutes</item>
+        <item>30 minutes</item>
+    </array>
+
+    <array name="max_snooze_options">
+        <item>Unlimited</item>
+        <item>1 time</item>
+        <item>2 times</item>
+        <item>3 times</item>
+        <item>4 times</item>
+        <item>5 times</item>
+        <item>6 times</item>
+    </array>
+
+    <array name="dismiss_alarm_missions">
+        <item>default</item>
+        <item>Maths Puzzle</item>
+    </array>
+
+    <array name="dismiss_mission_options">
+        <item>@string/default_dismiss_mission</item>
+        <item>@string/maths_mission_dismiss</item>
+    </array>
+
+    <array name="dismiss_mission_level">
+        <item>@string/dismiss_mission_level_default</item>
+        <item>@string/dismiss_mission_level_easy</item>
+        <item>@string/dismiss_mission_level_medium</item>
+        <item>@string/dismiss_mission_level_hard</item>
+    </array>
+
+    <array name="dismiss_mission_questions">
+        <item>3 questions</item>
+        <item>4 questions</item>
+        <item>5 questions</item>
+        <item>6 questions</item>
+        <item>7 questions</item>
+        <item>8 questions</item>
+    </array>
+</resources>

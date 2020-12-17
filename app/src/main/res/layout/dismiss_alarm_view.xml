@@ -5,39 +5,110 @@
     android:background="@color/customPrimary"
     android:id="@+id/dismiss_view_layout">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/textview_border"
+        android:id="@+id/preview_mode_textView"
+        android:visibility="gone"
+        android:layout_margin="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grey_shade"
+            android:layout_margin="10dp"
+            android:textSize="25dp"
+            android:text="This is preview mode"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="10dp"
+            android:id="@+id/preview_abort_button"
+            android:src="@drawable/ic_close_black_24dp"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
     <TextView
+        android:id="@+id/time_current"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:id="@+id/time_current"
+        android:background="@drawable/textview_border"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:paddingRight="30dp"
+        android:paddingLeft="30dp"
+        android:layout_above="@+id/dismiss_button"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="204dp"
-        android:gravity="center_horizontal"
-        android:text="It's 6:15 AM"
+        android:text="It's 6:15"
+        android:layout_margin="10dp"
         android:textColor="@color/grey_shade"
         android:textSize="30dp"
         android:textStyle="bold" />
 
-    <Button
-        android:layout_width="200dp"
+    <TextView
+        android:id="@+id/period"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/time_current"
+        android:layout_toEndOf="@+id/time_current"
+        android:visibility="gone"
+        android:layout_toRightOf="@id/time_current"
+        android:text="AM"
+        android:textColor="@color/grey_shade"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/dismiss_button"
-        android:background="@color/colorAccent"
+        android:background="@drawable/textview_border"
         android:text="DISMISS ALARM"
-        android:textSize="18dp"
+        android:textSize="20dp"
+        android:paddingTop="15dp"
+        android:paddingRight="30dp"
+        android:paddingLeft="30dp"
+        android:paddingBottom="15dp"
         android:textStyle="bold"
-        android:textColor="@color/customPrimary"
+        android:textColor="@color/grey_shade"
         android:layout_centerInParent="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:textColor="@color/grey_shade"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:id="@+id/snooze_button"
+        android:text="SNOOZE ALARM"
+        android:background="@drawable/textview_border"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:layout_below="@id/dismiss_button"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/alarm_label_message"
         android:text="@string/alarm_label_text_message"
-        android:layout_below="@id/dismiss_button"
+        android:textStyle="bold"
+        android:layout_below="@id/snooze_button"
         android:textColor="@color/grey_shade"
-        android:textSize="19dp"
-        android:layout_margin="15dp"
+        android:textSize="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:gravity="center_horizontal"/>
 
 </RelativeLayout>
+
